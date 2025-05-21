@@ -1,5 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
-import { auth } from '@/services/firebase';
+import { auth } from '@/services/supabase';
 import { router } from 'expo-router';
 import { signOut } from 'firebase/auth';
 import { useEffect } from 'react';

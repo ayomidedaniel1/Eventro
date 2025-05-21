@@ -1,12 +1,11 @@
-import { useAuth } from '@/contexts/AuthContext';
-import { auth } from '@/services/firebase';
+import { supabase } from '@/services/supabase';
+import { useAuthStore } from '@/store/authStore';
 import { router } from 'expo-router';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { Button, Text, TextInput, View } from 'react-native';
 
-export default function Login() {
-  const { user } = useAuth();
+export default function LoginScreen() {
+  const { user } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -15,12 +14,11 @@ export default function Login() {
   }, [user]);
 
   const login = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      router.replace('/');
-    } catch (e) {
-      console.log(e);
-    }
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) console.error(error.message);
   };
 
   return (
