@@ -1,5 +1,5 @@
-import { supabase } from '@/services/supabase';
 import { useAuthStore } from '@/store/authStore';
+import { supabase } from '@/utils/supabase';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { Button, Text, View } from 'react-native';

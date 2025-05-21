@@ -1,6 +1,6 @@
 // contexts/AuthProvider.tsx
-import { supabase } from '@/services/supabase';
 import { useAuthStore } from '@/store/authStore';
+import { supabase } from '@/utils/supabase';
 import { useEffect } from 'react';
 
 export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
