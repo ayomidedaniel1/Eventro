@@ -20,19 +20,22 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (error) throw error;
-
-    if (fontsLoaded) {
-      SplashScreen.hideAsync();
-    }
+    if (fontsLoaded) SplashScreen.hideAsync();
   }, [fontsLoaded, error]);
 
-  if (!fontsLoaded && !error) {
-    return null;
-  }
+  if (!fontsLoaded && !error) return null;
 
   return (
     <AuthProvider>
-      <Stack screenOptions={{ headerShown: false }} />
+      <Stack screenOptions={{ headerShown: false }}>
+        {/* Public Screens */}
+        <Stack.Screen name="login" />
+        <Stack.Screen name="register" />
+
+        {/* Tab group shown after login */}
+        <Stack.Screen name="(tabs)" />
+      </Stack>
+
       <StatusBar style="dark" />
     </AuthProvider>
   );

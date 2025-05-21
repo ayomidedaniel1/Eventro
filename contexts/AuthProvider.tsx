@@ -7,7 +7,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
   const setAuth = useAuthStore((s) => s.setAuth);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    supabase.auth.getSession().then(({ data, error }) => {
+      if (error) {
+        console.error('Error fetching session:', error.message);
+        return;
+      }
       setAuth(data.session);
     });
 
@@ -18,7 +22,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
     return () => {
       listener.subscription.unsubscribe();
     };
-  }, []);
+  }, [setAuth]);
 
   return <>{children}</>;
 };
