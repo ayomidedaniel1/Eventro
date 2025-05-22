@@ -5,13 +5,16 @@ import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Snackbar } from 'react-native-paper';
 
 export default function RegisterScreen() {
   const { user } = useAuthStore();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [successMsg, setSuccessMsg] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [visible, setVisible] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   useEffect(() => {
@@ -24,9 +27,19 @@ export default function RegisterScreen() {
 
     setLoading(true);
     setError('');
+    setSuccessMsg('');
 
     const { error } = await supabase.auth.signUp({ email, password });
-    if (error) console.error(error.message);
+
+    if (error) {
+      setError(error.message);
+    } else {
+      setSuccessMsg('Check your email to confirm your account');
+      setVisible(true);
+      setEmail('');
+      setPassword('');
+    }
+
     setLoading(false);
   };
 
@@ -87,6 +100,15 @@ export default function RegisterScreen() {
       <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
         <Text style={styles.linkText}>Already have an account? Login</Text>
       </TouchableOpacity>
+
+      <Snackbar
+        visible={visible}
+        onDismiss={() => setVisible(false)}
+        duration={6000}
+        style={{ backgroundColor: '#2ACE99' }}
+      >
+        <Text style={{ color: '#fff' }}>{successMsg}</Text>
+      </Snackbar>
     </View>
   );
 }

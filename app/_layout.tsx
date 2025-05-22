@@ -1,10 +1,12 @@
+import 'react-native-reanimated';
+
 import { AuthProvider } from '@/contexts/AuthProvider';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { PaperProvider } from 'react-native-paper';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -27,17 +29,19 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        {/* Public Screens */}
-        <Stack.Screen name="login" />
-        <Stack.Screen name="register" />
-        <Stack.Screen name="forgot-password" />
+      <PaperProvider>
+        <Stack screenOptions={{ headerShown: false }}>
+          {/* Public Screens */}
+          <Stack.Screen name="login" />
+          <Stack.Screen name="register" />
+          <Stack.Screen name="forgot-password" />
 
-        {/* Tab group shown after login */}
-        <Stack.Screen name="(tabs)" />
-      </Stack>
+          {/* Tab group shown after login */}
+          <Stack.Screen name="(tabs)" />
+        </Stack>
 
-      <StatusBar style="dark" />
+        <StatusBar style="dark" />
+      </PaperProvider>
     </AuthProvider>
   );
 }

@@ -25,11 +25,19 @@ export default function LoginScreen() {
     setLoading(true);
     setError('');
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    if (error) setError(error.message);
+
+    if (error) {
+      setError(error.message);
+    } else if (!data.user?.confirmed_at) {
+      setError('Please confirm your email before logging in');
+    } else {
+      router.replace('/');
+    }
+
     setLoading(false);
   };
 
