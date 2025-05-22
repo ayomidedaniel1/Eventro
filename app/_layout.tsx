@@ -31,6 +31,7 @@ export default function RootLayout() {
         {/* Public Screens */}
         <Stack.Screen name="login" />
         <Stack.Screen name="register" />
+        <Stack.Screen name="forgot-password" />
 
         {/* Tab group shown after login */}
         <Stack.Screen name="(tabs)" />
