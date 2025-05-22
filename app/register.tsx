@@ -1,5 +1,6 @@
 import { useAuthStore } from '@/store/authStore';
 import { supabase } from '@/utils/supabase';
+import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -11,14 +12,19 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   useEffect(() => {
     if (user) router.replace('/');
   }, [user]);
 
   const register = async () => {
+    if (!email) return setError('Please enter your email');
+    if (!password) return setError('Please set a password');
+
     setLoading(true);
     setError('');
+
     const { error } = await supabase.auth.signUp({ email, password });
     if (error) console.error(error.message);
     setLoading(false);
@@ -45,14 +51,28 @@ export default function RegisterScreen() {
         autoCapitalize="none"
         keyboardType="email-address"
       />
-      <TextInput
-        placeholder="Password"
-        placeholderTextColor="#888"
-        style={styles.input}
-        secureTextEntry
-        onChangeText={setPassword}
-        value={password}
-      />
+
+      <View style={styles.passwordWrapper}>
+        <TextInput
+          placeholder="Password"
+          placeholderTextColor="#888"
+          style={styles.input}
+          secureTextEntry={!showPassword}
+          onChangeText={setPassword}
+          value={password}
+        />
+        <TouchableOpacity
+          style={styles.eyeIcon}
+          onPress={() => setShowPassword(prev => !prev)}
+          activeOpacity={0.6}
+        >
+          <Ionicons
+            name={showPassword ? 'eye-off' : 'eye'}
+            size={20}
+            color="#888"
+          />
+        </TouchableOpacity>
+      </View>
 
       <TouchableOpacity style={styles.button} onPress={register} disabled={loading} activeOpacity={0.7}>
         {loading ? (
@@ -64,7 +84,7 @@ export default function RegisterScreen() {
 
       {!!error && <Text style={styles.errorText}>{error}</Text>}
 
-      <TouchableOpacity onPress={() => router.push('/login')} activeOpacity={0.7}>
+      <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
         <Text style={styles.linkText}>Already have an account? Login</Text>
       </TouchableOpacity>
     </View>
@@ -126,5 +146,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     fontFamily: 'Poppins-Regular',
+  },
+  passwordWrapper: {
+    position: 'relative',
+    justifyContent: 'center',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 16,
+    top: 18,
   },
 });

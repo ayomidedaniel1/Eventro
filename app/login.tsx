@@ -1,5 +1,6 @@
 import { useAuthStore } from '@/store/authStore';
 import { supabase } from '@/utils/supabase';
+import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -11,14 +12,19 @@ export default function LoginScreen() {
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   useEffect(() => {
     if (user) router.replace('/');
   }, [user]);
 
   const login = async () => {
+    if (!email) return setError('Please enter your email');
+    if (!password) return setError('Please set a password');
+
     setLoading(true);
     setError('');
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -47,14 +53,28 @@ export default function LoginScreen() {
         autoCapitalize="none"
         keyboardType="email-address"
       />
-      <TextInput
-        placeholder="Password"
-        placeholderTextColor="#888"
-        style={styles.input}
-        secureTextEntry
-        onChangeText={setPassword}
-        value={password}
-      />
+
+      <View style={styles.passwordWrapper}>
+        <TextInput
+          placeholder="Password"
+          placeholderTextColor="#888"
+          style={styles.input}
+          secureTextEntry={!showPassword}
+          onChangeText={setPassword}
+          value={password}
+        />
+        <TouchableOpacity
+          style={styles.eyeIcon}
+          onPress={() => setShowPassword(prev => !prev)}
+          activeOpacity={0.6}
+        >
+          <Ionicons
+            name={showPassword ? 'eye-off' : 'eye'}
+            size={20}
+            color="#888"
+          />
+        </TouchableOpacity>
+      </View>
 
       <TouchableOpacity onPress={() => router.push('/forgot-password')} activeOpacity={0.7}>
         <Text style={styles.forgotText}>Forgot password?</Text>
@@ -138,5 +158,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     fontFamily: 'Poppins-Regular',
+  },
+  passwordWrapper: {
+    position: 'relative',
+    justifyContent: 'center',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 16,
+    top: 18,
   },
 });
