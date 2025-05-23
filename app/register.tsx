@@ -49,7 +49,6 @@ export default function RegisterScreen() {
         style={styles.image}
         source={require("@/assets/images/icons/eventsync.png")}
         contentFit="cover"
-        tintColor="#2ACE99"
         transition={600}
       />
 
