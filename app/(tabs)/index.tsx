@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { Button, Text, View } from 'react-native';
 
-export default function Home() {
+export default function HomeScreen() {
   const { user, isLoading } = useAuthStore();
 
   useEffect(() => {

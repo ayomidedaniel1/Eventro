@@ -1,6 +1,7 @@
 import 'react-native-reanimated';
 
 import { AuthProvider } from '@/contexts/AuthProvider';
+import { useDeepLinkAuth } from '@/hooks/useDeepLink';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -11,6 +12,8 @@ import { PaperProvider } from 'react-native-paper';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  useDeepLinkAuth();
+
   const [fontsLoaded, error] = useFonts({
     "Poppins-Regular": require('@/assets/fonts/Poppins-Regular.ttf'),
     "Poppins-Medium": require('@/assets/fonts/Poppins-Medium.ttf'),

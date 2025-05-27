@@ -9,6 +9,7 @@ import { Snackbar } from 'react-native-paper';
 
 export default function RegisterScreen() {
   const { user } = useAuthStore();
+  const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -22,6 +23,7 @@ export default function RegisterScreen() {
   }, [user]);
 
   const register = async () => {
+    if (!name) return setError('Please enter your name');
     if (!email) return setError('Please enter your email');
     if (!password) return setError('Please set a password');
 
@@ -29,13 +31,21 @@ export default function RegisterScreen() {
     setError('');
     setSuccessMsg('');
 
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { name },
+        emailRedirectTo: 'eventsync://auth/callback', //emailRedirectTo: 'exp://auth/callback',
+      }
+    });
 
     if (error) {
       setError(error.message);
     } else {
       setSuccessMsg('Check your email to confirm your account');
       setVisible(true);
+      setName('');
       setEmail('');
       setPassword('');
     }
@@ -53,6 +63,15 @@ export default function RegisterScreen() {
       />
 
       <Text style={styles.title}>Create an Account</Text>
+
+      <TextInput
+        placeholder="Enter your name"
+        placeholderTextColor="#888"
+        style={styles.input}
+        onChangeText={setName}
+        value={name}
+        keyboardType="default"
+      />
 
       <TextInput
         placeholder="Email"
