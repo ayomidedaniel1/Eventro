@@ -24,12 +24,13 @@ export default function ForgotPasswordScreen() {
     setError('');
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'exp://127.0.0.1:19000/--/reset-password',
+      redirectTo: 'eventsync:/reset-password',
     });
 
     if (error) {
       setError(error.message);
     } else {
+      setEmail('');
       setMessage('Check your email for the reset link.');
     }
 

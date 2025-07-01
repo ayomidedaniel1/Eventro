@@ -4,8 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { Snackbar } from 'react-native-paper';
+import { ActivityIndicator, Linking, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function RegisterScreen() {
   const { user } = useAuthStore();
@@ -13,10 +12,9 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [successMsg, setSuccessMsg] = useState<string>('');
   const [error, setError] = useState<string>('');
-  const [visible, setVisible] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (user) router.replace('/');
@@ -29,22 +27,20 @@ export default function RegisterScreen() {
 
     setLoading(true);
     setError('');
-    setSuccessMsg('');
 
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: { name },
-        emailRedirectTo: 'eventsync://auth/callback', //emailRedirectTo: 'exp://auth/callback',
+        emailRedirectTo: 'eventsync://auth/callback',
       }
     });
 
     if (error) {
       setError(error.message);
     } else {
-      setSuccessMsg('Check your email to confirm your account');
-      setVisible(true);
+      setShowModal(true);
       setName('');
       setEmail('');
       setPassword('');
@@ -119,14 +115,31 @@ export default function RegisterScreen() {
         <Text style={styles.linkText}>Already have an account? Login</Text>
       </TouchableOpacity>
 
-      <Snackbar
-        visible={visible}
-        onDismiss={() => setVisible(false)}
-        duration={6000}
-        style={{ backgroundColor: '#2ACE99' }}
+      <Modal
+        animationType="fade"
+        transparent
+        visible={showModal}
+        onRequestClose={() => setShowModal(false)}
       >
-        <Text style={{ color: '#fff' }}>{successMsg}</Text>
-      </Snackbar>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Verify Your Email</Text>
+            <Text style={styles.modalText}>Check your email to confirm your account.</Text>
+
+            <TouchableOpacity
+              style={styles.modalButton}
+              activeOpacity={0.7}
+              onPress={() => {
+                Linking.openURL('googlegmail:');
+                setShowModal(false);
+              }}
+            >
+              <Text style={styles.modalButtonText}>Open Mail App</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
     </View>
   );
 }
@@ -195,5 +208,42 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 16,
     top: 18,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    backgroundColor: '#fff',
+    padding: 24,
+    borderRadius: 16,
+    width: '85%',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontFamily: 'Poppins-SemiBold',
+    color: '#2ACE99',
+    marginBottom: 12,
+  },
+  modalText: {
+    fontSize: 14,
+    fontFamily: 'Poppins-Regular',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  modalButton: {
+    backgroundColor: '#2ACE99',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+  },
+  modalButtonText: {
+    color: '#fff',
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 16,
   },
 });

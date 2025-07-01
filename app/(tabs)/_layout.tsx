@@ -8,6 +8,7 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
       }}
+      initialRouteName='index'
     >
       <Tabs.Screen
         name="index"
