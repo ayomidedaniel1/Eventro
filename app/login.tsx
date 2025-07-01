@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 
 export default function LoginScreen() {
   const { user } = useAuthStore();
@@ -42,66 +42,72 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={require("@/assets/images/icons/smile.png")}
-        contentFit="cover"
-        transition={600}
-      />
-
-      <Text style={styles.title}>Welcome Back</Text>
-
-      <TextInput
-        placeholder="Email"
-        placeholderTextColor="#888"
-        style={styles.input}
-        onChangeText={setEmail}
-        value={email}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
-
-      <View style={styles.passwordWrapper}>
-        <TextInput
-          placeholder="Password"
-          placeholderTextColor="#888"
-          style={styles.input}
-          secureTextEntry={!showPassword}
-          onChangeText={setPassword}
-          value={password}
-        />
-        <TouchableOpacity
-          style={styles.eyeIcon}
-          onPress={() => setShowPassword(prev => !prev)}
-          activeOpacity={0.6}
-        >
-          <Ionicons
-            name={showPassword ? 'eye-off' : 'eye'}
-            size={20}
-            color="#888"
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View>
+          <Image
+            style={styles.image}
+            source={require("@/assets/images/icons/smile.png")}
+            contentFit="cover"
+            transition={600}
           />
-        </TouchableOpacity>
-      </View>
 
-      <TouchableOpacity onPress={() => router.push('/forgot-password')} activeOpacity={0.7}>
-        <Text style={styles.forgotText}>Forgot password?</Text>
-      </TouchableOpacity>
+          <Text style={styles.title}>Welcome Back</Text>
 
-      <TouchableOpacity style={styles.button} onPress={login} disabled={loading} activeOpacity={0.7}>
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Login</Text>
-        )}
-      </TouchableOpacity>
+          <TextInput
+            placeholder="Email"
+            placeholderTextColor="#888"
+            style={styles.input}
+            onChangeText={setEmail}
+            value={email}
+            autoCapitalize="none"
+            keyboardType="email-address"
+          />
 
-      {!!error && <Text style={styles.errorText}>{error}</Text>}
+          <View style={styles.passwordWrapper}>
+            <TextInput
+              placeholder="Password"
+              placeholderTextColor="#888"
+              style={styles.input}
+              secureTextEntry={!showPassword}
+              onChangeText={setPassword}
+              value={password}
+            />
+            <TouchableOpacity
+              style={styles.eyeIcon}
+              onPress={() => setShowPassword(prev => !prev)}
+              activeOpacity={0.6}
+            >
+              <Ionicons
+                name={showPassword ? 'eye-off' : 'eye'}
+                size={20}
+                color="#888"
+              />
+            </TouchableOpacity>
+          </View>
 
-      <TouchableOpacity onPress={() => router.push('/register')} activeOpacity={0.7}>
-        <Text style={styles.linkText}>Don&apos;t have an account? Register</Text>
-      </TouchableOpacity>
-    </View>
+          <TouchableOpacity onPress={() => router.push('/forgot-password')} activeOpacity={0.7}>
+            <Text style={styles.forgotText}>Forgot password?</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={login} disabled={loading} activeOpacity={0.7}>
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Login</Text>
+            )}
+          </TouchableOpacity>
+
+          {!!error && <Text style={styles.errorText}>{error}</Text>}
+
+          <TouchableOpacity onPress={() => router.push('/register')} activeOpacity={0.7}>
+            <Text style={styles.linkText}>Don&apos;t have an account? Register</Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 

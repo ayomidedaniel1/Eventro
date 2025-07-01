@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Linking, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Linking, Modal, Platform, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 
 export default function RegisterScreen() {
   const { user } = useAuthStore();
@@ -50,97 +50,102 @@ export default function RegisterScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={require("@/assets/images/icons/eventsync.png")}
-        contentFit="cover"
-        transition={600}
-      />
-
-      <Text style={styles.title}>Create an Account</Text>
-
-      <TextInput
-        placeholder="Enter your name"
-        placeholderTextColor="#888"
-        style={styles.input}
-        onChangeText={setName}
-        value={name}
-        keyboardType="default"
-      />
-
-      <TextInput
-        placeholder="Email"
-        placeholderTextColor="#888"
-        style={styles.input}
-        onChangeText={setEmail}
-        value={email}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
-
-      <View style={styles.passwordWrapper}>
-        <TextInput
-          placeholder="Password"
-          placeholderTextColor="#888"
-          style={styles.input}
-          secureTextEntry={!showPassword}
-          onChangeText={setPassword}
-          value={password}
-        />
-        <TouchableOpacity
-          style={styles.eyeIcon}
-          onPress={() => setShowPassword(prev => !prev)}
-          activeOpacity={0.6}
-        >
-          <Ionicons
-            name={showPassword ? 'eye-off' : 'eye'}
-            size={20}
-            color="#888"
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View>
+          <Image
+            style={styles.image}
+            source={require("@/assets/images/icons/eventsync.png")}
+            contentFit="cover"
+            transition={600}
           />
-        </TouchableOpacity>
-      </View>
 
-      <TouchableOpacity style={styles.button} onPress={register} disabled={loading} activeOpacity={0.7}>
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Register</Text>
-        )}
-      </TouchableOpacity>
+          <Text style={styles.title}>Create an Account</Text>
 
-      {!!error && <Text style={styles.errorText}>{error}</Text>}
+          <TextInput
+            placeholder="Enter your name"
+            placeholderTextColor="#888"
+            style={styles.input}
+            onChangeText={setName}
+            value={name}
+            keyboardType="default"
+          />
 
-      <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
-        <Text style={styles.linkText}>Already have an account? Login</Text>
-      </TouchableOpacity>
+          <TextInput
+            placeholder="Email"
+            placeholderTextColor="#888"
+            style={styles.input}
+            onChangeText={setEmail}
+            value={email}
+            autoCapitalize="none"
+            keyboardType="email-address"
+          />
 
-      <Modal
-        animationType="fade"
-        transparent
-        visible={showModal}
-        onRequestClose={() => setShowModal(false)}
-      >
-        <View style={styles.modalBackdrop}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Verify Your Email</Text>
-            <Text style={styles.modalText}>Check your email to confirm your account.</Text>
-
+          <View style={styles.passwordWrapper}>
+            <TextInput
+              placeholder="Password"
+              placeholderTextColor="#888"
+              style={styles.input}
+              secureTextEntry={!showPassword}
+              onChangeText={setPassword}
+              value={password}
+            />
             <TouchableOpacity
-              style={styles.modalButton}
-              activeOpacity={0.7}
-              onPress={() => {
-                Linking.openURL('googlegmail:');
-                setShowModal(false);
-              }}
+              style={styles.eyeIcon}
+              onPress={() => setShowPassword(prev => !prev)}
+              activeOpacity={0.6}
             >
-              <Text style={styles.modalButtonText}>Open Mail App</Text>
+              <Ionicons
+                name={showPassword ? 'eye-off' : 'eye'}
+                size={20}
+                color="#888"
+              />
             </TouchableOpacity>
           </View>
-        </View>
-      </Modal>
 
-    </View>
+          <TouchableOpacity style={styles.button} onPress={register} disabled={loading} activeOpacity={0.7}>
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Register</Text>
+            )}
+          </TouchableOpacity>
+
+          {!!error && <Text style={styles.errorText}>{error}</Text>}
+
+          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
+            <Text style={styles.linkText}>Already have an account? Login</Text>
+          </TouchableOpacity>
+
+          <Modal
+            animationType="fade"
+            transparent
+            visible={showModal}
+            onRequestClose={() => setShowModal(false)}
+          >
+            <View style={styles.modalBackdrop}>
+              <View style={styles.modalContainer}>
+                <Text style={styles.modalTitle}>Verify Your Email</Text>
+                <Text style={styles.modalText}>Check your email to confirm your account.</Text>
+
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    Linking.openURL('googlegmail:');
+                    setShowModal(false);
+                  }}
+                >
+                  <Text style={styles.modalButtonText}>Open Mail App</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
