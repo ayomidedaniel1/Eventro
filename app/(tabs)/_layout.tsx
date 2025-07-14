@@ -6,8 +6,27 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        tabBarActiveTintColor: '#2ACE99',
+        tabBarInactiveTintColor: '#888',
+        tabBarStyle: {
+          backgroundColor: '#DCFDE7',
+          borderTopColor: '#B8FAD6',
+          borderTopWidth: 1,
+          paddingBottom: 10,
+          paddingTop: 6,
+          height: 70,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          position: 'absolute',
+          overflow: 'hidden',
+        },
+        tabBarLabelStyle: {
+          fontFamily: 'Poppins-SemiBold',
+          fontSize: 12,
+          marginBottom: 4,
+        },
       }}
-      initialRouteName='index'
+      initialRouteName="index"
     >
       <Tabs.Screen
         name="index"
