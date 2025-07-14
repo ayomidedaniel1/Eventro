@@ -1,4 +1,3 @@
-// app/(tabs)/_layout.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
@@ -20,7 +19,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="events/index"
+        name="events"
         options={{
           title: 'Events',
           tabBarIcon: ({ color, size }) => (
@@ -29,7 +28,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile/index"
+        name="profile"
         options={{
           title: 'Profile',
           tabBarIcon: ({ color, size }) => (
