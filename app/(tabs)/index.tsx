@@ -1,5 +1,4 @@
 import { useAuthStore } from '@/store/authStore';
-import { supabase } from '@/utils/supabase';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -13,21 +12,32 @@ export default function HomeScreen() {
     }
   }, [user]);
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setAuth(null);
-    router.replace('/login');
-  };
+  const events = [
+    { title: 'React Native Conf', time: 'July 20, 10:00 AM' },
+    { title: 'Expo SDK Meetup', time: 'July 22, 5:30 PM' },
+    { title: 'Next.js Summit', time: 'July 24, 1:00 PM' },
+  ];
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to EventSync 🎉</Text>
-      <Text style={styles.subtitle}>You&apos;re logged in as</Text>
-      <Text style={styles.email}>{user?.email}</Text>
+      <Text style={styles.title}>Upcoming Events</Text>
 
-      <TouchableOpacity style={styles.button} onPress={handleLogout} activeOpacity={0.8}>
-        <Text style={styles.buttonText}>Logout</Text>
-      </TouchableOpacity>
+      <View style={styles.card}>
+        {events.map((event, idx) => (
+          <View key={idx} style={styles.eventItem}>
+            <Text style={styles.eventTitle}>{event.title}</Text>
+            <Text style={styles.eventTime}>{event.time}</Text>
+          </View>
+        ))}
+
+        <TouchableOpacity
+          style={styles.viewAllButton}
+          onPress={() => router.push('/events')}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.viewAllText}>View All Events</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -36,38 +46,45 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingVertical: 28,
+    paddingHorizontal: 14,
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontFamily: 'Poppins-SemiBold',
     color: '#2ACE99',
+    marginVertical: 16,
+  },
+  card: {
+    backgroundColor: '#DCFDE7',
+    borderRadius: 12,
+    padding: 16,
+    borderColor: '#B8FAD6',
+    borderWidth: 1,
+  },
+  eventItem: {
     marginBottom: 12,
-    textAlign: 'center',
   },
-  subtitle: {
-    fontSize: 16,
-    fontFamily: 'Poppins-Regular',
-    color: '#888',
-    marginBottom: 4,
-  },
-  email: {
+  eventTitle: {
     fontSize: 16,
     fontFamily: 'Poppins-Medium',
-    color: '#000',
-    marginBottom: 32,
+    color: '#333',
   },
-  button: {
+  eventTime: {
+    fontSize: 14,
+    color: '#666',
+    fontFamily: 'Poppins-Regular',
+  },
+  viewAllButton: {
+    marginTop: 12,
+    paddingVertical: 10,
+    alignItems: 'center',
     backgroundColor: '#2ACE99',
-    paddingVertical: 14,
-    paddingHorizontal: 32,
     borderRadius: 8,
   },
-  buttonText: {
+  viewAllText: {
     color: '#fff',
     fontFamily: 'Poppins-SemiBold',
-    fontSize: 16,
+    fontSize: 14,
   },
 });

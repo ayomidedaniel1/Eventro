@@ -6,3 +6,11 @@ export type AuthState = {
   isLoading: boolean;
   setAuth: (session: Session | null) => void;
 };
+
+export type EventCardProps = {
+  id: string;
+  title: string;
+  date: string;
+  location: string;
+  imageUrl: string;
+};
