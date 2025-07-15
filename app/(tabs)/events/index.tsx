@@ -7,44 +7,34 @@ import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native
 
 export default function EventsScreen() {
   const [events, setEvents] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
     const fetchEvents = async () => {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('events')
-        .select('*')
-        .order('starts_at', { ascending: true });
-
-      if (data) setEvents(data);
-      setLoading(false);
+      try {
+        const { data } = await supabase.from('events').select('*').order('starts_at', { ascending: true });
+        setEvents(data ?? []);
+      } finally {
+        setLoading(false);
+      }
     };
-
     fetchEvents();
   }, []);
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>All Events</Text>
-      {loading ? (
-        <FlatList
-          data={[1, 2, 3]}
-          renderItem={() => <SkeletonEventCard />}
-          keyExtractor={(_, i) => i.toString()}
-        />
-      ) : (
-        <FlatList
-          data={events}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
+      <FlatList
+        data={loading ? [1, 2, 3] : events}
+        keyExtractor={(_, i) => loading ? i.toString() : events[i].id}
+        renderItem={({ item }) =>
+          loading ? <SkeletonEventCard /> :
             <TouchableOpacity onPress={() => router.push(`/events/${item.id}`)}>
               <EventCard {...item} />
             </TouchableOpacity>
-          )}
-        />
-      )}
+        }
+      />
     </View>
   );
 }

@@ -1,20 +1,17 @@
 import { EventCardProps } from '@/types';
 import { Image } from 'expo-image';
-import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-export default function EventCard({ id, title, date, location, imageUrl }: EventCardProps) {
-  const router = useRouter();
+export default function EventCard({ id, title, starts_at, location, image_url }: EventCardProps) {
 
   return (
-    <Pressable
-      onPress={() => router.push(`/events/${id}`)}
-      style={styles.card}
-    >
-      <Image source={{ uri: imageUrl }} style={styles.image} contentFit="cover" />
+    <Pressable style={styles.card}>
+      {image_url ? <Image source={{ uri: image_url }} style={styles.image} contentFit="cover" /> : null}
       <View style={styles.details}>
-        <Text style={styles.title} numberOfLines={1}>{title}</Text>
-        <Text style={styles.meta}>{date} • {location}</Text>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.meta}>
+          {new Date(starts_at).toLocaleString()} • {location}
+        </Text>
       </View>
     </Pressable>
   );

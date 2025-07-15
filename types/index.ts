@@ -10,7 +10,7 @@ export type AuthState = {
 export type EventCardProps = {
   id: string;
   title: string;
-  date: string;
+  starts_at: string;
   location: string;
-  imageUrl: string;
+  image_url: string;
 };
