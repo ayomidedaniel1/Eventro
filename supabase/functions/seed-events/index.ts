@@ -1,3 +1,5 @@
+// deno-lint-ignore-file
+// @ts-ignore
 import { serve } from 'https://deno.land/std/http/server.ts';
 
 serve(async (req) => {
