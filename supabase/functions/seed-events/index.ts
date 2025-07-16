@@ -1,5 +1,5 @@
 // deno-lint-ignore-file
-import { EventInsert, TicketmasterEvent } from "../../../types/index.ts";
+import { EventInsert, TicketmasterEvent } from "./types.ts";
 
 Deno.serve(async (_req: Request) => {
   const TICKETMASTER_API_KEY = Deno.env.get("TICKETMASTER_API_KEY");
