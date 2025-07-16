@@ -2,12 +2,15 @@ import 'react-native-reanimated';
 
 import { AuthProvider } from '@/contexts/AuthProvider';
 import { useDeepLinkAuth } from '@/hooks/useDeepLink';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { PaperProvider } from 'react-native-paper';
+
+const queryClient = new QueryClient();
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,21 +34,23 @@ export default function RootLayout() {
   if (!fontsLoaded && !error) return null;
 
   return (
-    <AuthProvider>
-      <PaperProvider>
-        <Stack screenOptions={{ headerShown: false }}>
-          {/* Public Screens */}
-          <Stack.Screen name="login" />
-          <Stack.Screen name="register" />
-          <Stack.Screen name="forgot-password" />
-          <Stack.Screen name="reset-password" />
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <PaperProvider>
+          <Stack screenOptions={{ headerShown: false }}>
+            {/* Public Screens */}
+            <Stack.Screen name="login" />
+            <Stack.Screen name="register" />
+            <Stack.Screen name="forgot-password" />
+            <Stack.Screen name="reset-password" />
 
-          {/* Tab group shown after login */}
-          <Stack.Screen name="(tabs)" />
-        </Stack>
+            {/* Tab group shown after login */}
+            <Stack.Screen name="(tabs)" />
+          </Stack>
 
-        <StatusBar style="dark" />
-      </PaperProvider>
-    </AuthProvider>
+          <StatusBar style="dark" />
+        </PaperProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }

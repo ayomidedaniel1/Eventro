@@ -1,12 +1,12 @@
-// deno-lint-ignore-file
 import { EventInsert, TicketmasterEvent } from "./types.ts";
 
-// Disable authentication for this function
-export const config = {
-  auth: false,
-};
-
 Deno.serve(async (_req: Request) => {
+  const AUTH_HEADER = _req.headers.get("Authorization");
+
+  if (!AUTH_HEADER || !AUTH_HEADER.startsWith("Bearer ")) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
   const TICKETMASTER_API_KEY = Deno.env.get("TICKETMASTER_API_KEY");
   const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
   const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -63,7 +63,7 @@ Deno.serve(async (_req: Request) => {
     updated_at: new Date().toISOString(),
   }));
 
-  const supabaseRes = await fetch(`${SUPABASE_URL}/functions/v1/seed-events`, {
+  const supabaseRes = await fetch(`${SUPABASE_URL}/rest/v1/events`, {
     method: "POST",
     headers: {
       apikey: SUPABASE_SERVICE_ROLE_KEY,
