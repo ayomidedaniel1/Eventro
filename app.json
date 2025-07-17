@@ -6,6 +6,11 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "eventsync",
+    "deepLinking": {
+      "prefixes": [
+        "eventsync://"
+      ]
+    },
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
