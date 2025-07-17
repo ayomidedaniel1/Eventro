@@ -21,8 +21,8 @@ export type EventInsert = {
   country: string;
   countryCode: string | null;
   address: string | null;
-  latitude: string | null;
-  longitude: string | null;
+  latitude: number | null;
+  longitude: number | null;
 
   // Classification
   genre: string | null;
@@ -32,7 +32,7 @@ export type EventInsert = {
   status: string | null;
   promoter: string | null;
   location: string | null;
-  priceRanges: any[] | null;
+  priceRanges: Array<{ min?: number; max?: number; currency?: string }> | null;
 
   // Timestamps
   created_at: string;
