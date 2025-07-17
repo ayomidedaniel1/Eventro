@@ -67,9 +67,11 @@ Deno.serve(async (_req: Request) => {
   });
 
   if (error) {
-    return new Response(`Error inserting events: ${error.message}`, {
-      status: 500,
-    });
+    console.error("Upsert error:", error);
+    return new Response(
+      `Error inserting events: ${error.message || JSON.stringify(error)}`,
+      { status: 500 },
+    );
   }
 
   return new Response("Events seeded successfully!", { status: 200 });
