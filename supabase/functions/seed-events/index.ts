@@ -1,12 +1,13 @@
+// deno-lint-ignore-file
 import { EventInsert, TicketmasterEvent } from "./types.ts";
+// eslint-disable-next-line import/no-unresolved
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+export const config = {
+  auth: false,
+};
 
 Deno.serve(async (_req: Request) => {
-  const AUTH_HEADER = _req.headers.get("Authorization");
-
-  if (!AUTH_HEADER || !AUTH_HEADER.startsWith("Bearer ")) {
-    return new Response("Unauthorized", { status: 401 });
-  }
-
   const TICKETMASTER_API_KEY = Deno.env.get("TICKETMASTER_API_KEY");
   const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
   const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -17,8 +18,10 @@ Deno.serve(async (_req: Request) => {
 
   const res = await fetch(
     `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${TICKETMASTER_API_KEY}&countryCode=US&size=50`,
+    {
+      headers: { "Accept": "application/json" },
+    },
   );
-
   const json = await res.json();
   const events = json._embedded?.events;
 
@@ -32,7 +35,6 @@ Deno.serve(async (_req: Request) => {
     description: e.info || e.pleaseNote || "No description available",
     image: e.images?.[0]?.url || "",
     url: e.url || null,
-
     startDate: e.dates.start.localDate || null,
     startTime: e.dates.start.localTime || null,
     startDateTime: e.dates.start.dateTime || e.dates.start.startDateTime ||
@@ -41,7 +43,6 @@ Deno.serve(async (_req: Request) => {
     endTime: e.dates.end?.localTime || null,
     endDateTime: e.dates.end?.dateTime || null,
     timezone: e.dates.timezone || null,
-
     venue: e._embedded?.venues?.[0]?.name || "Unknown venue",
     venue_id: e._embedded?.venues?.[0]?.id || null,
     city: e._embedded?.venues?.[0]?.city?.name || "Unknown city",
@@ -50,34 +51,26 @@ Deno.serve(async (_req: Request) => {
     address: e._embedded?.venues?.[0]?.address?.line1 || null,
     latitude: e._embedded?.venues?.[0]?.location?.latitude || null,
     longitude: e._embedded?.venues?.[0]?.location?.longitude || null,
-
     genre: e.classifications?.[0]?.genre?.name || null,
     segment: e.classifications?.[0]?.segment?.name || null,
     status: e.dates.status?.code || null,
     promoter: e._embedded?.promoters?.[0]?.name || null,
     location: e.locale || null,
     priceRanges: e.priceRanges || null,
-
-    // Timestamps
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   }));
 
-  const supabaseRes = await fetch(`${SUPABASE_URL}/rest/v1/events`, {
-    method: "POST",
-    headers: {
-      apikey: SUPABASE_SERVICE_ROLE_KEY,
-      Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-      "Content-Type": "application/json",
-      Prefer: "return=representation",
-    },
-    body: JSON.stringify(insertData),
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+  const { error } = await supabase.from("events").upsert(insertData, {
+    onConflict: "id",
   });
 
-  if (!supabaseRes.ok) {
-    const error = await supabaseRes.text();
-    return new Response(`Error inserting events: ${error}`, { status: 500 });
+  if (error) {
+    return new Response(`Error inserting events: ${error.message}`, {
+      status: 500,
+    });
   }
 
-  return new Response("Events seeded successfully!");
+  return new Response("Events seeded successfully!", { status: 200 });
 });

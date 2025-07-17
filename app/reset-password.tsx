@@ -23,15 +23,16 @@ export default function ResetPasswordScreen() {
     setError('');
     setSuccess('');
 
-    const { error } = await supabase.auth.updateUser({ password });
-
-    if (error) {
-      setError(error.message);
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error || !session) {
+      setError('Invalid session. Please use the link from your email.');
     } else {
-      setSuccess('Password updated! You can now login.');
-      setTimeout(() => {
-        router.replace('/login');
-      }, 2000);
+      const { error: updateError } = await supabase.auth.updateUser({ password });
+      if (updateError) setError(updateError.message);
+      else {
+        setSuccess('Password updated! Redirecting to login...');
+        setTimeout(() => router.replace('/login'), 2000);
+      }
     }
 
     setLoading(false);

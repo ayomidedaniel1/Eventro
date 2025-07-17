@@ -5,6 +5,7 @@ export type AuthState = {
   session: Session | null;
   isLoading: boolean;
   setAuth: (session: Session | null) => void;
+  logout: () => Promise<void>;
 };
 
 export type EventCardProps = {
