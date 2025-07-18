@@ -1,40 +1,55 @@
 import { StyleSheet, View } from 'react-native';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 export default function SkeletonEventCard() {
   return (
     <View style={styles.card}>
-      <View style={styles.image} />
-      <View style={styles.textLine} />
-      <View style={styles.textSmall} />
+      <Animated.View
+        entering={FadeIn.duration(500)}
+        exiting={FadeOut.duration(500)}
+        style={styles.imagePlaceholder}
+      />
+      <Animated.View
+        entering={FadeIn.delay(100).duration(500)}
+        exiting={FadeOut.duration(500)}
+        style={styles.textPlaceholder}
+      />
+      <Animated.View
+        entering={FadeIn.delay(200).duration(500)}
+        exiting={FadeOut.duration(500)}
+        style={styles.textPlaceholder}
+      />
+      <Animated.View
+        entering={FadeIn.delay(300).duration(500)}
+        exiting={FadeOut.duration(500)}
+        style={[styles.textPlaceholder, styles.smallTextPlaceholder]}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#F3F3F3',
-    borderRadius: 12,
-    overflow: 'hidden',
-    marginBottom: 16,
+    backgroundColor: '#DCFDE7',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+    elevation: 2,
   },
-  image: {
-    height: 160,
-    backgroundColor: '#E0E0E0',
+  imagePlaceholder: {
+    width: '100%',
+    height: 150,
+    backgroundColor: '#B8FAD6',
+    borderRadius: 10,
   },
-  textLine: {
+  textPlaceholder: {
     height: 16,
-    backgroundColor: '#D0D0D0',
-    marginHorizontal: 12,
-    marginTop: 12,
+    backgroundColor: '#B8FAD6',
     borderRadius: 4,
+    marginTop: 5,
   },
-  textSmall: {
-    height: 14,
-    width: '50%',
-    backgroundColor: '#D0D0D0',
-    marginHorizontal: 12,
-    marginTop: 8,
-    marginBottom: 12,
-    borderRadius: 4,
+  smallTextPlaceholder: {
+    height: 12,
+    width: '60%',
   },
 });

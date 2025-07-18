@@ -1,55 +1,44 @@
 import EventCard from '@/components/EventCard';
 import SkeletonEventCard from '@/components/SkeletonEventCard';
-import { supabase } from '@/utils/supabase';
-import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useEvents } from '@/hooks/useEvents';
+import { useEventStore } from '@/store/eventStore';
+import { EventInsert } from '@/types';
+import { FlatList, StyleSheet, Text } from 'react-native';
 
 export default function EventsScreen() {
-  const [events, setEvents] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const router = useRouter();
+  const { data: events, isLoading, error } = useEvents();
+  const setEvents = useEventStore((state) => state.setEvents);
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const { data } = await supabase.from('events').select('*').order('starts_at', { ascending: true });
-        setEvents(data ?? []);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchEvents();
-  }, []);
+  if (events && events.length > 0) {
+    setEvents(events);
+  }
+
+  if (error) return <Text style={styles.error}>Error: {error.message}</Text>;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>All Events</Text>
-      <FlatList
-        data={loading ? [1, 2, 3] : events}
-        keyExtractor={(_, i) => loading ? i.toString() : events[i].id}
-        renderItem={({ item }) =>
-          loading ? <SkeletonEventCard /> :
-            <TouchableOpacity onPress={() => router.push(`/events/${item.id}`)}>
-              <EventCard {...item} />
-            </TouchableOpacity>
-        }
-      />
-    </View>
+    <FlatList
+      data={isLoading ? Array(5).fill({}) : events || []}
+      renderItem={({ item }) =>
+        isLoading ? (
+          <SkeletonEventCard />
+        ) : (
+          <EventCard event={item as EventInsert} />
+        )
+      }
+      keyExtractor={(item, index) => item.id || index.toString()}
+      contentContainerStyle={styles.list}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: 16,
+  error: {
+    textAlign: 'center',
+    marginTop: 20,
+    color: 'red',
+    fontFamily: 'Poppins-Regular',
   },
-  header: {
-    fontSize: 22,
-    fontWeight: '600',
-    fontFamily: 'Poppins-SemiBold',
-    color: '#2ACE99',
-    marginBottom: 16,
+  list: {
+    padding: 10,
   },
 });
