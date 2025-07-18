@@ -20,7 +20,7 @@ export default function EventsScreen() {
 
   const renderEventCard = ({ item }: { item: EventInsert; }) => (
     <TouchableOpacity
-      onPress={() => router.push(`/events/[id]/detail?id=${item.id}`)}
+      onPress={() => router.push({ pathname: '/events/[id]/detail', params: { id: item.id } })}
       // onPress={() => router.push(`/events/${item.id}/detail`)}
       activeOpacity={0.8}
     >
