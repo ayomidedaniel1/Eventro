@@ -1,12 +1,12 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 export default function SkeletonEventCard() {
   return (
     <View style={styles.card}>
-      <Animated.View
-        entering={FadeIn.duration(500)}
-        exiting={FadeOut.duration(500)}
+      <LinearGradient
+        colors={['#B8FAD6', '#DCFDE7']}
         style={styles.imagePlaceholder}
       />
       <Animated.View
@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
   imagePlaceholder: {
     width: '100%',
     height: 150,
-    backgroundColor: '#B8FAD6',
     borderRadius: 10,
+    overflow: 'hidden',
   },
   textPlaceholder: {
     height: 16,

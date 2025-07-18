@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Linking, Modal, Platform, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { ActivityIndicator, Alert, Keyboard, KeyboardAvoidingView, Linking, Modal, Platform, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 
 export default function RegisterScreen() {
   const { user } = useAuthStore();
@@ -47,6 +47,18 @@ export default function RegisterScreen() {
     }
 
     setLoading(false);
+  };
+
+  const openMailApp = async () => {
+    const mailtoUrl = `mailto:${email}`;
+    const canOpen = await Linking.canOpenURL(mailtoUrl);
+
+    if (canOpen) {
+      await Linking.openURL(mailtoUrl);
+    } else {
+      Alert.alert('No Mail App', 'Please check your email manually or set a default mail app.');
+    }
+    setShowModal(false);
   };
 
   return (
@@ -133,10 +145,7 @@ export default function RegisterScreen() {
                 <TouchableOpacity
                   style={styles.modalButton}
                   activeOpacity={0.7}
-                  onPress={() => {
-                    Linking.openURL('googlegmail:');
-                    setShowModal(false);
-                  }}
+                  onPress={openMailApp}
                 >
                   <Text style={styles.modalButtonText}>Open Mail App</Text>
                 </TouchableOpacity>
