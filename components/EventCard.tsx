@@ -1,47 +1,49 @@
 import { EventCardProps } from '@/types';
 import { Image } from 'expo-image';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
-export default function EventCard({ id, title, starts_at, location, image_url }: EventCardProps) {
-
+export default function EventCard({ event }: EventCardProps) {
   return (
-    <Pressable style={styles.card}>
-      {image_url ? <Image source={{ uri: image_url }} style={styles.image} contentFit="cover" /> : null}
-      <View style={styles.details}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.meta}>
-          {new Date(starts_at).toLocaleString()} • {location}
-        </Text>
-      </View>
-    </Pressable>
+    <View style={styles.card}>
+      <Image source={{ uri: event.image }} style={styles.image} />
+      <Text style={styles.title}>{event.title}</Text>
+      <Text style={styles.location}>
+        {event.venue}, {event.city}
+      </Text>
+      <Text style={styles.date}>
+        {event.startDate || event.startDateTime || 'TBA'}
+      </Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    overflow: 'hidden',
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#DCFDE7',
+    backgroundColor: '#DCFDE7',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+    elevation: 2,
   },
   image: {
-    height: 160,
     width: '100%',
-  },
-  details: {
-    padding: 12,
+    height: 150,
+    borderRadius: 10,
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: 'Poppins-SemiBold',
-    color: '#222',
-    marginBottom: 4,
+    marginTop: 5,
+    color: '#2ACE99',
   },
-  meta: {
+  location: {
     fontSize: 14,
     fontFamily: 'Poppins-Regular',
-    color: '#666',
+    color: '#333',
+  },
+  date: {
+    fontSize: 12,
+    fontFamily: 'Poppins-Regular',
+    color: '#888',
   },
 });
