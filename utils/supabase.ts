@@ -1,6 +1,5 @@
 import "react-native-url-polyfill/auto";
 
-import { useAuthStore } from "@/store/authStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createClient } from "@supabase/supabase-js";
 
@@ -15,10 +14,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     persistSession: true,
     detectSessionInUrl: true,
   },
-});
-
-supabase.auth.onAuthStateChange((event, session) => {
-  useAuthStore.getState().setAuth(session);
 });
 
 export const seedEvents = async () => {
