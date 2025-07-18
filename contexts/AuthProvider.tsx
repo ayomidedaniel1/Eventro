@@ -1,25 +1,30 @@
-// contexts/AuthProvider.tsx
 import { useAuthStore } from '@/store/authStore';
 import { supabase } from '@/utils/supabase';
 import { useEffect } from 'react';
 
 export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const setAuth = useAuthStore((state) => state.setAuth);
 
   useEffect(() => {
+    let isMounted = true;
+
     supabase.auth.getSession().then(({ data, error }) => {
-      if (error) {
-        console.error('Error fetching session:', error.message);
-        return;
+      if (isMounted) {
+        if (error) {
+          console.error('Error fetching session:', error.message);
+          setAuth(null);
+        } else {
+          setAuth(data.session);
+        }
       }
-      setAuth(data.session);
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setAuth(session);
+      if (isMounted) setAuth(session);
     });
 
     return () => {
+      isMounted = false;
       listener.subscription.unsubscribe();
     };
   }, [setAuth]);
