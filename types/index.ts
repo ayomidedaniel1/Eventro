@@ -105,8 +105,32 @@ export type TicketmasterEvent = {
   }[];
 };
 
-export type PaymentIntent = {
-  clientSecret: string;
-  amount: number;
-  currency: string;
+// types/supabase.ts
+export type Database = {
+  public: {
+    Tables: {
+      transactions: {
+        Row: {
+          id: string;
+          event_id: string;
+          user_id: string;
+          amount: number;
+          currency: string;
+          transaction_id: string;
+          status: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          event_id: string;
+          user_id: string;
+          amount: number;
+          currency: string;
+          transaction_id: string;
+          status: string;
+        };
+      };
+      // ... other tables ...
+    };
+  };
 };

@@ -1,13 +1,20 @@
 import "react-native-url-polyfill/auto";
 
+import { Database } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = "https://cqokcsdcvdkywypxovjd.supabase.co";
-const supabaseAnonKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxb2tjc2RjdmRreXd5cHhvdmpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc4MzQ0MDQsImV4cCI6MjA2MzQxMDQwNH0.6mOI_5s-1ICj4oSvI2-nvk-HWSs6ooVKLoxyRZYCSLA";
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseAnonKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+if (!supabaseUrl) {
+  throw new Error("Missing SUPABASE_URL environment variable");
+}
+if (!supabaseAnonKey) {
+  throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY environment variable");
+}
+
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
     storage: AsyncStorage,
     autoRefreshToken: true,

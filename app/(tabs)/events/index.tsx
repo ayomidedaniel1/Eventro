@@ -5,7 +5,7 @@ import { useEventStore } from '@/store/eventStore';
 import { EventInsert } from '@/types';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function EventsScreen() {
   const router = useRouter();
@@ -56,7 +56,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FFF9',
   },
   header: {
-    padding: 20,
+    paddingTop: (StatusBar.currentHeight ?? 0) + 10,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     elevation: 5,

@@ -1,47 +1,79 @@
+import { useAuthStore } from '@/store/authStore';
 import { useEventStore } from '@/store/eventStore';
+import { supabase } from '@/utils/supabase';
 import { Ionicons } from '@expo/vector-icons';
-import { useStripe } from '@stripe/stripe-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { PayWithFlutterwave } from 'flutterwave-react-native';
 import { Alert, Image, Linking, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function EventsDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string; }>();
   const events = useEventStore((state) => state.events);
   const event = events.find((e) => e.id === id);
-  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const { user } = useAuthStore();
+  console.log('Event:', event);
 
   const router = useRouter();
 
-  if (!event) return <Text style={styles.error}>Event not found</Text>;
+  if (!event || !user) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.error}>Event or user not found</Text>
+      </View>
+    );
+  }
 
-  const handlePayment = async () => {
-    try {
-      const mockClientSecret = 'pi_3P7x7g2eZvKYlo2C1kQ3yM2Q_secret_test';
-      await initPaymentSheet({
-        paymentIntentClientSecret: mockClientSecret,
-        merchantDisplayName: 'EventSync',
-        customFlow: false,
+  const handleOnRedirect = async (data: { status: string; transactionId?: string; }) => {
+    if (data.status === 'successful' && data.transactionId) {
+      // Store transaction in Supabase
+      const { error } = await supabase.from('transactions').insert({
+        event_id: id,
+        user_id: user.id,
+        amount: event.priceRanges?.[0]?.min || 1000,
+        currency: 'NGN',
+        transaction_id: data.transactionId,
+        status: 'successful',
       });
 
-      const { error } = await presentPaymentSheet();
-
       if (error) {
-        Alert.alert('Payment Failed', error.message);
+        Alert.alert('Database Error', 'Payment saved but failed to record in database.');
       } else {
-        Alert.alert('Success', 'Payment completed! (Test mode)');
+        Alert.alert('Success', 'Payment completed and recorded!');
       }
-    } catch {
-      Alert.alert('Error', 'Something went wrong with the payment.');
+    } else {
+      Alert.alert('Cancelled', 'Payment was cancelled or failed.');
     }
+  };
+
+  const generateTransactionRef = (length: number) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return `tx_${result}`;
+  };
+
+  const handlePayment = () => {
+    const config = {
+      tx_ref: generateTransactionRef(10),
+      authorization: process.env.FLUTTERWAVE_PUBLIC_KEY || '',
+      customer: { email: user.email ?? '', name: user.user_metadata.name },
+      amount: event.priceRanges?.[0]?.min || 1000,
+      currency: 'NGN' as any,
+      payment_options: 'card,mobilemoney,ussd',
+    };
+
+    PayWithFlutterwave({
+      options: config,
+      onRedirect: handleOnRedirect,
+    });
   };
 
   return (
     <ScrollView style={styles.container}>
-      <LinearGradient
-        colors={['#2ACE99', '#B8FAD6']}
-        style={styles.header}
-      >
+      <LinearGradient colors={['#2ACE99', '#B8FAD6']} style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
@@ -50,22 +82,16 @@ export default function EventsDetailScreen() {
       <Image source={{ uri: event.image }} style={styles.image} />
       <View style={styles.content}>
         <Text style={styles.title}>{event.title}</Text>
-        <Text style={styles.detail}>Venue: {event.venue}, {event.city}</Text>
+        <Text style={styles.detail}>Venue: {event.venue || 'N/A'}, {event.city || 'N/A'}</Text>
         <Text style={styles.detail}>Date: {event.startDate || event.startDateTime || 'TBA'}</Text>
-        <Text style={styles.description}>{event.description}</Text>
+        <Text style={styles.description}>{event.description || 'No description available'}</Text>
         {event.priceRanges?.[0]?.min && (
-          <TouchableOpacity
-            onPress={handlePayment}
-            style={[styles.linkButton, { marginTop: 15 }]}
-          >
+          <TouchableOpacity onPress={handlePayment} style={[styles.linkButton, { marginTop: 15 }]}>
             <Text style={styles.linkText}>Buy Ticket - ${event.priceRanges[0].min}</Text>
           </TouchableOpacity>
         )}
         {event.url && (
-          <TouchableOpacity
-            onPress={() => Linking.openURL(event.url!)}
-            style={styles.linkButton}
-          >
+          <TouchableOpacity onPress={() => Linking.openURL(event.url!)} style={styles.linkButton}>
             <Text style={styles.linkText}>Get Tickets</Text>
           </TouchableOpacity>
         )}
@@ -91,7 +117,7 @@ const styles = StyleSheet.create({
   backButton: {
     position: 'absolute',
     left: 10,
-    top: 10,
+    top: 50,
   },
   headerText: {
     fontSize: 24,
@@ -99,7 +125,10 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
     textShadowColor: 'rgba(0, 0, 0, 0.2)',
-    textShadowOffset: { width: 1, height: 1 },
+    textShadowOffset: {
+      width: 1,
+      height: 1
+    },
     textShadowRadius: 5,
   },
   image: {
@@ -131,20 +160,30 @@ const styles = StyleSheet.create({
   },
   linkButton: {
     backgroundColor: '#2ACE99',
-    padding: 12,
+    padding: 10,
     borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 10,
   },
   linkText: {
     color: '#fff',
     fontFamily: 'Poppins-SemiBold',
     fontSize: 16,
   },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+  },
   error: {
     textAlign: 'center',
-    marginTop: 20,
+    marginTop: 0,
     color: 'red',
     fontFamily: 'Poppins-Regular',
+    fontSize: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    backgroundColor: '#FFE6E6',
+    borderRadius: 8,
   },
 });
