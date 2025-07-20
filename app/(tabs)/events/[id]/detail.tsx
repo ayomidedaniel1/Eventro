@@ -1,17 +1,40 @@
 import { useEventStore } from '@/store/eventStore';
 import { Ionicons } from '@expo/vector-icons';
+import { useStripe } from '@stripe/stripe-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Image, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Linking, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function EventsDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string; }>();
   const events = useEventStore((state) => state.events);
   const event = events.find((e) => e.id === id);
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
   const router = useRouter();
 
   if (!event) return <Text style={styles.error}>Event not found</Text>;
+
+  const handlePayment = async () => {
+    try {
+      const mockClientSecret = 'pi_3P7x7g2eZvKYlo2C1kQ3yM2Q_secret_test';
+      await initPaymentSheet({
+        paymentIntentClientSecret: mockClientSecret,
+        merchantDisplayName: 'EventSync',
+        customFlow: false,
+      });
+
+      const { error } = await presentPaymentSheet();
+
+      if (error) {
+        Alert.alert('Payment Failed', error.message);
+      } else {
+        Alert.alert('Success', 'Payment completed! (Test mode)');
+      }
+    } catch {
+      Alert.alert('Error', 'Something went wrong with the payment.');
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -30,6 +53,14 @@ export default function EventsDetailScreen() {
         <Text style={styles.detail}>Venue: {event.venue}, {event.city}</Text>
         <Text style={styles.detail}>Date: {event.startDate || event.startDateTime || 'TBA'}</Text>
         <Text style={styles.description}>{event.description}</Text>
+        {event.priceRanges?.[0]?.min && (
+          <TouchableOpacity
+            onPress={handlePayment}
+            style={[styles.linkButton, { marginTop: 15 }]}
+          >
+            <Text style={styles.linkText}>Buy Ticket - ${event.priceRanges[0].min}</Text>
+          </TouchableOpacity>
+        )}
         {event.url && (
           <TouchableOpacity
             onPress={() => Linking.openURL(event.url!)}
@@ -49,7 +80,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FFF9',
   },
   header: {
-    padding: 20,
+    paddingTop: (StatusBar.currentHeight ?? 0) + 10,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     elevation: 5,
@@ -98,9 +131,10 @@ const styles = StyleSheet.create({
   },
   linkButton: {
     backgroundColor: '#2ACE99',
-    padding: 10,
+    padding: 12,
     borderRadius: 8,
     alignItems: 'center',
+    marginBottom: 10,
   },
   linkText: {
     color: '#fff',

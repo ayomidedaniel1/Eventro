@@ -104,3 +104,9 @@ export type TicketmasterEvent = {
     segment?: { name?: string };
   }[];
 };
+
+export type PaymentIntent = {
+  clientSecret: string;
+  amount: number;
+  currency: string;
+};
