@@ -3,16 +3,10 @@ import "react-native-url-polyfill/auto";
 import { Database } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createClient } from "@supabase/supabase-js";
+import Constants from "expo-constants";
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseAnonKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!supabaseUrl) {
-  throw new Error("Missing SUPABASE_URL environment variable");
-}
-if (!supabaseAnonKey) {
-  throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY environment variable");
-}
+const supabaseUrl = Constants.expoConfig?.extra?.SUPABASE_URL;
+const supabaseAnonKey = Constants.expoConfig?.extra?.SUPABASE_ANON_KEY;
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {

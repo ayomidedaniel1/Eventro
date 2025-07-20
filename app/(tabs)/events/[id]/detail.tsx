@@ -2,6 +2,7 @@ import { useAuthStore } from '@/store/authStore';
 import { useEventStore } from '@/store/eventStore';
 import { supabase } from '@/utils/supabase';
 import { Ionicons } from '@expo/vector-icons';
+import Constants from 'expo-constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { PayWithFlutterwave } from 'flutterwave-react-native';
@@ -58,7 +59,7 @@ export default function EventsDetailScreen() {
   const handlePayment = () => {
     const config = {
       tx_ref: generateTransactionRef(10),
-      authorization: process.env.FLUTTERWAVE_PUBLIC_KEY || '',
+      authorization: Constants.expoConfig?.extra?.FLUTTERWAVE_PUBLIC_KEY || '',
       customer: { email: user.email ?? '', name: user.user_metadata.name },
       amount: event.priceRanges?.[0]?.min || 1000,
       currency: 'NGN' as any,
