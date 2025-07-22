@@ -6,7 +6,11 @@ import { createClient } from "@supabase/supabase-js";
 import Constants from "expo-constants";
 
 const supabaseUrl = Constants.expoConfig?.extra?.SUPABASE_URL;
-const supabaseAnonKey = Constants.expoConfig?.extra?.SUPABASE_ANON_KEY;
+const supabaseAnonKey = Constants.expoConfig?.extra?.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error("Missing Supabase URL or Anon Key in app.json extra");
+}
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {

@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function HomeScreen() {
-  const { user, setAuth } = useAuthStore();
+  const { user } = useAuthStore();
 
   useEffect(() => {
     if (!user) {
