@@ -5,11 +5,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createClient } from "@supabase/supabase-js";
 import Constants from "expo-constants";
 
-const supabaseUrl = Constants.expoConfig?.extra?.SUPABASE_URL;
-const supabaseAnonKey = Constants.expoConfig?.extra?.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = Constants.expoConfig?.extra?.EXPO_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = Constants.expoConfig?.extra
+  ?.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+
+console.log("Extra config:", Constants.expoConfig?.extra);
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Missing Supabase URL or Anon Key in app.json extra");
+}
+
+// Ensure URL is a string and valid
+if (typeof supabaseUrl !== "string" || !supabaseUrl.startsWith("http")) {
+  throw new Error("Invalid Supabase URL format");
 }
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {

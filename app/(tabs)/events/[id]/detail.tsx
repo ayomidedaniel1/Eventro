@@ -59,7 +59,7 @@ export default function EventsDetailScreen() {
   const handlePayment = () => {
     const config = {
       tx_ref: generateTransactionRef(10),
-      authorization: Constants.expoConfig?.extra?.FLUTTERWAVE_PUBLIC_KEY || '',
+      authorization: Constants.expoConfig?.extra?.EXPO_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || '',
       customer: { email: user.email ?? '', name: user.user_metadata.name },
       amount: event.priceRanges?.[0]?.min || 1000,
       currency: 'NGN' as any,
