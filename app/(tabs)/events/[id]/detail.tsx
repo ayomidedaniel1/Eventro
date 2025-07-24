@@ -9,6 +9,12 @@ import { PayWithFlutterwave } from 'flutterwave-react-native';
 import { useEffect, useState } from 'react';
 import { Alert, Image, Linking, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+interface RedirectParams {
+  status: 'successful' | 'cancelled';
+  transaction_id?: string;
+  tx_ref: string;
+}
+
 export default function EventsDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string; }>();
   const events = useEventStore((state) => state.events);
@@ -32,8 +38,10 @@ export default function EventsDetailScreen() {
         );
         if (!response.ok) throw new Error('Failed to fetch event details');
         const data = await response.json();
+        console.log("data>>>>", data);
 
         const priceRanges = data.priceRanges || [];
+        console.log('Full priceRanges from API:', priceRanges);
         if (priceRanges.length > 0) {
           const { min, max } = priceRanges[0];
           setPriceRange({ min, max });
@@ -56,12 +64,12 @@ export default function EventsDetailScreen() {
           };
           setEvents(events.map(e => e.id === id ? updatedEvent : e));
         } else {
-          setPriceRange({ min: 1000, max: 1000 });
+          setPriceRange({ min: 1000, max: 1500 });
         }
       } catch (err) {
         setError('Error fetching price range');
-        setPriceRange({ min: 1000, max: 1000 });
-        console.error(err);
+        setPriceRange({ min: 1000, max: 1500 });
+        console.error('Error fetching price range:', err);
       } finally {
         setLoading(false);
       }
@@ -78,14 +86,14 @@ export default function EventsDetailScreen() {
     );
   }
 
-  const handleOnRedirect = async (data: { status: string; transactionId?: string; }) => {
-    if (data.status === 'successful' && data.transactionId) {
+  const handleOnRedirect = async (data: RedirectParams) => {
+    if (data.status === 'successful' && data.transaction_id) {
       const { error } = await supabase.from('transactions').insert({
         event_id: id,
         user_id: user.id,
         amount: priceRange?.min || 1000,
         currency: 'NGN',
-        transaction_id: data.transactionId,
+        transaction_id: data.transaction_id,
         status: 'successful',
       });
 
@@ -108,23 +116,6 @@ export default function EventsDetailScreen() {
     return `tx_${result}`;
   };
 
-  const handlePayment = () => {
-    if (loading) return;
-    const config = {
-      tx_ref: generateTransactionRef(10),
-      authorization: process.env.EXPO_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || '',
-      customer: { email: user.email ?? '', name: user.user_metadata.name },
-      amount: priceRange?.min || 1000,
-      currency: 'NGN' as any,
-      payment_options: 'card,mobilemoney,ussd',
-    };
-
-    PayWithFlutterwave({
-      options: config,
-      onRedirect: handleOnRedirect,
-    });
-  };
-
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
       <LinearGradient colors={['#2ACE99', '#B8FAD6']} style={styles.header}>
@@ -144,10 +135,29 @@ export default function EventsDetailScreen() {
         ) : error ? (
           <Text style={styles.error}>{error}</Text>
         ) : priceRange?.min ? (
-          <TouchableOpacity onPress={handlePayment} style={[styles.linkButton, { marginTop: 15 }]}>
-            <Text style={styles.linkText}>Buy Ticket - ${priceRange.min} - ${priceRange.max}</Text>
-          </TouchableOpacity>
+          <PayWithFlutterwave
+            onRedirect={handleOnRedirect}
+            options={{
+              tx_ref: generateTransactionRef(10),
+              authorization: process.env.EXPO_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || '',
+              customer: { email: user.email ?? '' },
+              amount: priceRange?.min || 1000,
+              currency: 'NGN' as any,
+              payment_options: 'card',
+            }}
+            customButton={(props) => (
+              <TouchableOpacity
+                style={[styles.linkButton, { marginTop: 15 }]}
+                activeOpacity={0.7}
+                onPress={props.onPress}
+                disabled={props.disabled}
+              >
+                <Text style={styles.linkText}>Buy Ticket - ${priceRange.min}</Text>
+              </TouchableOpacity>
+            )}
+          />
         ) : null}
+
         {event.url && (
           <TouchableOpacity onPress={() => Linking.openURL(event.url!)} style={styles.linkButton}>
             <Text style={styles.linkText}>Go to event details</Text>
