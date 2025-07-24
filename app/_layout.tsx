@@ -1,7 +1,8 @@
-import 'react-native-reanimated';
-
 import { AuthProvider } from '@/contexts/AuthProvider';
 import { useDeepLinkAuth } from '@/hooks/useDeepLink';
+import { useEventStore } from '@/store/eventStore';
+import { seedEvents } from '@/utils/supabase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -9,14 +10,16 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { PaperProvider } from 'react-native-paper';
+import 'react-native-reanimated';
 
 const queryClient = new QueryClient();
+const SEED_INTERVAL = 24 * 60 * 60 * 1000;
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   useDeepLinkAuth();
-
+  const setEvents = useEventStore((state) => state.setEvents);
   const [fontsLoaded, error] = useFonts({
     "Poppins-Regular": require('@/assets/fonts/Poppins-Regular.ttf'),
     "Poppins-Medium": require('@/assets/fonts/Poppins-Medium.ttf'),
@@ -30,6 +33,27 @@ export default function RootLayout() {
     if (error) throw error;
     if (fontsLoaded) SplashScreen.hideAsync();
   }, [fontsLoaded, error]);
+
+  useEffect(() => {
+    const checkAndSeedEvents = async () => {
+      try {
+        const lastSeedTime = await AsyncStorage.getItem('lastSeedTime');
+        const now = Date.now();
+
+        if (!lastSeedTime || (now - parseInt(lastSeedTime, 10)) >= SEED_INTERVAL) {
+          const data = await seedEvents();
+          if (data) {
+            setEvents(data);
+            await AsyncStorage.setItem('lastSeedTime', now.toString());
+          }
+        }
+      } catch (err) {
+        console.error('Error seeding events:', err);
+      }
+    };
+
+    if (fontsLoaded) checkAndSeedEvents();
+  }, [fontsLoaded, setEvents]);
 
   if (!fontsLoaded && !error) return null;
 

@@ -1,23 +1,14 @@
 import "react-native-url-polyfill/auto";
 
-import { Database } from "@/types";
+import { Database, EventInsert } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createClient } from "@supabase/supabase-js";
-import Constants from "expo-constants";
 
-const supabaseUrl = Constants.expoConfig?.extra?.EXPO_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = Constants.expoConfig?.extra
-  ?.EXPO_PUBLIC_SUPABASE_ANON_KEY;
-
-console.log("Extra config:", Constants.expoConfig?.extra);
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Missing Supabase URL or Anon Key in app.json extra");
-}
-
-// Ensure URL is a string and valid
-if (typeof supabaseUrl !== "string" || !supabaseUrl.startsWith("http")) {
-  throw new Error("Invalid Supabase URL format");
 }
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
@@ -29,10 +20,10 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-export const seedEvents = async () => {
+export const seedEvents = async (): Promise<EventInsert[]> => {
   const response = await supabase.functions.invoke("seed-events", {
     method: "POST",
   });
   if (response.error) throw new Error(response.error.message);
-  return response.data;
+  return Array.isArray(response.data) ? response.data : [];
 };

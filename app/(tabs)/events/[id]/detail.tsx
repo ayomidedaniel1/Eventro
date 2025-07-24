@@ -1,21 +1,74 @@
 import { useAuthStore } from '@/store/authStore';
 import { useEventStore } from '@/store/eventStore';
+import { EventInsert, TicketmasterPriceRange } from '@/types';
 import { supabase } from '@/utils/supabase';
 import { Ionicons } from '@expo/vector-icons';
-import Constants from 'expo-constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { PayWithFlutterwave } from 'flutterwave-react-native';
+import { useEffect, useState } from 'react';
 import { Alert, Image, Linking, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function EventsDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string; }>();
   const events = useEventStore((state) => state.events);
+  const setEvents = useEventStore((state) => state.setEvents);
   const event = events.find((e) => e.id === id);
   const { user } = useAuthStore();
-  console.log('Event:', event);
-
   const router = useRouter();
+
+  const [priceRange, setPriceRange] = useState<TicketmasterPriceRange | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPriceRange = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const apiKey = process.env.EXPO_PUBLIC_TICKETMASTER_API_KEY;
+        const response = await fetch(
+          `https://app.ticketmaster.com/discovery/v2/events/${id}.json?apikey=${apiKey}`
+        );
+        if (!response.ok) throw new Error('Failed to fetch event details');
+        const data = await response.json();
+
+        const priceRanges = data.priceRanges || [];
+        if (priceRanges.length > 0) {
+          const { min, max } = priceRanges[0];
+          setPriceRange({ min, max });
+
+          // Transform and update the event in the store
+          const updatedEvent: EventInsert = {
+            ...event!,
+            id: id!,
+            priceRanges: [{ min, max, currency: 'USD' }],
+            title: event?.title || 'Unknown Event',
+            description: event?.description || 'No description',
+            image: event?.image || '',
+            url: event?.url || null,
+            startDate: event?.startDate || null,
+            venue: event?.venue || 'N/A',
+            city: event?.city || 'N/A',
+            country: event?.country || 'N/A',
+            created_at: event?.created_at || new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          };
+          setEvents(events.map(e => e.id === id ? updatedEvent : e));
+        } else {
+          setPriceRange({ min: 1000, max: 1000 });
+        }
+      } catch (err) {
+        setError('Error fetching price range');
+        setPriceRange({ min: 1000, max: 1000 });
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) fetchPriceRange();
+  }, [id, event, events, setEvents]);
 
   if (!event || !user) {
     return (
@@ -27,11 +80,10 @@ export default function EventsDetailScreen() {
 
   const handleOnRedirect = async (data: { status: string; transactionId?: string; }) => {
     if (data.status === 'successful' && data.transactionId) {
-      // Store transaction in Supabase
       const { error } = await supabase.from('transactions').insert({
         event_id: id,
         user_id: user.id,
-        amount: event.priceRanges?.[0]?.min || 1000,
+        amount: priceRange?.min || 1000,
         currency: 'NGN',
         transaction_id: data.transactionId,
         status: 'successful',
@@ -57,11 +109,12 @@ export default function EventsDetailScreen() {
   };
 
   const handlePayment = () => {
+    if (loading) return;
     const config = {
       tx_ref: generateTransactionRef(10),
-      authorization: Constants.expoConfig?.extra?.EXPO_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || '',
+      authorization: process.env.EXPO_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || '',
       customer: { email: user.email ?? '', name: user.user_metadata.name },
-      amount: event.priceRanges?.[0]?.min || 1000,
+      amount: priceRange?.min || 1000,
       currency: 'NGN' as any,
       payment_options: 'card,mobilemoney,ussd',
     };
@@ -73,7 +126,7 @@ export default function EventsDetailScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
       <LinearGradient colors={['#2ACE99', '#B8FAD6']} style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
@@ -86,14 +139,18 @@ export default function EventsDetailScreen() {
         <Text style={styles.detail}>Venue: {event.venue || 'N/A'}, {event.city || 'N/A'}</Text>
         <Text style={styles.detail}>Date: {event.startDate || event.startDateTime || 'TBA'}</Text>
         <Text style={styles.description}>{event.description || 'No description available'}</Text>
-        {event.priceRanges?.[0]?.min && (
+        {loading ? (
+          <Text style={styles.detail}>Loading price...</Text>
+        ) : error ? (
+          <Text style={styles.error}>{error}</Text>
+        ) : priceRange?.min ? (
           <TouchableOpacity onPress={handlePayment} style={[styles.linkButton, { marginTop: 15 }]}>
-            <Text style={styles.linkText}>Buy Ticket - ${event.priceRanges[0].min}</Text>
+            <Text style={styles.linkText}>Buy Ticket - ${priceRange.min} - ${priceRange.max}</Text>
           </TouchableOpacity>
-        )}
+        ) : null}
         {event.url && (
           <TouchableOpacity onPress={() => Linking.openURL(event.url!)} style={styles.linkButton}>
-            <Text style={styles.linkText}>Get Tickets</Text>
+            <Text style={styles.linkText}>Go to event details</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -162,6 +219,7 @@ const styles = StyleSheet.create({
   linkButton: {
     backgroundColor: '#2ACE99',
     padding: 10,
+    marginTop: 20,
     borderRadius: 8,
     alignItems: 'center',
   },
@@ -181,7 +239,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
     color: 'red',
     fontFamily: 'Poppins-Regular',
-    fontSize: 20,
+    fontSize: 12,
     paddingHorizontal: 20,
     paddingVertical: 15,
     backgroundColor: '#FFE6E6',

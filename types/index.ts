@@ -130,7 +130,11 @@ export type Database = {
           status: string;
         };
       };
-      // ... other tables ...
     };
   };
+};
+
+export type TicketmasterPriceRange = {
+  min: number;
+  max: number;
 };

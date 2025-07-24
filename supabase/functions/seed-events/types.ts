@@ -32,7 +32,7 @@ export type EventInsert = {
   status: string | null;
   promoter: string | null;
   location: string | null;
-  priceRanges: Array<{ min?: number; max?: number; currency?: string }> | null;
+  priceRanges: ({ min?: number; max?: number; currency?: string }[]) | null;
 
   // Timestamps
   created_at: string;
@@ -47,7 +47,7 @@ export type TicketmasterEvent = {
   url?: string;
   locale?: string;
   images?: { url: string }[];
-  priceRanges?: any[];
+  priceRanges?: { min?: number; max?: number; currency?: string }[];
 
   dates: {
     start: {
@@ -89,4 +89,16 @@ export type TicketmasterEvent = {
     genre?: { name?: string };
     segment?: { name?: string };
   }[];
+};
+
+export type TicketmasterDetailedEvent = TicketmasterEvent & {
+  priceRanges?: {
+    type?: string;
+    currency?: string;
+    min?: number;
+    max?: number;
+  }[];
+  sales?: unknown;
+  info?: string;
+  pleaseNote?: string;
 };
