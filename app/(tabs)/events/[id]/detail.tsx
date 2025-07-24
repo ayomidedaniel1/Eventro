@@ -7,7 +7,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { PayWithFlutterwave } from 'flutterwave-react-native';
 import { useEffect, useState } from 'react';
-import { Alert, Image, Linking, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Linking, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Snackbar } from 'react-native-paper';
 
 interface RedirectParams {
   status: 'successful' | 'cancelled';
@@ -27,6 +28,9 @@ export default function EventsDetailScreen() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
   useEffect(() => {
     const fetchPriceRange = async () => {
       setLoading(true);
@@ -38,7 +42,6 @@ export default function EventsDetailScreen() {
         );
         if (!response.ok) throw new Error('Failed to fetch event details');
         const data = await response.json();
-        console.log("data>>>>", data);
 
         const priceRanges = data.priceRanges || [];
         console.log('Full priceRanges from API:', priceRanges);
@@ -98,14 +101,19 @@ export default function EventsDetailScreen() {
       });
 
       if (error) {
-        Alert.alert('Database Error', 'Payment saved but failed to record in database.');
+        console.error('Database error:', error);
+        setSnackbarMessage('Payment saved but failed to record in database');
       } else {
-        Alert.alert('Success', 'Payment completed and recorded!');
+        setSnackbarMessage('Payment completed and recorded!');
       }
     } else {
-      Alert.alert('Cancelled', 'Payment was cancelled or failed.');
+      console.log('Payment not successful, status:', data.status);
+      setSnackbarMessage('Payment was cancelled or failed.');
     }
+    setSnackbarVisible(true);
   };
+
+  const onDismissSnackbar = () => setSnackbarVisible(false);
 
   const generateTransactionRef = (length: number) => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -118,6 +126,19 @@ export default function EventsDetailScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={onDismissSnackbar}
+        duration={3000}
+        style={styles.snackbar}
+        action={{
+          label: 'Dismiss',
+          onPress: onDismissSnackbar,
+        }}
+      >
+        {snackbarMessage}
+      </Snackbar>
+
       <LinearGradient colors={['#2ACE99', '#B8FAD6']} style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
@@ -254,5 +275,13 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     backgroundColor: '#FFE6E6',
     borderRadius: 8,
+  },
+  snackbar: {
+    top: 0,
+    position: 'absolute',
+    width: '100%',
+    backgroundColor: '#2ACE99',
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
   },
 });
