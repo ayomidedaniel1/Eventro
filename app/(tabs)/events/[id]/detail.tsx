@@ -49,7 +49,6 @@ export default function EventsDetailScreen() {
           const { min, max } = priceRanges[0];
           setPriceRange({ min, max });
 
-          // Transform and update the event in the store
           const updatedEvent: EventInsert = {
             ...event!,
             id: id!,
@@ -124,6 +123,10 @@ export default function EventsDetailScreen() {
     return `tx_${result}`;
   };
 
+  const navigateToChat = () => {
+    router.push(`/events/${id}/chat`);
+  };
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
       <Snackbar
@@ -184,6 +187,10 @@ export default function EventsDetailScreen() {
             <Text style={styles.linkText}>Go to event details</Text>
           </TouchableOpacity>
         )}
+
+        <TouchableOpacity onPress={navigateToChat} style={[styles.linkButton, { marginTop: 15 }]}>
+          <Text style={styles.linkText}>Chat with Support</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

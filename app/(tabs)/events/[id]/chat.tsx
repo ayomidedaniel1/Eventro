@@ -1,7 +1,9 @@
 import { Message } from '@/types';
+import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function ChatScreen() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -47,6 +49,9 @@ export default function ChatScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient colors={['#2ACE99', '#B8FAD6']} style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="#fff" />
+        </TouchableOpacity>
         <Text style={styles.headerText}>Support Chat</Text>
       </LinearGradient>
       <FlatList
@@ -54,7 +59,7 @@ export default function ChatScreen() {
         renderItem={renderMessage}
         keyExtractor={(item) => item._id.toString()}
         style={styles.chatContainer}
-        inverted // Scroll to the latest message
+        inverted
         contentContainerStyle={{ paddingBottom: 10 }}
       />
       <View style={styles.inputContainer}>
@@ -79,12 +84,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9FFF9',
+    paddingBottom: 70,
   },
   header: {
-    padding: 20,
+    paddingTop: (StatusBar.currentHeight ?? 0) + 10,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     elevation: 5,
+  },
+  backButton: {
+    position: 'absolute',
+    left: 10,
+    top: 50,
   },
   headerText: {
     fontSize: 24,
