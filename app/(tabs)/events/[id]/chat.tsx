@@ -60,7 +60,7 @@ export default function ChatScreen() {
         keyExtractor={(item) => item._id.toString()}
         style={styles.chatContainer}
         inverted
-        contentContainerStyle={{ paddingBottom: 12 }}
+        contentContainerStyle={{ paddingBottom: 10 }}
       />
       <View style={styles.inputContainer}>
         <TextInput
