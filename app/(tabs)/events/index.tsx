@@ -32,7 +32,7 @@ export default function EventsScreen() {
       setSearchTerm(text);
       refetch();
     }, 300),
-    [refetch] // Added refetch to dependencies
+    [refetch]
   );
 
   const handleSearch = (text: string) => {
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   },
   error: {
     textAlign: 'center',
-    marginTop: 20,
+    marginTop: 60,
     color: 'red',
     fontFamily: 'Poppins-Regular',
   },
