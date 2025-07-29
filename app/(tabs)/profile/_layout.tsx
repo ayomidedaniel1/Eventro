@@ -5,7 +5,6 @@ export default function ProfileLayout() {
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="settings" options={{ headerShown: false }} />
-      <Stack.Screen name="chat" options={{ headerShown: false }} />
     </Stack>
   );
 }
