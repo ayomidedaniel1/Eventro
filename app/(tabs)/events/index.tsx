@@ -10,7 +10,7 @@ import { EventInsert } from '@/types';
 import { useRouter } from 'expo-router';
 import debounce from 'lodash/debounce';
 import { useCallback, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 export default function EventsScreen() {
   const router = useRouter();
@@ -34,19 +34,19 @@ export default function EventsScreen() {
   }
 
   const debouncedRefetch = useCallback(
-    debounce((term: string, date: string, location: string, genre: string, status: string) => {
-      refetch({ keyword: term, startDateTime: date, city: location, genre, status });
+    debounce(() => {
+      refetch();
     }, 300),
-    [refetch]
+    [refetch, filterDate, filterLocation, filterGenre, filterStatus]
   );
 
   const handleSearch = (text: string) => {
     setSearchTerm(text);
-    debouncedRefetch(text, filterDate, filterLocation, filterGenre, filterStatus);
+    debouncedRefetch();
   };
 
   const handleFilterChange = () => {
-    debouncedRefetch(searchTerm, filterDate, filterLocation, filterGenre, filterStatus);
+    debouncedRefetch();
   };
 
   const openFilterModal = () => setModalVisible(true);
