@@ -1,4 +1,6 @@
 import { Session, User } from "@supabase/supabase-js";
+import { useRouter } from "expo-router";
+import { JSX } from "react";
 
 export type AuthState = {
   user: User | null;
@@ -148,3 +150,61 @@ export interface Message {
     name: string;
   };
 }
+
+export type HeaderProps = {
+  title: string;
+};
+
+export type SearchBarProps = {
+  value: string;
+  onChangeText: (text: string) => void;
+  isLoading: boolean;
+  placeholder: string;
+  placeholderTextColor: string;
+};
+
+export type FilterRowProps = {
+  filterDate: string;
+  setFilterDate: (value: string) => void;
+  filterLocation: string;
+  setFilterLocation: (value: string) => void;
+  filterGenre: string;
+  setFilterGenre: (value: string) => void;
+  filterStatus: string;
+  setFilterStatus: (value: string) => void;
+};
+
+export type FilterModalProps = {
+  visible: boolean;
+  onClose: () => void;
+  filterDate: string;
+  setFilterDate: (value: string) => void;
+  filterLocation: string;
+  setFilterLocation: (value: string) => void;
+  filterGenre: string;
+  setFilterGenre: (value: string) => void;
+  filterStatus: string;
+  setFilterStatus: (value: string) => void;
+  onApply: () => void;
+  onClear: () => void;
+};
+
+export type EventCardWrapperProps = {
+  item: EventInsert;
+  router: ReturnType<typeof useRouter>;
+};
+
+export type EventListProps = {
+  data: any[];
+  renderItem: (item: any) => JSX.Element;
+  keyExtractor: (item: any, index: number) => string;
+  isLoading: boolean;
+};
+
+export type SearchParam = {
+  keyword?: string;
+  startDateTime?: string;
+  city?: string;
+  genre?: string;
+  status?: string;
+};

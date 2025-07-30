@@ -1,3 +1,4 @@
+import HeaderComponent from '@/components/HeaderComponent';
 import { useAuthStore } from '@/store/authStore';
 import { supabase } from '@/utils/supabase';
 import { router } from 'expo-router';
@@ -14,7 +15,7 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Your Profile</Text>
+      <HeaderComponent title="Your Profile" />
 
       <Text style={styles.label}>Email</Text>
       <Text style={styles.value}>{user?.email}</Text>

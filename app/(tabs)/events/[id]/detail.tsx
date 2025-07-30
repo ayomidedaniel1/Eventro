@@ -1,13 +1,13 @@
+import HeaderComponent from '@/components/HeaderComponent';
 import { useAuthStore } from '@/store/authStore';
 import { useEventStore } from '@/store/eventStore';
 import { EventInsert, TicketmasterPriceRange } from '@/types';
 import { supabase } from '@/utils/supabase';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { PayWithFlutterwave } from 'flutterwave-react-native';
 import { useEffect, useState } from 'react';
-import { Image, Linking, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Snackbar } from 'react-native-paper';
 
 interface RedirectParams {
@@ -142,12 +142,11 @@ export default function EventsDetailScreen() {
         {snackbarMessage}
       </Snackbar>
 
-      <LinearGradient colors={['#2ACE99', '#B8FAD6']} style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#fff" />
-        </TouchableOpacity>
-        <Text style={styles.headerText}>{event.title}</Text>
-      </LinearGradient>
+      <HeaderComponent title={event.title} />
+      <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <Ionicons name="arrow-back" size={24} color="#fff" />
+      </TouchableOpacity>
+
       <Image source={{ uri: event.image }} style={styles.image} />
       <View style={styles.content}>
         <Text style={styles.title}>{event.title}</Text>
@@ -201,31 +200,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F9FFF9',
   },
-  header: {
-    paddingTop: (StatusBar.currentHeight ?? 0) + 10,
-    paddingHorizontal: 20,
-    paddingBottom: 10,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    elevation: 5,
-    position: 'relative',
-  },
   backButton: {
     position: 'absolute',
     left: 10,
     top: 50,
-  },
-  headerText: {
-    fontSize: 24,
-    fontFamily: 'Poppins-ExtraBold',
-    color: '#fff',
-    textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.2)',
-    textShadowOffset: {
-      width: 1,
-      height: 1
-    },
-    textShadowRadius: 5,
   },
   image: {
     width: '100%',

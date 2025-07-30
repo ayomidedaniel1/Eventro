@@ -3,7 +3,6 @@ import { Image } from 'expo-image';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function EventCard({ event }: EventCardProps) {
-  console.log(event);
   return (
     <View style={styles.card}>
       <Image source={{ uri: event.image }} style={styles.image} />

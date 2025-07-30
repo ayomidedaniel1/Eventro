@@ -1,9 +1,9 @@
+import HeaderComponent from '@/components/HeaderComponent';
 import { Message } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { FlatList, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function ChatScreen() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -48,12 +48,11 @@ export default function ChatScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#2ACE99', '#B8FAD6']} style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#fff" />
-        </TouchableOpacity>
-        <Text style={styles.headerText}>Support Chat</Text>
-      </LinearGradient>
+      <HeaderComponent title="Support Chat" />
+      <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <Ionicons name="arrow-back" size={24} color="#fff" />
+      </TouchableOpacity>
+
       <FlatList
         data={messages}
         renderItem={renderMessage}
@@ -86,25 +85,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FFF9',
     paddingBottom: 70,
   },
-  header: {
-    paddingTop: (StatusBar.currentHeight ?? 0) + 10,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    elevation: 5,
-  },
   backButton: {
     position: 'absolute',
     left: 10,
     top: 50,
-  },
-  headerText: {
-    fontSize: 24,
-    fontFamily: 'Poppins-ExtraBold',
-    color: '#fff',
-    textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.2)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 5,
   },
   chatContainer: {
     backgroundColor: '#DCFDE7',

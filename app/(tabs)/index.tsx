@@ -1,3 +1,4 @@
+import HeaderComponent from '@/components/HeaderComponent';
 import { useAuthStore } from '@/store/authStore';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
@@ -20,7 +21,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Upcoming Events</Text>
+      <HeaderComponent title="Upcoming Events" />
 
       <View style={styles.card}>
         {events.map((event, idx) => (
@@ -48,12 +49,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingVertical: 28,
     paddingHorizontal: 14,
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: 'Poppins-SemiBold',
-    color: '#2ACE99',
-    marginVertical: 16,
   },
   card: {
     backgroundColor: '#DCFDE7',

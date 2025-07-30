@@ -1,9 +1,9 @@
-import { EventInsert } from "@/types";
+import { EventInsert, SearchParam } from "@/types";
 import { supabase } from "@/utils/supabase";
 import { useQuery } from "@tanstack/react-query";
 
 export function useEvents(
-  params: { keyword?: string; startDateTime?: string; city?: string } = {},
+  params: SearchParam = {},
 ) {
   const fetchEvents = async (): Promise<EventInsert[]> => {
     let { data: supabaseEvents, error: supabaseError } = await supabase
@@ -11,7 +11,9 @@ export function useEvents(
       .select("*")
       .ilike("title", `%${params.keyword || ""}%`)
       .ilike("city", `%${params.city || ""}%`)
-      .gte("startDate", params.startDateTime || "2000-01-01");
+      .gte("startDate", params.startDateTime || "2000-01-01")
+      .ilike("genre", `%${params.genre || ""}%`)
+      .ilike("status", `%${params.status || ""}%`);
 
     if (supabaseError) {
       console.error("Supabase error:", supabaseError);

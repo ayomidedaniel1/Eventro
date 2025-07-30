@@ -1,25 +1,31 @@
-import EventCard from '@/components/EventCard';
-import SkeletonEventCard from '@/components/SkeletonEventCard';
+import EventCardWrapper from '@/components/EventCardWrapper';
+import EventListComponent from '@/components/EventListComponent';
+import FilterModalComponent from '@/components/FilterModalComponent';
+import FilterRowComponent from '@/components/FilterRowComponent';
+import HeaderComponent from '@/components/HeaderComponent';
+import SearchBarComponent from '@/components/SearchBarComponent';
 import { useEvents } from '@/hooks/useEvents';
 import { useEventStore } from '@/store/eventStore';
 import { EventInsert } from '@/types';
-import { Picker } from '@react-native-picker/picker';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import debounce from 'lodash/debounce';
 import { useCallback, useState } from 'react';
-import { FlatList, Modal, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 export default function EventsScreen() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDate, setFilterDate] = useState('');
   const [filterLocation, setFilterLocation] = useState('');
+  const [filterGenre, setFilterGenre] = useState('');
+  const [filterStatus, setFilterStatus] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const { data: events, isLoading, error, refetch } = useEvents({
     keyword: searchTerm,
     startDateTime: filterDate,
     city: filterLocation,
+    genre: filterGenre,
+    status: filterStatus,
   });
   const setEvents = useEventStore((state) => state.setEvents);
 
@@ -27,16 +33,20 @@ export default function EventsScreen() {
     setEvents(events);
   }
 
-  const debouncedSearch = useCallback(
-    debounce((text: string) => {
-      setSearchTerm(text);
-      refetch();
+  const debouncedRefetch = useCallback(
+    debounce((term: string, date: string, location: string, genre: string, status: string) => {
+      refetch({ keyword: term, startDateTime: date, city: location, genre, status });
     }, 300),
     [refetch]
   );
 
   const handleSearch = (text: string) => {
-    debouncedSearch(text);
+    setSearchTerm(text);
+    debouncedRefetch(text, filterDate, filterLocation, filterGenre, filterStatus);
+  };
+
+  const handleFilterChange = () => {
+    debouncedRefetch(searchTerm, filterDate, filterLocation, filterGenre, filterStatus);
   };
 
   const openFilterModal = () => setModalVisible(true);
@@ -50,94 +60,66 @@ export default function EventsScreen() {
   const clearFilters = () => {
     setFilterDate('');
     setFilterLocation('');
+    setFilterGenre('');
+    setFilterStatus('');
     refetch();
     closeFilterModal();
   };
 
   if (error) return <Text style={styles.error}>Error: {error.message}</Text>;
 
-  const renderEventCard = ({ item }: { item: EventInsert; }) => (
-    <TouchableOpacity
-      onPress={() => router.push({ pathname: '/events/[id]/detail', params: { id: item.id } })}
-      activeOpacity={0.8}
-    >
-      <EventCard event={item} />
-    </TouchableOpacity>
-  );
-
-  const EmptyComponent = () => (!isLoading && events?.length === 0 ? (
-    <Text style={styles.empty}>No events available.</Text>
-  ) : null);
-
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#2ACE99', '#B8FAD6']}
-        style={styles.header}
-      >
-        <Text style={styles.headerText}>Upcoming Events</Text>
-      </LinearGradient>
-      <View style={styles.filterContainer}>
-        <TextInput
-          style={styles.searchInput}
-          value={searchTerm}
-          onChangeText={handleSearch}
-          placeholder="Search events..."
-          placeholderTextColor="#888"
-        />
-        <TouchableOpacity style={styles.filterButton} onPress={openFilterModal}>
-          <Text style={styles.filterText}>Filter Events</Text>
-        </TouchableOpacity>
-      </View>
-      <FlatList
-        data={isLoading ? Array(4).fill({}) : events || []}
-        renderItem={({ item }) => (isLoading ? <SkeletonEventCard /> : renderEventCard({ item }))}
-        keyExtractor={(item, index) => item.id || index.toString()}
-        contentContainerStyle={styles.list}
-        ListEmptyComponent={EmptyComponent}
+      <HeaderComponent title="Upcoming Events" />
+      <SearchBarComponent
+        value={searchTerm}
+        onChangeText={handleSearch}
+        isLoading={isLoading}
+        placeholder="Search events..."
+        placeholderTextColor="#888"
       />
-      <Modal
+      <FilterRowComponent
+        filterDate={filterDate}
+        setFilterDate={(value) => {
+          setFilterDate(value);
+          handleFilterChange();
+        }}
+        filterLocation={filterLocation}
+        setFilterLocation={(value) => {
+          setFilterLocation(value);
+          handleFilterChange();
+        }}
+        filterGenre={filterGenre}
+        setFilterGenre={(value) => {
+          setFilterGenre(value);
+          handleFilterChange();
+        }}
+        filterStatus={filterStatus}
+        setFilterStatus={(value) => {
+          setFilterStatus(value);
+          handleFilterChange();
+        }}
+      />
+      <EventListComponent
+        data={isLoading ? Array(4).fill({}) : events || []}
+        renderItem={(item: EventInsert) => <EventCardWrapper item={item} router={router} />}
+        keyExtractor={(item: EventInsert, index: number) => item.id || index.toString()}
+        isLoading={isLoading}
+      />
+      <FilterModalComponent
         visible={modalVisible}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={closeFilterModal}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Filter Events</Text>
-            <Picker
-              selectedValue={filterDate}
-              onValueChange={(itemValue) => setFilterDate(itemValue)}
-              style={styles.picker}
-              itemStyle={styles.pickerItem}
-            >
-              <Picker.Item label="Any Date" value="" />
-              <Picker.Item label="Today" value={new Date().toISOString().split('T')[0]} />
-              <Picker.Item label="Tomorrow" value={new Date(Date.now() + 86400000).toISOString().split('T')[0]} />
-              <Picker.Item label="This Week" value={new Date(Date.now() + 604800000).toISOString().split('T')[0]} />
-            </Picker>
-            <Picker
-              selectedValue={filterLocation}
-              onValueChange={(itemValue) => setFilterLocation(itemValue)}
-              style={styles.picker}
-              itemStyle={styles.pickerItem}
-            >
-              <Picker.Item label="Any Location" value="" />
-              <Picker.Item label="Lagos" value="Lagos" />
-              <Picker.Item label="Abuja" value="Abuja" />
-              <Picker.Item label="Port Harcourt" value="Port Harcourt" />
-            </Picker>
-            <View style={styles.modalButtons}>
-              <TouchableOpacity style={[styles.modalButton, styles.clearButton]} onPress={clearFilters}>
-                <Text style={styles.modalButtonText}>Clear</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.modalButton, styles.applyButton]} onPress={applyFilters}>
-                <Text style={styles.modalButtonText}>Apply</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+        onClose={closeFilterModal}
+        filterDate={filterDate}
+        setFilterDate={setFilterDate}
+        filterLocation={filterLocation}
+        setFilterLocation={setFilterLocation}
+        filterGenre={filterGenre}
+        setFilterGenre={setFilterGenre}
+        filterStatus={filterStatus}
+        setFilterStatus={setFilterStatus}
+        onApply={applyFilters}
+        onClear={clearFilters}
+      />
     </View>
   );
 }
@@ -147,111 +129,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F9FFF9',
   },
-  header: {
-    paddingTop: (StatusBar.currentHeight ?? 0) + 10,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    elevation: 5,
-  },
-  headerText: {
-    fontSize: 24,
-    fontFamily: 'Poppins-ExtraBold',
-    color: '#fff',
-    textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.2)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 5,
-  },
-  list: {
-    padding: 15,
-    paddingTop: 10,
-  },
   error: {
     textAlign: 'center',
     marginTop: 60,
     color: 'red',
     fontFamily: 'Poppins-Regular',
-  },
-  empty: {
-    textAlign: 'center',
-    marginTop: 20,
-    color: '#888',
-    fontFamily: 'Poppins-Regular',
-  },
-  filterContainer: {
-    padding: 15,
-  },
-  searchInput: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 10,
-    fontFamily: 'Poppins-Regular',
-    color: '#333',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    marginBottom: 10,
-  },
-  filterButton: {
-    backgroundColor: '#2ACE99',
-    padding: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  filterText: {
-    color: '#fff',
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 16,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 20,
-    width: '80%',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontFamily: 'Poppins-SemiBold',
-    color: '#2ACE99',
-    textAlign: 'center',
-    marginBottom: 15,
-  },
-  picker: {
-    height: 150,
-    width: '100%',
-  },
-  pickerItem: {
-    fontFamily: 'Poppins-Regular',
-    color: '#333',
-  },
-  modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
-  },
-  modalButton: {
-    padding: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-    flex: 1,
-    marginHorizontal: 5,
-  },
-  clearButton: {
-    backgroundColor: '#FF6B6B',
-  },
-  applyButton: {
-    backgroundColor: '#2ACE99',
-  },
-  modalButtonText: {
-    color: '#fff',
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 16,
   },
 });
