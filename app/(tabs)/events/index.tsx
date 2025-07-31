@@ -29,7 +29,7 @@ export default function EventsScreen() {
   });
   const setEvents = useEventStore((state) => state.setEvents);
 
-  if (events && events.length > 0) {
+  if (events && events.length > 1) {
     setEvents(events);
   }
 
