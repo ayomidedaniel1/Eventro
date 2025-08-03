@@ -20,7 +20,7 @@ export function useEvents(
       throw supabaseError;
     }
 
-    console.log("Raw Supabase data:", supabaseEvents);
+    // console.log("Raw Supabase data:", supabaseEvents);
 
     if (!supabaseEvents || supabaseEvents.length === 0) {
       console.warn("No events found in Supabase with current filters");

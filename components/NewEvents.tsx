@@ -1,33 +1,45 @@
+import { EventInsert } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
+import { router } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-const NewEvents = () => {
+const NewEvents = ({ events }: { events: EventInsert[]; }) => {
+  const newEvents = [...events]
+    .filter(event => event.startDateTime && new Date(event.startDateTime) > new Date())
+    .sort((a, b) => new Date(b.startDateTime!).getTime() - new Date(a.startDateTime!).getTime())
+    .slice(0, 5);
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>New Event</Text>
-        <Text style={styles.navText}>See All</Text>
+        <Text style={styles.headerText}>New Events</Text>
+        <Pressable onPress={() => router.push('/events')} style={{ padding: 4 }}>
+          <Text style={styles.navText}>See All</Text>
+        </Pressable>
       </View>
 
-      <View style={styles.eventContainer}>
-        <Image
-          //  source={{ uri: event.image }} 
-          source={'@assets/images/icons/smile.png'}
-          style={styles.image}
-          contentFit='cover'
-        />
-
-        <View style={styles.dataContainer}>
-          <Text style={styles.date}>21 Mei 2025</Text>
-          <Text style={styles.title}>Indie Film Night</Text>
-          <View style={styles.locationContainer}>
-            <Ionicons name='location' size={12} color={'#2ACE99'} />
-            <Text style={styles.location}>Lagos</Text>
+      {newEvents.map((event) => (
+        <View key={event.id} style={styles.eventContainer}>
+          <Image
+            source={{ uri: event.image }}
+            style={styles.image}
+            contentFit="cover"
+          />
+          <View style={styles.dataContainer}>
+            <Text style={styles.date}>
+              {event.startDateTime ? new Date(event.startDateTime).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : '21 Mei 2025'}
+            </Text>
+            <Text style={styles.title}>{event.title}</Text>
+            <View style={styles.locationContainer}>
+              <Ionicons name="location" size={12} color="#2ACE99" />
+              <Text style={styles.location}>{event.city}</Text>
+            </View>
           </View>
         </View>
-      </View>
+      ))}
+
     </View>
   );
 };
@@ -37,14 +49,13 @@ export default NewEvents;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    marginVertical: 14,
+    marginTop: -120,
   },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: 18,
   },
   headerText: {
     fontFamily: 'Poppins-SemiBold',
@@ -52,14 +63,12 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     color: '#1D1D1D',
     textAlign: 'left',
-    letterSpacing: -0.02,
   },
   navText: {
     fontFamily: 'Poppins-Medium',
     fontSize: 14,
     lineHeight: 19,
-    letterSpacing: -0.02,
-    color: '#655CBB',
+    color: '#2ACE99',
   },
   eventContainer: {
     flexDirection: 'row',
@@ -68,7 +77,7 @@ const styles = StyleSheet.create({
     gap: 16,
     width: 335,
     height: 88,
-    marginBottom: 8,
+    marginBottom: 14,
   },
   image: {
     width: 64,
@@ -88,14 +97,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     fontSize: 14,
     lineHeight: 19,
-    letterSpacing: -0.02,
     color: '#655CBB',
   },
   title: {
     fontFamily: 'Poppins-Medium',
     fontSize: 14,
     lineHeight: 19,
-    letterSpacing: -0.02,
     color: '#1D1D1D',
   },
   locationContainer: {
@@ -107,7 +114,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     fontSize: 14,
     lineHeight: 19,
-    letterSpacing: -0.02,
     color: 'rgba(29, 29, 29, 0.5)',
   },
 });

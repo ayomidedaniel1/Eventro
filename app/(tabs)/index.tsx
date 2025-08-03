@@ -1,5 +1,6 @@
 import NewEvents from '@/components/NewEvents';
 import PopularEvents from '@/components/PopularEvents';
+import { useEvents } from '@/hooks/useEvents';
 import { useAuthStore } from '@/store/authStore';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
@@ -9,6 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
   const { user } = useAuthStore();
+  const { data: events = [] } = useEvents();
 
   useEffect(() => {
     if (!user) {
@@ -24,23 +26,21 @@ export default function HomeScreen() {
             Welcome Back
           </Text>
           <Text style={styles.name}>
-            Ayomide Daniel
+            {user?.user_metadata?.name || ''}
           </Text>
         </View>
 
-        <View style={styles.imgContainer}>
-          <Image
-            //  source={{ uri: event.image }} 
-            source={'@assets/images/icons/smile.png'}
-            style={styles.image}
-            contentFit='cover'
-          />
-        </View>
+        <Image
+          //  source={{ uri: user.image }} 
+          source={{ uri: '../../assets/images/icons/smile.png' }}
+          style={styles.image}
+          contentFit='cover'
+        />
       </View>
 
-      <PopularEvents />
+      <PopularEvents events={events} />
 
-      <NewEvents />
+      <NewEvents events={events} />
 
     </SafeAreaView>
   );
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingHorizontal: 14,
-    paddingTop: (StatusBar.currentHeight ?? 0) + 14,
+    paddingTop: (StatusBar.currentHeight ?? 0) + 4,
   },
   headerContainer: {
     flexDirection: 'row',
@@ -78,14 +78,12 @@ const styles = StyleSheet.create({
     letterSpacing: -0.02,
     color: '#1D1D1D',
   },
-  imgContainer: {
-    width: 45,
-    height: 45,
-    backgroundColor: '#D9D9D9',
-  },
   image: {
     width: 45,
     height: 45,
     backgroundColor: '#D9D9D9',
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: '#2ACE99',
   },
 });

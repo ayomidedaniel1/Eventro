@@ -1,36 +1,69 @@
+import { EventInsert } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-const PopularEvents = () => {
+const PopularEvents = ({ events }: { events: EventInsert[]; }) => {
+  // Function to calculate events popularity score since it doesn't exist on API
+  const calculatePopularityScore = (event: EventInsert): number => {
+    const now = new Date();
+    const updatedAt = new Date(event.updated_at);
+    const daysSinceUpdate = (now.getTime() - updatedAt.getTime()) / (1000 * 60 * 60 * 24);
+
+    const start = event.startDateTime ? new Date(event.startDateTime) : null;
+    const end = event.endDateTime ? new Date(event.endDateTime) : null;
+    const eventDurationInHours = start && end
+      ? (end.getTime() - start.getTime()) / (1000 * 60 * 60)
+      : 2;
+
+    return (daysSinceUpdate * 0.5) + (eventDurationInHours * 0.3);
+  };
+
+  // Sort by popularity score (lower score = more popular due to recent updates)
+  const popularEvents = [...events]
+    .filter(event => event.startDateTime && new Date(event.startDateTime) > new Date())
+    .sort((a, b) => calculatePopularityScore(a) - calculatePopularityScore(b))
+    .slice(0, 5);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>🔥 Popular Event</Text>
+      <Text style={styles.headerText}>🔥 Popular Events</Text>
 
-      <ScrollView showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingRight: 50 }} style={styles.eventsContainer}>
-        <View style={styles.eventCard}>
-          <View style={styles.imgContainer}>
-            <Image
-              //  source={{ uri: event.image }} 
-              source={'@assets/images/icons/smile.png'}
-              style={styles.image}
-              contentFit='cover'
-            />
-            <View style={styles.dateContainer}>
-              <Text style={styles.date}>20</Text>
-              <Text style={styles.month}>Mar</Text>
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingRight: 50 }}
+        style={styles.eventsContainer}
+        horizontal
+      >
+
+        {popularEvents.map((event) => (
+          <View key={event.id} style={styles.eventCard}>
+            <View style={styles.imgContainer}>
+              <Image
+                source={{ uri: event.image }}
+                style={styles.image}
+                contentFit="cover"
+              />
+              <View style={styles.dateContainer}>
+                <Text style={styles.date}>
+                  {event.startDate ? new Date(event.startDate).getDate() : '20'}
+                </Text>
+                <Text style={styles.month}>
+                  {event.startDate ? new Date(event.startDate).toLocaleString('default', { month: 'short' }) : 'Mar'}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.contentContainer}>
+              <Text style={styles.title}>{event.title}</Text>
+              <View style={styles.locationContainer}>
+                <Ionicons name="location" size={12} color="#2ACE99" />
+                <Text style={styles.location}>{event.city}</Text>
+              </View>
             </View>
           </View>
+        ))}
 
-          <View style={styles.contentContainer}>
-            <Text style={styles.title}>Design Talks 2025</Text>
-            <View style={styles.locationContainer}>
-              <Ionicons name='location' size={12} color={'#2ACE99'} />
-              <Text style={styles.location}>Lagos</Text>
-            </View>
-          </View>
-        </View>
       </ScrollView>
     </View>
   );
@@ -42,7 +75,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    marginVertical: 14,
+    marginTop: 14,
   },
   headerText: {
     fontFamily: 'Poppins-SemiBold',
@@ -52,12 +85,11 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   eventsContainer: {
-    marginVertical: 12,
+    marginTop: 16,
   },
   eventCard: {
     flexDirection: 'column',
     alignItems: 'flex-start',
-    padding: 0,
     isolation: 'isolate',
     width: 210,
     height: 248,
@@ -65,25 +97,25 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,
     borderColor: '#F4F4F4',
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    marginRight: 18,
   },
   imgContainer: {
     width: 210,
     height: 140,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
     position: 'relative',
   },
   image: {
     width: 210,
     height: 140,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
   dateContainer: {
     position: 'absolute',
-    // bottom:12,
     top: 82,
     left: 12,
     flexDirection: 'column',
@@ -111,7 +143,7 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     textAlign: 'center',
     letterSpacing: -0.02,
-    color: ' rgba(29, 29, 29, 0.5)',
+    color: 'rgba(29, 29, 29, 0.5)',
   },
   contentContainer: {
     flexDirection: 'column',

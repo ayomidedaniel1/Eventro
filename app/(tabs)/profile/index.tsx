@@ -1,12 +1,25 @@
-import HeaderComponent from '@/components/HeaderComponent';
+import ProfileActionsComponent from '@/components/ProfileActionsComponent';
+import ProfileHeaderComponent from '@/components/ProfileHeaderComponent';
+import UserStatsComponent from '@/components/UserStatsComponent';
 import { useAuthStore } from '@/store/authStore';
+import { useEventStore } from '@/store/eventStore';
 import { supabase } from '@/utils/supabase';
-import { router } from 'expo-router';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
+import { StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
   const { user, setAuth } = useAuthStore();
+  const router = useRouter();
+  const events = useEventStore((state) => state.events);
+
+  const userStats = {
+    attendedEvents: events.filter((e) => e.status === 'attended').length,
+    createdEvents: events.filter((e) => e.promoter === user?.id).length,
+  };
+
+
+  if (!user) return <Text style={styles.error}>Please log in</Text>;
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -16,14 +29,13 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderComponent title="Your Profile" />
-
-      <Text style={styles.label}>Email</Text>
-      <Text style={styles.value}>{user?.email}</Text>
-
-      <TouchableOpacity style={styles.button} onPress={handleLogout} activeOpacity={0.8}>
-        <Text style={styles.buttonText}>Logout</Text>
-      </TouchableOpacity>
+      <ProfileHeaderComponent
+        name={user.user_metadata?.full_name || 'Sly'}
+        location="Lagos, Nigeria"
+        avatar={user.user_metadata?.avatar_url || 'https://via.placeholder.com/150'}
+      />
+      <UserStatsComponent stats={userStats} />
+      <ProfileActionsComponent onLogout={handleLogout} onEdit={() => router.push('/profile/settings')} />
     </SafeAreaView>
   );
 }
@@ -31,37 +43,13 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
+    backgroundColor: '#F9FFF9',
+    padding: 15,
   },
-  title: {
-    fontSize: 24,
-    color: '#2ACE99',
-    fontFamily: 'Poppins-SemiBold',
-    marginBottom: 32,
-  },
-  label: {
-    fontSize: 14,
-    color: '#999',
+  error: {
+    textAlign: 'center',
+    marginTop: 60,
+    color: 'red',
     fontFamily: 'Poppins-Regular',
-    marginBottom: 4,
-  },
-  value: {
-    fontSize: 16,
-    color: '#000',
-    fontFamily: 'Poppins-Medium',
-    marginBottom: 24,
-  },
-  button: {
-    backgroundColor: '#2ACE99',
-    paddingVertical: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 16,
   },
 });
