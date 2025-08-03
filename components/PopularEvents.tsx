@@ -26,7 +26,7 @@ const PopularEvents = () => {
           <View style={styles.contentContainer}>
             <Text style={styles.title}>Design Talks 2025</Text>
             <View style={styles.locationContainer}>
-              <Ionicons name='location' size={12} color={'#523FFF'} />
+              <Ionicons name='location' size={12} color={'#2ACE99'} />
               <Text style={styles.location}>Lagos</Text>
             </View>
           </View>

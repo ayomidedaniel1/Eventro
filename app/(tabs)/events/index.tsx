@@ -71,6 +71,7 @@ export default function EventsScreen() {
   return (
     <View style={styles.container}>
       <HeaderComponent title="Upcoming Events" />
+
       <SearchBarComponent
         value={searchTerm}
         onChangeText={handleSearch}
@@ -78,6 +79,7 @@ export default function EventsScreen() {
         placeholder="Search events..."
         placeholderTextColor="#888"
       />
+
       <FilterRowComponent
         filterDate={filterDate}
         setFilterDate={(value) => {
@@ -100,12 +102,14 @@ export default function EventsScreen() {
           handleFilterChange();
         }}
       />
+
       <EventListComponent
         data={isLoading ? Array(4).fill({}) : events || []}
         renderItem={(item: EventInsert) => <EventCardWrapper item={item} router={router} />}
         keyExtractor={(item: EventInsert, index: number) => item.id || index.toString()}
         isLoading={isLoading}
       />
+
       <FilterModalComponent
         visible={modalVisible}
         onClose={closeFilterModal}

@@ -23,7 +23,7 @@ const NewEvents = () => {
           <Text style={styles.date}>21 Mei 2025</Text>
           <Text style={styles.title}>Indie Film Night</Text>
           <View style={styles.locationContainer}>
-            <Ionicons name='location' size={12} color={'#523FFF'} />
+            <Ionicons name='location' size={12} color={'#2ACE99'} />
             <Text style={styles.location}>Lagos</Text>
           </View>
         </View>

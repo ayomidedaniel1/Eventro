@@ -175,7 +175,7 @@ export default function EventsDetailScreen() {
                 onPress={props.onPress}
                 disabled={props.disabled}
               >
-                <Text style={styles.linkText}>Buy Ticket - ${priceRange.min}</Text>
+                <Text style={styles.linkText}>Book Ticket - ${priceRange.min}</Text>
               </TouchableOpacity>
             )}
           />
