@@ -10,7 +10,8 @@ import { EventInsert } from '@/types';
 import { useRouter } from 'expo-router';
 import debounce from 'lodash/debounce';
 import { useCallback, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function EventsScreen() {
   const router = useRouter();
@@ -69,7 +70,7 @@ export default function EventsScreen() {
   if (error) return <Text style={styles.error}>Error: {error.message}</Text>;
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <HeaderComponent title="Upcoming Events" />
 
       <SearchBarComponent
@@ -124,7 +125,7 @@ export default function EventsScreen() {
         onApply={applyFilters}
         onClear={clearFilters}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

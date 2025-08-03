@@ -2,7 +2,8 @@ import HeaderComponent from '@/components/HeaderComponent';
 import { useAuthStore } from '@/store/authStore';
 import { supabase } from '@/utils/supabase';
 import { router } from 'expo-router';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
   const { user, setAuth } = useAuthStore();
@@ -14,7 +15,7 @@ export default function ProfileScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <HeaderComponent title="Your Profile" />
 
       <Text style={styles.label}>Email</Text>
@@ -23,7 +24,7 @@ export default function ProfileScreen() {
       <TouchableOpacity style={styles.button} onPress={handleLogout} activeOpacity={0.8}>
         <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 
