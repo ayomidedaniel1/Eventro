@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    marginTop: 14,
+    marginTop: 36,
   },
   headerText: {
     fontFamily: 'Poppins-SemiBold',
@@ -148,10 +148,11 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexDirection: 'column',
     alignItems: 'flex-start',
+    justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 16,
-    zIndex: 1,
+    paddingTop: 12,
+    paddingBottom: 16,
+    flex: 1,
   },
   title: {
     fontFamily: 'Poppins-Medium',

@@ -49,7 +49,7 @@ export default NewEvents;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: -120,
+    marginTop: 36,
   },
   headerContainer: {
     flexDirection: 'row',
