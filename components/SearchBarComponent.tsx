@@ -1,4 +1,5 @@
 import { SearchBarProps } from '@/types';
+import { Ionicons } from '@expo/vector-icons';
 import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
 
 export default function SearchBarComponent({
@@ -10,6 +11,8 @@ export default function SearchBarComponent({
 }: SearchBarProps) {
   return (
     <View style={styles.searchWrapper}>
+      <Ionicons name="search" size={20} color="#2ACE99" />
+
       <TextInput
         style={styles.searchInput}
         value={value}
@@ -17,7 +20,8 @@ export default function SearchBarComponent({
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}
       />
-      {isLoading && <ActivityIndicator size="small" color="#2ACE99" style={styles.loadingIndicator} />}
+
+      {isLoading && <ActivityIndicator size="small" color="#2ACE99" />}
     </View>
   );
 }
@@ -26,19 +30,23 @@ const styles = StyleSheet.create({
   searchWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginVertical: 10,
+    marginHorizontal: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    gap: 11,
+    height: 45,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#EBEBEB',
+    borderRadius: 14,
   },
   searchInput: {
     flex: 1,
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 10,
+    height: 45,
     fontFamily: 'Poppins-Regular',
-    color: '#333',
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  loadingIndicator: {
-    marginLeft: 10,
+    fontSize: 14,
+    lineHeight: 19,
+    color: '#C4C4C4',
   },
 });

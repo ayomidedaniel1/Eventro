@@ -71,7 +71,7 @@ export default function EventsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderComponent title="Upcoming Events" />
+      <HeaderComponent title="Events" />
 
       <SearchBarComponent
         value={searchTerm}

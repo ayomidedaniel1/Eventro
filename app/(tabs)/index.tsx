@@ -18,8 +18,6 @@ export default function HomeScreen() {
     if (!user) {
       router.replace('/login');
     } else {
-      console.log('User loaded:', user);
-      console.log('Events loaded:', events);
       setEvents(events);
     }
   }, [user, events, setEvents]);

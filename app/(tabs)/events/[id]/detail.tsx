@@ -24,9 +24,6 @@ export default function EventsDetailScreen() {
   const { user } = useAuthStore();
   const router = useRouter();
 
-  console.log('Navigated to event with id:', id);
-  console.log('All events in store:', events);
-
   console.log('Found event:', event);
 
   const [priceRange, setPriceRange] = useState<TicketmasterPriceRange | null>(null);
