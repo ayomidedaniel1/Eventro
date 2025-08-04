@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingHorizontal: 14,
-    paddingTop: (StatusBar.currentHeight ?? 0) - 16,
+    paddingTop: (StatusBar.currentHeight ?? 0) - 18,
   },
   headerContainer: {
     flexDirection: 'row',

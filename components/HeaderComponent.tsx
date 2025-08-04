@@ -15,7 +15,7 @@ export default function HeaderComponent({ title }: HeaderProps) {
 
 const styles = StyleSheet.create({
   header: {
-    paddingTop: (StatusBar.currentHeight ?? 0) + 10,
+    paddingTop: (StatusBar.currentHeight ?? 0) - 18,
     paddingHorizontal: 20,
     paddingBottom: 20,
     borderBottomLeftRadius: 20,
