@@ -14,6 +14,7 @@ export default function FilterRowComponent({
 }: FilterRowProps) {
   return (
     <View style={styles.filterRow}>
+
       <Picker
         selectedValue={filterDate}
         onValueChange={setFilterDate}
@@ -25,6 +26,7 @@ export default function FilterRowComponent({
         <Picker.Item label="Tomorrow" value={new Date(Date.now() + 86400000).toISOString().split('T')[0]} />
         <Picker.Item label="This Week" value={new Date(Date.now() + 604800000).toISOString().split('T')[0]} />
       </Picker>
+
       <Picker
         selectedValue={filterLocation}
         onValueChange={setFilterLocation}
@@ -38,6 +40,7 @@ export default function FilterRowComponent({
         <Picker.Item label="London" value="London" />
         <Picker.Item label="Bronx" value="Bronx" />
       </Picker>
+
       <Picker
         selectedValue={filterGenre}
         onValueChange={setFilterGenre}
@@ -53,6 +56,7 @@ export default function FilterRowComponent({
         <Picker.Item label="Baseball" value="Baseball" />
         <Picker.Item label="Performance Art" value="Performance Art" />
       </Picker>
+
       <Picker
         selectedValue={filterStatus}
         onValueChange={setFilterStatus}
@@ -63,6 +67,7 @@ export default function FilterRowComponent({
         <Picker.Item label="Onsale" value="onsale" />
         <Picker.Item label="Offsale" value="offsale" />
       </Picker>
+
     </View>
   );
 }

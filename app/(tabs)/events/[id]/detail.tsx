@@ -1,9 +1,8 @@
-import HeaderComponent from '@/components/HeaderComponent';
 import { useAuthStore } from '@/store/authStore';
 import { useEventStore } from '@/store/eventStore';
 import { EventInsert, TicketmasterPriceRange } from '@/types';
 import { supabase } from '@/utils/supabase';
-import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { PayWithFlutterwave } from 'flutterwave-react-native';
 import { useEffect, useState } from 'react';
@@ -131,30 +130,29 @@ export default function EventsDetailScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
-      <Snackbar
-        visible={snackbarVisible}
-        onDismiss={onDismissSnackbar}
-        duration={3000}
-        style={styles.snackbar}
-        action={{
-          label: 'Dismiss',
-          onPress: onDismissSnackbar,
-        }}
-      >
-        {snackbarMessage}
-      </Snackbar>
 
-      <HeaderComponent title={event.title} />
-      <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-        <Ionicons name="arrow-back" size={24} color="#fff" />
+      <TouchableOpacity onPress={() => router.back()} style={styles.backButton} activeOpacity={0.7}>
+        <Ionicons name="arrow-back" size={30} color="#fff" />
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => Linking.openURL(event.url!)} style={styles.shareButton} activeOpacity={0.7}>
+        <FontAwesome name="share-square-o" size={30} color="#fff" />
       </TouchableOpacity>
 
       <Image source={{ uri: event.image }} style={styles.image} />
+
       <View style={styles.content}>
         <Text style={styles.title}>{event.title}</Text>
-        <Text style={styles.detail}>Venue: {event.venue || 'N/A'}, {event.city || 'N/A'}</Text>
-        <Text style={styles.detail}>Date: {event.startDate || event.startDateTime || 'TBA'}</Text>
+        <Text style={styles.segmentText}>{event.segment}</Text>
+        <Text style={styles.sale}>• {event.status}</Text>
+
+        <Text style={styles.about}>About</Text>
+        <Text style={styles.detail}>
+          {event.genre || ''} • {event.venue || ''} • {event.startDate || event.startDateTime || 'TBA'}
+        </Text>
         <Text style={styles.description}>{event.description || 'No description available'}</Text>
+        <View style={styles.line} />
+
         {loading ? (
           <Text style={styles.detail}>Loading price...</Text>
         ) : error ? (
@@ -183,16 +181,23 @@ export default function EventsDetailScreen() {
           />
         ) : null}
 
-        {event.url && (
-          <TouchableOpacity onPress={() => Linking.openURL(event.url!)} style={styles.linkButton}>
-            <Text style={styles.linkText}>Go to event details</Text>
-          </TouchableOpacity>
-        )}
-
         <TouchableOpacity onPress={navigateToChat} style={[styles.linkButton, { marginTop: 15 }]}>
           <Text style={styles.linkText}>Chat with Support</Text>
         </TouchableOpacity>
       </View>
+
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={onDismissSnackbar}
+        duration={3000}
+        style={styles.snackbar}
+        action={{
+          label: 'Dismiss',
+          onPress: onDismissSnackbar,
+        }}
+      >
+        {snackbarMessage}
+      </Snackbar>
     </ScrollView>
   );
 }
@@ -200,39 +205,84 @@ export default function EventsDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FFF9',
+    backgroundColor: '#FFFFFF',
+    position: 'relative',
   },
   backButton: {
     position: 'absolute',
-    left: 10,
-    top: 50,
+    left: 20,
+    top: 59,
+    width: 30,
+    height: 30,
+    zIndex: 10,
+  },
+  shareButton: {
+    position: 'absolute',
+    right: 20,
+    top: 59,
+    width: 30,
+    height: 30,
+    zIndex: 10,
   },
   image: {
     width: '100%',
-    height: 250,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    height: 234,
   },
   content: {
-    padding: 20,
+    padding: 14,
   },
   title: {
-    fontSize: 22,
+    fontSize: 20,
+    lineHeight: 28,
     fontFamily: 'Poppins-SemiBold',
-    color: '#2ACE99',
-    marginBottom: 10,
+    color: '#1C1B19',
+    marginBottom: 7,
+  },
+  segmentText: {
+    height: 20,
+    paddingHorizontal: 8,
+    backgroundColor: '#ECF1FF',
+    borderRadius: 2,
+    marginBottom: 3,
+    fontFamily: 'Poppins-Regular',
+    fontSize: 12,
+    lineHeight: 18,
+    color: '#1C1B19',
+  },
+  sale: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 12,
+    lineHeight: 18,
+    color: '#1C1B19',
+  },
+  about: {
+    fontFamily: 'Poppins-Medium',
+    fontSize: 18,
+    lineHeight: 27,
+    color: '#1C1B19',
+    marginTop: 14,
+    marginBottom: 7,
   },
   detail: {
-    fontSize: 16,
+    fontSize: 12,
+    lineHeight: 18,
     fontFamily: 'Poppins-Regular',
-    color: '#333',
-    marginBottom: 5,
+    color: '#6A6A6A',
+    marginBottom: 12,
   },
   description: {
     fontSize: 14,
     fontFamily: 'Poppins-Regular',
     color: '#666',
     marginBottom: 15,
+  },
+  line: {
+    width: 1000,
+    height: 0,
+    borderWidth: 0.5,
+    borderColor: '#C4C4C4',
+    marginLeft: -200,
+    marginBottom: 40,
   },
   linkButton: {
     backgroundColor: '#2ACE99',
