@@ -140,7 +140,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     textAlign: 'center',
-    letterSpacing: -0.02,
     color: '#1D1D1D',
   },
   month: {
@@ -148,7 +147,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     textAlign: 'center',
-    letterSpacing: -0.02,
     color: 'rgba(29, 29, 29, 0.5)',
   },
   contentContainer: {
@@ -165,7 +163,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 19,
     alignItems: 'center',
-    letterSpacing: -0.02,
     color: '#1D1D1D',
   },
   locationContainer: {
@@ -179,7 +176,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 19,
     alignItems: 'center',
-    letterSpacing: -0.02,
     color: 'rgba(29, 29, 29, 0.5)',
   },
 });

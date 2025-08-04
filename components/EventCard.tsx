@@ -13,18 +13,23 @@ export default function EventCard({ event }: EventCardProps) {
         />
         <View style={styles.dateContainer}>
           <Text style={styles.date}>
-            {event.startDate || event.startDateTime || 'TBA'}
+            {event.startDate ? new Date(event.startDate).getDate() : '20'}
+          </Text>
+          <Text style={styles.month}>
+            {event.startDate ? new Date(event.startDate).toLocaleString('default', { month: 'short' }) : 'Mar'}
           </Text>
         </View>
       </View>
 
-      <Text style={styles.title}>{event.title}</Text>
+      <View style={styles.contentContainer}>
+        <Text style={styles.title}>{event.title}</Text>
 
-      <View style={styles.locationContainer}>
-        <Ionicons name='location' size={12} color={'#2ACE99'} />
-        <Text style={styles.location}>
-          {event.venue}, {event.city}
-        </Text>
+        <View style={styles.locationContainer}>
+          <Ionicons name='location' size={12} color={'#2ACE99'} />
+          <Text style={styles.location}>
+            {event.venue}, {event.city}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -32,40 +37,41 @@ export default function EventCard({ event }: EventCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#DCFDE7', //#FFFFFF
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
-    marginBottom: 10,
+    marginBottom: 24,
     flexDirection: 'column',
     alignItems: 'flex-start',
     isolation: 'isolate',
-    width: 335,
+    width: '100%',
     height: 268,
     borderColor: '#F4F4F4',
     borderWidth: 1,
   },
   imgContainer: {
-    width: 210,
-    height: 140,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    width: '100%',
+    height: 160,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
     position: 'relative',
   },
   image: {
     width: '100%',
     height: 160,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
   dateContainer: {
     position: 'absolute',
-    // bottom:12,
-    top: 82,
+    top: 100,
     left: 12,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 7,
+    padding: 6,
     gap: 2,
+    width: 46,
+    height: 46,
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
     zIndex: 2,
@@ -75,8 +81,23 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     textAlign: 'center',
-    letterSpacing: -0.02,
     color: '#1D1D1D',
+  },
+  month: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 12,
+    lineHeight: 16,
+    textAlign: 'center',
+    color: 'rgba(29, 29, 29, 0.5)',
+  },
+  contentContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-end',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    gap: 16,
+    flex: 1,
   },
   title: {
     fontSize: 14,
