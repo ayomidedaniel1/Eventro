@@ -4,8 +4,9 @@ import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React from 'react';
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import NewEventSkeleton from './skeletons/NewEventSkeleton';
 
-const NewEvents = ({ events }: { events: EventInsert[]; }) => {
+const NewEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
   const newEvents = [...events]
     .filter(event => event.startDateTime && new Date(event.startDateTime) > new Date())
     .sort((a, b) => new Date(b.startDateTime!).getTime() - new Date(a.startDateTime!).getTime())
@@ -20,30 +21,38 @@ const NewEvents = ({ events }: { events: EventInsert[]; }) => {
         </Pressable>
       </View>
 
-      {newEvents.map((event) => (
-        <TouchableOpacity
-          onPress={() => router.push(`/events/${event.id}/detail`)}
-          activeOpacity={0.8}
-          key={event.id}
-          style={styles.eventContainer}
-        >
-          <Image
-            source={{ uri: event.image }}
-            style={styles.image}
-            contentFit="cover"
-          />
-          <View style={styles.dataContainer}>
-            <Text style={styles.date}>
-              {event.startDateTime ? new Date(event.startDateTime).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : '21 Mei 2025'}
-            </Text>
-            <Text style={styles.title}>{event.title}</Text>
-            <View style={styles.locationContainer}>
-              <Ionicons name="location" size={12} color="#2ACE99" />
-              <Text style={styles.location}>{event.city}</Text>
+      {isLoading
+        ? Array(5)
+          .fill(null)
+          .map((_, index) => (
+            <NewEventSkeleton key={`skeleton-${index}`} />
+          ))
+        : newEvents.map((event) => (
+          <TouchableOpacity
+            onPress={() => router.push(`/events/${event.id}/detail`)}
+            activeOpacity={0.8}
+            key={event.id}
+            style={styles.eventContainer}
+          >
+            <Image
+              source={{ uri: event.image || '../../assets/images/icons/smile.png' }}
+              style={styles.image}
+              contentFit="cover"
+            />
+            <View style={styles.dataContainer}>
+              <Text style={styles.date}>
+                {event.startDateTime
+                  ? new Date(event.startDateTime).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
+                  : '21 Mei 2025'}
+              </Text>
+              <Text style={styles.title}>{event.title}</Text>
+              <View style={styles.locationContainer}>
+                <Ionicons name="location" size={12} color="#2ACE99" />
+                <Text style={styles.location}>{event.city}</Text>
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
-      ))}
+          </TouchableOpacity>
+        ))}
 
     </View>
   );

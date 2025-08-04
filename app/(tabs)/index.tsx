@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
   const { user } = useAuthStore();
-  const { data: events = [] } = useEvents();
+  const { data: events = [], isLoading } = useEvents();
   const setEvents = useEventStore((state) => state.setEvents);
 
   useEffect(() => {
@@ -44,9 +44,9 @@ export default function HomeScreen() {
           />
         </View>
 
-        <PopularEvents events={events} />
+        <PopularEvents events={events} isLoading={isLoading} />
 
-        <NewEvents events={events} />
+        <NewEvents events={events} isLoading={isLoading} />
 
       </ScrollView>
     </SafeAreaView>

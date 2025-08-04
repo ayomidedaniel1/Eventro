@@ -10,7 +10,7 @@ import { EventInsert } from '@/types';
 import { useRouter } from 'expo-router';
 import debounce from 'lodash/debounce';
 import { useCallback, useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function EventsScreen() {
@@ -71,60 +71,66 @@ export default function EventsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderComponent title="Events" />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View>
 
-      <SearchBarComponent
-        value={searchTerm}
-        onChangeText={handleSearch}
-        isLoading={isLoading}
-        placeholder="Search events..."
-        placeholderTextColor="#888"
-      />
+          <HeaderComponent title="Events" />
 
-      <FilterRowComponent
-        filterDate={filterDate}
-        setFilterDate={(value) => {
-          setFilterDate(value);
-          handleFilterChange();
-        }}
-        filterLocation={filterLocation}
-        setFilterLocation={(value) => {
-          setFilterLocation(value);
-          handleFilterChange();
-        }}
-        filterGenre={filterGenre}
-        setFilterGenre={(value) => {
-          setFilterGenre(value);
-          handleFilterChange();
-        }}
-        filterStatus={filterStatus}
-        setFilterStatus={(value) => {
-          setFilterStatus(value);
-          handleFilterChange();
-        }}
-      />
+          <SearchBarComponent
+            value={searchTerm}
+            onChangeText={handleSearch}
+            isLoading={isLoading}
+            placeholder="Search events..."
+            placeholderTextColor="#888"
+          />
 
-      <EventListComponent
-        data={isLoading ? Array(4).fill({}) : events || []}
-        renderItem={(item: EventInsert) => <EventCardWrapper item={item} router={router} />}
-        keyExtractor={(item: EventInsert, index: number) => item.id || index.toString()}
-        isLoading={isLoading}
-      />
+          <FilterRowComponent
+            filterDate={filterDate}
+            setFilterDate={(value) => {
+              setFilterDate(value);
+              handleFilterChange();
+            }}
+            filterLocation={filterLocation}
+            setFilterLocation={(value) => {
+              setFilterLocation(value);
+              handleFilterChange();
+            }}
+            filterGenre={filterGenre}
+            setFilterGenre={(value) => {
+              setFilterGenre(value);
+              handleFilterChange();
+            }}
+            filterStatus={filterStatus}
+            setFilterStatus={(value) => {
+              setFilterStatus(value);
+              handleFilterChange();
+            }}
+          />
 
-      <FilterModalComponent
-        visible={modalVisible}
-        onClose={closeFilterModal}
-        filterDate={filterDate}
-        setFilterDate={setFilterDate}
-        filterLocation={filterLocation}
-        setFilterLocation={setFilterLocation}
-        filterGenre={filterGenre}
-        setFilterGenre={setFilterGenre}
-        filterStatus={filterStatus}
-        setFilterStatus={setFilterStatus}
-        onApply={applyFilters}
-        onClear={clearFilters}
-      />
+          <EventListComponent
+            data={isLoading ? Array(4).fill({}) : events || []}
+            renderItem={(item: EventInsert) => <EventCardWrapper item={item} router={router} />}
+            keyExtractor={(item: EventInsert, index: number) => item.id || index.toString()}
+            isLoading={isLoading}
+          />
+
+          <FilterModalComponent
+            visible={modalVisible}
+            onClose={closeFilterModal}
+            filterDate={filterDate}
+            setFilterDate={setFilterDate}
+            filterLocation={filterLocation}
+            setFilterLocation={setFilterLocation}
+            filterGenre={filterGenre}
+            setFilterGenre={setFilterGenre}
+            filterStatus={filterStatus}
+            setFilterStatus={setFilterStatus}
+            onApply={applyFilters}
+            onClear={clearFilters}
+          />
+
+        </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }

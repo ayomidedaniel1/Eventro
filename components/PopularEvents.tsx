@@ -4,8 +4,9 @@ import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import PopularEventSkeleton from './skeletons/PopularEventSkeleton';
 
-const PopularEvents = ({ events }: { events: EventInsert[]; }) => {
+const PopularEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
   // Function to calculate events popularity score since it doesn't exist on API
   const calculatePopularityScore = (event: EventInsert): number => {
     const now = new Date();
@@ -38,37 +39,45 @@ const PopularEvents = ({ events }: { events: EventInsert[]; }) => {
         horizontal
       >
 
-        {popularEvents.map((event) => (
-          <TouchableOpacity
-            onPress={() => router.push(`/events/${event.id}/detail`)}
-            activeOpacity={0.8}
-            key={event.id}
-            style={styles.eventCard}
-          >
-            <View style={styles.imgContainer}>
-              <Image
-                source={{ uri: event.image }}
-                style={styles.image}
-                contentFit="cover"
-              />
-              <View style={styles.dateContainer}>
-                <Text style={styles.date}>
-                  {event.startDate ? new Date(event.startDate).getDate() : '20'}
-                </Text>
-                <Text style={styles.month}>
-                  {event.startDate ? new Date(event.startDate).toLocaleString('default', { month: 'short' }) : 'Mar'}
-                </Text>
+        {isLoading
+          ? Array(5)
+            .fill(null)
+            .map((_, index) => (
+              <PopularEventSkeleton key={`skeleton-${index}`} />
+            ))
+          : popularEvents.map((event) => (
+            <TouchableOpacity
+              onPress={() => router.push(`/events/${event.id}/detail`)}
+              activeOpacity={0.8}
+              key={event.id}
+              style={styles.eventCard}
+            >
+              <View style={styles.imgContainer}>
+                <Image
+                  source={{ uri: event.image || '../../assets/images/icons/smile.png' }}
+                  style={styles.image}
+                  contentFit="cover"
+                />
+                <View style={styles.dateContainer}>
+                  <Text style={styles.date}>
+                    {event.startDate ? new Date(event.startDate).getDate() : '20'}
+                  </Text>
+                  <Text style={styles.month}>
+                    {event.startDate
+                      ? new Date(event.startDate).toLocaleString('default', { month: 'short' })
+                      : 'Mar'}
+                  </Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.contentContainer}>
-              <Text style={styles.title}>{event.title}</Text>
-              <View style={styles.locationContainer}>
-                <Ionicons name="location" size={12} color="#2ACE99" />
-                <Text style={styles.location}>{event.city}</Text>
+              <View style={styles.contentContainer}>
+                <Text style={styles.title}>{event.title}</Text>
+                <View style={styles.locationContainer}>
+                  <Ionicons name="location" size={12} color="#2ACE99" />
+                  <Text style={styles.location}>{event.city}</Text>
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
-        ))}
+            </TouchableOpacity>
+          ))}
 
       </ScrollView>
     </View>
