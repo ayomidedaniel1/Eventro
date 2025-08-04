@@ -11,10 +11,9 @@ export default function EventListComponent({
   const EmptyComponent = () => (!isLoading && data.length === 0 ? (
     <Text style={styles.empty}>No events available.</Text>
   ) : null);
-  const loading = true;
 
   const SkeletonComponent = () => (
-    loading ? (
+    isLoading ? (
       Array(4)
         .fill(null)
         .map((_, index) => (

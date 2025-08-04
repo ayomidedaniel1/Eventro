@@ -14,7 +14,7 @@ export default function NewEventSkeleton() {
 
   const fade = fadeValue.interpolate({
     inputRange: [0, 0.5, 1],
-    outputRange: [0.3, 0.7, 0.3], // Fade from 30% to 70% opacity and back
+    outputRange: [0.3, 0.7, 0.3],
   });
 
   return (
