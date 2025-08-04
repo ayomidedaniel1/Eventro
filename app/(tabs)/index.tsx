@@ -2,6 +2,7 @@ import NewEvents from '@/components/NewEvents';
 import PopularEvents from '@/components/PopularEvents';
 import { useEvents } from '@/hooks/useEvents';
 import { useAuthStore } from '@/store/authStore';
+import { useEventStore } from '@/store/eventStore';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
@@ -11,12 +12,17 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function HomeScreen() {
   const { user } = useAuthStore();
   const { data: events = [] } = useEvents();
+  const setEvents = useEventStore((state) => state.setEvents);
 
   useEffect(() => {
     if (!user) {
       router.replace('/login');
+    } else {
+      console.log('User loaded:', user);
+      console.log('Events loaded:', events);
+      setEvents(events);
     }
-  }, [user]);
+  }, [user, events, setEvents]);
 
   return (
     <SafeAreaView style={styles.container}>

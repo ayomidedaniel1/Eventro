@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const NewEvents = ({ events }: { events: EventInsert[]; }) => {
   const newEvents = [...events]
@@ -21,7 +21,12 @@ const NewEvents = ({ events }: { events: EventInsert[]; }) => {
       </View>
 
       {newEvents.map((event) => (
-        <View key={event.id} style={styles.eventContainer}>
+        <TouchableOpacity
+          onPress={() => router.push(`/events/${event.id}/detail`)}
+          activeOpacity={0.8}
+          key={event.id}
+          style={styles.eventContainer}
+        >
           <Image
             source={{ uri: event.image }}
             style={styles.image}
@@ -37,7 +42,7 @@ const NewEvents = ({ events }: { events: EventInsert[]; }) => {
               <Text style={styles.location}>{event.city}</Text>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       ))}
 
     </View>
