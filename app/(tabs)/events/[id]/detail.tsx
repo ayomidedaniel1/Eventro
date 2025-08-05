@@ -84,7 +84,7 @@ export default function EventsDetailScreen() {
   if (!event || !user) {
     return (
       <View style={styles.errorContainer}>
-        <Text style={styles.error}>Event or user not found</Text>
+        <Text style={styles.error}>Event not found</Text>
       </View>
     );
   }
