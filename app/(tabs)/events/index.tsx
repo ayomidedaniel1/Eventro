@@ -1,6 +1,5 @@
 import EventCardWrapper from '@/components/EventCardWrapper';
 import EventListComponent from '@/components/EventListComponent';
-import FilterModalComponent from '@/components/FilterModalComponent';
 import FilterRowComponent from '@/components/FilterRowComponent';
 import HeaderComponent from '@/components/HeaderComponent';
 import SearchBarComponent from '@/components/SearchBarComponent';
@@ -20,7 +19,6 @@ export default function EventsScreen() {
   const [filterLocation, setFilterLocation] = useState('');
   const [filterGenre, setFilterGenre] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
   const { data: events, isLoading, error, refetch } = useEvents({
     keyword: searchTerm,
     startDateTime: filterDate,
@@ -48,23 +46,6 @@ export default function EventsScreen() {
 
   const handleFilterChange = () => {
     debouncedRefetch();
-  };
-
-  const openFilterModal = () => setModalVisible(true);
-  const closeFilterModal = () => setModalVisible(false);
-
-  const applyFilters = () => {
-    refetch();
-    closeFilterModal();
-  };
-
-  const clearFilters = () => {
-    setFilterDate('');
-    setFilterLocation('');
-    setFilterGenre('');
-    setFilterStatus('');
-    refetch();
-    closeFilterModal();
   };
 
   if (error) return <Text style={styles.error}>Error: {error.message}</Text>;
@@ -112,21 +93,6 @@ export default function EventsScreen() {
             renderItem={(item: EventInsert) => <EventCardWrapper item={item} router={router} />}
             keyExtractor={(item: EventInsert, index: number) => item.id || index.toString()}
             isLoading={isLoading}
-          />
-
-          <FilterModalComponent
-            visible={modalVisible}
-            onClose={closeFilterModal}
-            filterDate={filterDate}
-            setFilterDate={setFilterDate}
-            filterLocation={filterLocation}
-            setFilterLocation={setFilterLocation}
-            filterGenre={filterGenre}
-            setFilterGenre={setFilterGenre}
-            filterStatus={filterStatus}
-            setFilterStatus={setFilterStatus}
-            onApply={applyFilters}
-            onClear={clearFilters}
           />
 
         </View>
