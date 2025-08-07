@@ -76,11 +76,9 @@ const styles = StyleSheet.create({
   filterRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
   },
   picker: {
     flex: 1,
-    height: 150,
     marginHorizontal: 5,
   },
   pickerItem: {
