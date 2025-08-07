@@ -18,54 +18,54 @@ export default function FilterRowComponent({
       <Picker
         selectedValue={filterDate}
         onValueChange={setFilterDate}
-        style={styles.picker}
-        itemStyle={styles.pickerItem}
+        style={{ flex: 1 }}
+        mode='dropdown'
       >
-        <Picker.Item label="Any Date" value="" />
-        <Picker.Item label="Today" value={new Date().toISOString().split('T')[0]} />
-        <Picker.Item label="Tomorrow" value={new Date(Date.now() + 86400000).toISOString().split('T')[0]} />
-        <Picker.Item label="This Week" value={new Date(Date.now() + 604800000).toISOString().split('T')[0]} />
+        <Picker.Item label="Date" value="" style={styles.picker} />
+        <Picker.Item label="Today" value={new Date().toISOString().split('T')[0]} style={styles.picker} />
+        <Picker.Item label="Tomorrow" value={new Date(Date.now() + 86400000).toISOString().split('T')[0]} style={styles.picker} />
+        <Picker.Item label="This Week" value={new Date(Date.now() + 604800000).toISOString().split('T')[0]} style={styles.picker} />
       </Picker>
 
       <Picker
         selectedValue={filterLocation}
         onValueChange={setFilterLocation}
-        style={styles.picker}
-        itemStyle={styles.pickerItem}
+        style={{ flex: 1 }}
+        mode='dropdown'
       >
-        <Picker.Item label="Any Location" value="" />
-        <Picker.Item label="New York" value="New York" />
-        <Picker.Item label="Boston" value="Boston" />
-        <Picker.Item label="Los Angeles" value="Los Angeles" />
-        <Picker.Item label="London" value="London" />
-        <Picker.Item label="Bronx" value="Bronx" />
+        <Picker.Item label="Location" value="" style={styles.picker} />
+        <Picker.Item label="New York" value="New York" style={styles.picker} />
+        <Picker.Item label="Boston" value="Boston" style={styles.picker} />
+        <Picker.Item label="Los Angeles" value="Los Angeles" style={styles.picker} />
+        <Picker.Item label="London" value="London" style={styles.picker} />
+        <Picker.Item label="Bronx" value="Bronx" style={styles.picker} />
       </Picker>
 
       <Picker
         selectedValue={filterGenre}
         onValueChange={setFilterGenre}
-        style={styles.picker}
-        itemStyle={styles.pickerItem}
+        style={{ flex: 1 }}
+        mode='dropdown'
       >
-        <Picker.Item label="Any Genre" value="" />
-        <Picker.Item label="Country" value="Country" />
-        <Picker.Item label="Football" value="Football" />
-        <Picker.Item label="Theatre" value="Theatre" />
-        <Picker.Item label="R&B" value="R&B" />
-        <Picker.Item label="Rock" value="Rock" />
-        <Picker.Item label="Baseball" value="Baseball" />
-        <Picker.Item label="Performance Art" value="Performance Art" />
+        <Picker.Item label="Genre" value="" style={styles.picker} />
+        <Picker.Item label="Country" value="Country" style={styles.picker} />
+        <Picker.Item label="Football" value="Football" style={styles.picker} />
+        <Picker.Item label="Theatre" value="Theatre" style={styles.picker} />
+        <Picker.Item label="R&B" value="R&B" style={styles.picker} />
+        <Picker.Item label="Rock" value="Rock" style={styles.picker} />
+        <Picker.Item label="Baseball" value="Baseball" style={styles.picker} />
+        <Picker.Item label="Performance Art" value="Performance Art" style={styles.picker} />
       </Picker>
 
       <Picker
         selectedValue={filterStatus}
         onValueChange={setFilterStatus}
-        style={styles.picker}
-        itemStyle={styles.pickerItem}
+        style={{ flex: 1 }}
+        mode='dropdown'
       >
-        <Picker.Item label="Any Status" value="" />
-        <Picker.Item label="Onsale" value="onsale" />
-        <Picker.Item label="Offsale" value="offsale" />
+        <Picker.Item label="Status" value="" style={styles.picker} />
+        <Picker.Item label="Onsale" value="onsale" style={styles.picker} />
+        <Picker.Item label="Offsale" value="offsale" style={styles.picker} />
       </Picker>
 
     </View>
@@ -75,13 +75,11 @@ export default function FilterRowComponent({
 const styles = StyleSheet.create({
   filterRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    paddingHorizontal: 14,
   },
   picker: {
-    flex: 1,
-    marginHorizontal: 5,
-  },
-  pickerItem: {
+    fontSize: 12,
     fontFamily: 'Poppins-Regular',
     color: '#333',
   },
