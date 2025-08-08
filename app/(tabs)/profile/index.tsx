@@ -26,8 +26,8 @@ export default function ProfileScreen() {
       <HeaderComponent title="My Account" />
 
       <ProfileHeaderComponent
-        name={user.user_metadata?.full_name || ''}
-        email={user.email || ''}
+        name={user.user_metadata?.name || ''}
+        email={user.user_metadata?.email || ''}
         avatar={user.user_metadata?.avatar_url || 'https://via.placeholder.com/150'}
       />
 
@@ -37,12 +37,21 @@ export default function ProfileScreen() {
           title='Personal Info'
           icon='person-outline'
         />
+        <View style={styles.line} />
+
+        {/* <ProfileActionsComponent
+          action={() => router.push('/profile/password')}
+          title='Change Password'
+          icon='lock-closed-outline'
+        />
+        <View style={styles.line} /> */}
 
         <ProfileActionsComponent
           action={() => router.push('/profile/tickets')}
           title='My Tickets'
           icon='ticket-outline'
         />
+        <View style={styles.line} />
 
       </View>
 
@@ -58,7 +67,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9FFF9',
-    padding: 15,
   },
   error: {
     textAlign: 'center',
@@ -70,18 +78,25 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     gap: 12,
+    paddingHorizontal: 20,
+  },
+  line: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#EDEDED',
   },
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 12,
-    borderRadius: 200,
-    gap: 11,
+    paddingHorizontal: 20,
+    marginTop: 12,
+    gap: 10,
   },
   logoutText: {
+    color: '#CC0000',
     fontFamily: 'Poppins-Regular',
     fontSize: 14,
     lineHeight: 19,
-    color: '#CC0000',
   },
 });

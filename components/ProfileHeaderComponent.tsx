@@ -1,4 +1,5 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image } from 'expo-image';
+import { StyleSheet, Text, View } from 'react-native';
 
 type ProfileHeaderProps = {
   name: string;
@@ -9,7 +10,11 @@ type ProfileHeaderProps = {
 export default function ProfileHeaderComponent({ name, email, avatar }: ProfileHeaderProps) {
   return (
     <View style={styles.container}>
-      <Image source={{ uri: avatar }} style={styles.avatar} />
+      <Image
+        source={{ uri: avatar }}
+        style={styles.avatar}
+        contentFit='cover'
+      />
 
       <View style={styles.textContainer}>
         <Text style={styles.name}>{name}</Text>
@@ -23,6 +28,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginVertical: 24,
+    marginHorizontal: 20,
     paddingVertical: 20,
     paddingHorizontal: 24,
     gap: 16,
@@ -35,6 +42,8 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
+    borderWidth: 1,
+    borderColor: '#E2E2E2',
   },
   textContainer: {
     flexDirection: 'column',
@@ -45,16 +54,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     fontSize: 14,
     lineHeight: 19,
-    alignItems: 'center',
     color: '#1D1D1D',
-    alignSelf: 'stretch',
   },
   email: {
     fontFamily: 'Poppins-Regular',
     fontSize: 14,
     lineHeight: 19,
-    alignItems: 'center',
     color: 'rgba(29, 29, 29, 0.5)',
-    alignSelf: 'stretch',
   },
 });

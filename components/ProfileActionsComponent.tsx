@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-
 import type { ComponentProps } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
 type ProfileActionsProps = {
   action: () => void;
   title: string;
@@ -11,9 +11,11 @@ type ProfileActionsProps = {
 export default function ProfileActionsComponent({ action, title, icon }: ProfileActionsProps) {
   return (
     <TouchableOpacity activeOpacity={0.8} style={styles.actionsContainer} onPress={action}>
-      <Ionicons name={icon} size={20} color="#1E1E1E" />
-      <Text style={styles.actionText}>{title}</Text>
-      <Ionicons name="chevron-forward-outline" size={20} color="#1E1E1E" />
+      <View style={styles.textContainer}>
+        <Ionicons name={icon} size={20} color="#1D1D1D" />
+        <Text style={styles.actionText}>{title}</Text>
+      </View>
+      <Ionicons name="chevron-forward-outline" size={20} color="rgba(30, 30, 30, 0.5)" />
     </TouchableOpacity>
   );
 }
@@ -22,22 +24,20 @@ const styles = StyleSheet.create({
   actionsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
     paddingVertical: 12,
-    gap: 11,
-    height: 44,
-    borderRadius: 200,
   },
-  actionButton: {
-    backgroundColor: '#2ACE99',
-    padding: 10,
-    borderRadius: 8,
+  textContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
-    marginHorizontal: 5,
+    gap: 10,
+    justifyContent: 'flex-start',
   },
   actionText: {
-    color: '#fff',
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 16,
+    color: '#1D1D1D',
+    fontFamily: 'Poppins-Regular',
+    fontSize: 14,
+    lineHeight: 19,
   },
 });
