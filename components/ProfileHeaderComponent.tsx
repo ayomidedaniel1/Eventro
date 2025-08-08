@@ -1,45 +1,60 @@
-import { LinearGradient } from 'expo-linear-gradient';
-import { Image, StyleSheet, Text } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 type ProfileHeaderProps = {
   name: string;
-  location: string;
+  email: string;
   avatar: string;
 };
 
-export default function ProfileHeaderComponent({ name, location, avatar }: ProfileHeaderProps) {
+export default function ProfileHeaderComponent({ name, email, avatar }: ProfileHeaderProps) {
   return (
-    <LinearGradient colors={['#2ACE99', '#B8FAD6']} style={styles.header}>
+    <View style={styles.container}>
       <Image source={{ uri: avatar }} style={styles.avatar} />
-      <Text style={styles.name}>{name}</Text>
-      <Text style={styles.location}>{location}</Text>
-    </LinearGradient>
+
+      <View style={styles.textContainer}>
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.email}>{email}</Text>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    padding: 20,
-    borderRadius: 10,
+  container: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
+    paddingVertical: 20,
+    paddingHorizontal: 24,
+    gap: 16,
+    height: 100,
+    borderWidth: 1,
+    borderColor: '#E2E2E2',
+    borderRadius: 16,
   },
   avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 10,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+  },
+  textContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: 4,
   },
   name: {
-    fontSize: 24,
-    fontFamily: 'Poppins-ExtraBold',
-    color: '#fff',
-    textAlign: 'center',
+    fontFamily: 'Poppins-Medium',
+    fontSize: 14,
+    lineHeight: 19,
+    alignItems: 'center',
+    color: '#1D1D1D',
+    alignSelf: 'stretch',
   },
-  location: {
-    fontSize: 16,
+  email: {
     fontFamily: 'Poppins-Regular',
-    color: '#fff',
-    textAlign: 'center',
+    fontSize: 14,
+    lineHeight: 19,
+    alignItems: 'center',
+    color: 'rgba(29, 29, 29, 0.5)',
+    alignSelf: 'stretch',
   },
 });

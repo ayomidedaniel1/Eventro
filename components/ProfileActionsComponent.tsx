@@ -1,27 +1,31 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
+import type { ComponentProps } from 'react';
 type ProfileActionsProps = {
-  onLogout: () => void;
-  onEdit: () => void;
+  action: () => void;
+  title: string;
+  icon: ComponentProps<typeof Ionicons>['name'];
 };
 
-export default function ProfileActionsComponent({ onLogout, onEdit }: ProfileActionsProps) {
+export default function ProfileActionsComponent({ action, title, icon }: ProfileActionsProps) {
   return (
-    <View style={styles.actionsContainer}>
-      <TouchableOpacity style={styles.actionButton} onPress={onEdit}>
-        <Text style={styles.actionText}>Edit Profile</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.actionButton} onPress={onLogout}>
-        <Text style={styles.actionText}>Logout</Text>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity activeOpacity={0.8} style={styles.actionsContainer} onPress={action}>
+      <Ionicons name={icon} size={20} color="#1E1E1E" />
+      <Text style={styles.actionText}>{title}</Text>
+      <Ionicons name="chevron-forward-outline" size={20} color="#1E1E1E" />
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   actionsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingVertical: 12,
+    gap: 11,
+    height: 44,
+    borderRadius: 200,
   },
   actionButton: {
     backgroundColor: '#2ACE99',

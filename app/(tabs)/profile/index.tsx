@@ -1,23 +1,17 @@
+import HeaderComponent from '@/components/HeaderComponent';
 import ProfileActionsComponent from '@/components/ProfileActionsComponent';
 import ProfileHeaderComponent from '@/components/ProfileHeaderComponent';
-import UserStatsComponent from '@/components/UserStatsComponent';
 import { useAuthStore } from '@/store/authStore';
-import { useEventStore } from '@/store/eventStore';
 import { supabase } from '@/utils/supabase';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
   const { user, setAuth } = useAuthStore();
   const router = useRouter();
-  const events = useEventStore((state) => state.events);
-
-  const userStats = {
-    attendedEvents: events.filter((e) => e.status === 'attended').length,
-    createdEvents: events.filter((e) => e.promoter === user?.id).length,
-  };
-
+  console.log('User >>', user?.user_metadata);
 
   if (!user) return <Text style={styles.error}>Please log in</Text>;
 
@@ -29,13 +23,33 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <HeaderComponent title="My Account" />
+
       <ProfileHeaderComponent
-        name={user.user_metadata?.full_name || 'Sly'}
-        location="Lagos, Nigeria"
+        name={user.user_metadata?.full_name || ''}
+        email={user.email || ''}
         avatar={user.user_metadata?.avatar_url || 'https://via.placeholder.com/150'}
       />
-      <UserStatsComponent stats={userStats} />
-      <ProfileActionsComponent onLogout={handleLogout} onEdit={() => router.push('/profile/settings')} />
+
+      <View style={styles.actionsContainer}>
+        <ProfileActionsComponent
+          action={() => router.push('/profile/settings')}
+          title='Personal Info'
+          icon='person-outline'
+        />
+
+        <ProfileActionsComponent
+          action={() => router.push('/profile/tickets')}
+          title='My Tickets'
+          icon='ticket-outline'
+        />
+
+      </View>
+
+      <TouchableOpacity activeOpacity={0.8} style={styles.logoutButton} onPress={handleLogout}>
+        <Ionicons name="log-out-outline" size={24} color="#CC0000" />
+        <Text style={styles.logoutText}>Logout</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -51,5 +65,23 @@ const styles = StyleSheet.create({
     marginTop: 60,
     color: 'red',
     fontFamily: 'Poppins-Regular',
+  },
+  actionsContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 12,
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderRadius: 200,
+    gap: 11,
+  },
+  logoutText: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 14,
+    lineHeight: 19,
+    color: '#CC0000',
   },
 });
