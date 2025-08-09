@@ -27,7 +27,7 @@
       ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#DBFDE7"
+        "backgroundColor": "#010101"
       },
       "edgeToEdgeEnabled": true
     },
@@ -57,19 +57,13 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#DBFDE7"
+          "backgroundColor": "#010101"
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
     },
-    "extra": {
-      "EXPO_PUBLIC_SUPABASE_URL": "${EXPO_PUBLIC_SUPABASE_URL}",
-      "EXPO_PUBLIC_SUPABASE_ANON_KEY": "${EXPO_PUBLIC_SUPABASE_ANON_KEY}",
-      "EXPO_PUBLIC_FLUTTERWAVE_PUBLIC_KEY": "${EXPO_PUBLIC_FLUTTERWAVE_PUBLIC_KEY}"
-    }
   }
 }
