@@ -1,19 +1,33 @@
+// app/register.tsx
 import { useAuthStore } from '@/store/authStore';
 import { supabase } from '@/utils/supabase';
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Keyboard, KeyboardAvoidingView, Linking, Modal, Platform, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Linking,
+  Modal,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 
 export default function RegisterScreen() {
   const { user } = useAuthStore();
-  const [name, setName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -34,7 +48,7 @@ export default function RegisterScreen() {
       options: {
         data: { name },
         emailRedirectTo: 'eventsync://auth/callback',
-      }
+      },
     });
 
     if (error) {
@@ -56,7 +70,10 @@ export default function RegisterScreen() {
     if (canOpen) {
       await Linking.openURL(mailtoUrl);
     } else {
-      Alert.alert('No Mail App', 'Please check your email manually or set a default mail app.');
+      Alert.alert(
+        'No Mail App',
+        'Please check your email manually or set a default mail app.'
+      );
     }
     setShowModal(false);
   };
@@ -64,20 +81,27 @@ export default function RegisterScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}>
+      style={styles.container}
+    >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View>
-          <Image
-            style={styles.image}
-            source={require("@/assets/images/icons/eventsync.png")}
-            contentFit="cover"
-            transition={600}
-          />
+          {/* Back button */}
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backButton}
+          >
+            <Ionicons name="arrow-back" size={24} color="#fff" />
+          </TouchableOpacity>
 
-          <Text style={styles.title}>Create an Account</Text>
+          <Text style={styles.headerTitle}>Join Eventro.</Text>
+          <Text style={styles.subText}>
+            Let’s get you in. Join Eventro and start discovering amazing events
+            near you.
+          </Text>
 
+          <Text style={styles.label}>Enter full name</Text>
           <TextInput
-            placeholder="Enter your name"
+            placeholder=""
             placeholderTextColor="#888"
             style={styles.input}
             onChangeText={setName}
@@ -85,8 +109,9 @@ export default function RegisterScreen() {
             keyboardType="default"
           />
 
+          <Text style={styles.label}>Enter email address</Text>
           <TextInput
-            placeholder="Email"
+            placeholder="Enter your email address"
             placeholderTextColor="#888"
             style={styles.input}
             onChangeText={setEmail}
@@ -95,9 +120,10 @@ export default function RegisterScreen() {
             keyboardType="email-address"
           />
 
+          <Text style={styles.label}>Enter password</Text>
           <View style={styles.passwordWrapper}>
             <TextInput
-              placeholder="Password"
+              placeholder="Password must contain 8 characters"
               placeholderTextColor="#888"
               style={styles.input}
               secureTextEntry={!showPassword}
@@ -117,20 +143,32 @@ export default function RegisterScreen() {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity style={styles.button} onPress={register} disabled={loading} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={register}
+            disabled={loading}
+            activeOpacity={0.7}
+          >
             {loading ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color="#000" />
             ) : (
-              <Text style={styles.buttonText}>Register</Text>
+              <Text style={styles.buttonText}>Continue</Text>
             )}
           </TouchableOpacity>
 
           {!!error && <Text style={styles.errorText}>{error}</Text>}
 
-          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
-            <Text style={styles.linkText}>Already have an account? Login</Text>
-          </TouchableOpacity>
+          <Text style={styles.linkText}>
+            Already have an account?{' '}
+            <Text
+              style={styles.signIn}
+              onPress={() => router.push('/login')}
+            >
+              Sign in
+            </Text>
+          </Text>
 
+          {/* Modal */}
           <Modal
             animationType="fade"
             transparent
@@ -140,7 +178,9 @@ export default function RegisterScreen() {
             <View style={styles.modalBackdrop}>
               <View style={styles.modalContainer}>
                 <Text style={styles.modalTitle}>Verify Your Email</Text>
-                <Text style={styles.modalText}>Check your email to confirm your account.</Text>
+                <Text style={styles.modalText}>
+                  Check your email to confirm your account.
+                </Text>
 
                 <TouchableOpacity
                   style={styles.modalButton}
@@ -161,58 +201,47 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     padding: 24,
+    paddingTop: 60,
+  },
+  backButton: {
+    marginBottom: 24,
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    alignItems: 'center',
     justifyContent: 'center',
   },
-  image: {
-    width: 151,
-    height: 139,
-    marginBottom: 24,
-    alignSelf: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '600',
+  headerTitle: {
+    fontSize: 28,
     fontFamily: 'Poppins-SemiBold',
-    marginBottom: 24,
-    color: '#2ACE99',
-    textAlign: 'center',
+    color: '#fff',
+    marginBottom: 8,
+  },
+  subText: {
+    fontSize: 14,
+    fontFamily: 'Poppins-Regular',
+    color: '#ccc',
+    marginBottom: 32,
+  },
+  label: {
+    fontSize: 14,
+    fontFamily: 'Poppins-Regular',
+    color: '#fff',
+    marginBottom: 8,
   },
   input: {
-    backgroundColor: '#DCFDE7',
+    backgroundColor: 'transparent',
+    borderColor: '#333',
+    borderWidth: 1,
     padding: 14,
     borderRadius: 8,
-    marginBottom: 16,
+    marginBottom: 24,
     fontSize: 16,
     fontFamily: 'Poppins-Regular',
-    borderWidth: 1,
-    borderColor: '#B8FAD6',
-  },
-  button: {
-    backgroundColor: '#2ACE99',
-    paddingVertical: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  buttonText: {
     color: '#fff',
-    fontWeight: '600',
-    fontSize: 16,
-    fontFamily: 'Poppins-SemiBold',
-  },
-  linkText: {
-    color: '#2ACE99',
-    textAlign: 'center',
-    fontSize: 14,
-    fontFamily: 'Poppins-Regular',
-  },
-  errorText: {
-    color: 'red',
-    textAlign: 'center',
-    fontSize: 14,
-    fontFamily: 'Poppins-Regular',
   },
   passwordWrapper: {
     position: 'relative',
@@ -222,6 +251,36 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 16,
     top: 18,
+  },
+  button: {
+    backgroundColor: '#fff',
+    paddingVertical: 14,
+    borderRadius: 50,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  buttonText: {
+    color: '#000',
+    fontWeight: '600',
+    fontSize: 16,
+    fontFamily: 'Poppins-SemiBold',
+  },
+  linkText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 14,
+    fontFamily: 'Poppins-Regular',
+  },
+  signIn: {
+    color: '#fff',
+    textDecorationLine: 'underline',
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    fontSize: 14,
+    fontFamily: 'Poppins-Regular',
+    marginBottom: 12,
   },
   modalBackdrop: {
     flex: 1,
@@ -239,7 +298,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 20,
     fontFamily: 'Poppins-SemiBold',
-    color: '#2ACE99',
+    color: '#000',
     marginBottom: 12,
   },
   modalText: {
@@ -250,7 +309,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   modalButton: {
-    backgroundColor: '#2ACE99',
+    backgroundColor: '#000',
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,

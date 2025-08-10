@@ -16,14 +16,12 @@ export default function OnboardingScreen() {
           Find the hottest events around, concerts, art, culture, and more. Eventro is your gateway
           to unforgettable moments
         </Text>
-
         <TouchableOpacity
           style={styles.createButton}
           onPress={() => router.push('/register')}
         >
           <Text style={styles.createButtonText}>Create account</Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={styles.signInButton}
           onPress={() => router.push('/login')}
@@ -41,7 +39,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     padding: 20,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   title: {
     fontSize: 40,
