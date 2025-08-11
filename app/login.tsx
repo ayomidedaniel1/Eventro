@@ -1,10 +1,9 @@
 import { useAuthStore } from '@/store/authStore';
 import { supabase } from '@/utils/supabase';
-import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { ActivityIndicator, Keyboard, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 
 export default function LoginScreen() {
   const { user } = useAuthStore();
@@ -13,10 +12,21 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isFocused, setIsFocused] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState('');
 
   useEffect(() => {
     if (user) router.replace('/');
   }, [user]);
+
+  const handlePasswordChange = (text: string) => {
+    setPassword(text);
+    if (text.length > 0 && text.length < 8) {
+      setPasswordError('Password must be at least 8 characters');
+    } else {
+      setPasswordError('');
+    }
+  };
 
   const login = async () => {
     if (!email) return setError('Please enter your email');
@@ -42,38 +52,54 @@ export default function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View>
-          <Image
-            style={styles.image}
-            source={require("@/assets/images/icons/smile.png")}
-            contentFit="cover"
-            transition={600}
-          />
+        <View style={{ flex: 1, position: 'relative', width: '100%' }}>
+          {/* Back button */}
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backButton}
+          >
+            <FontAwesome6 name="arrow-left-long" size={20} color="#fff" />
+          </TouchableOpacity>
 
-          <Text style={styles.title}>Welcome Back</Text>
+          <Text style={styles.headerTitle}>Welcome back.</Text>
+          <Text style={styles.subText}>
+            Sign in to continue discovering amazing events near you.
+          </Text>
 
+          <Text style={styles.label}>Enter email address</Text>
           <TextInput
-            placeholder="Email"
-            placeholderTextColor="#888"
-            style={styles.input}
+            placeholder="Enter your email address"
+            placeholderTextColor="#7B7B7B"
+            style={[
+              styles.input,
+              { borderColor: isFocused === 'email' ? '#FFF' : '#A2A4B2' }
+            ]}
             onChangeText={setEmail}
             value={email}
             autoCapitalize="none"
             keyboardType="email-address"
+            cursorColor="#FFF"
+            onFocus={() => setIsFocused('email')}
+            onBlur={() => setIsFocused(null)}
           />
 
+          <Text style={styles.label}>Enter password</Text>
           <View style={styles.passwordWrapper}>
             <TextInput
-              placeholder="Password"
-              placeholderTextColor="#888"
-              style={styles.input}
+              placeholder="Password must contain 8 characters"
+              placeholderTextColor="#7B7B7B"
+              style={[
+                styles.input,
+                { borderColor: isFocused === 'password' ? '#FFF' : '#A2A4B2' }
+              ]}
               secureTextEntry={!showPassword}
-              onChangeText={setPassword}
+              onChangeText={handlePasswordChange}
               value={password}
+              cursorColor="#FFF"
+              onFocus={() => setIsFocused('password')}
+              onBlur={() => setIsFocused(null)}
             />
             <TouchableOpacity
               style={styles.eyeIcon}
@@ -81,110 +107,97 @@ export default function LoginScreen() {
               activeOpacity={0.6}
             >
               <Ionicons
-                name={showPassword ? 'eye-off' : 'eye'}
-                size={20}
-                color="#888"
+                name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                size={22}
+                color="#7B7B7B"
               />
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity onPress={() => router.push('/forgot-password')} activeOpacity={0.7}>
-            <Text style={styles.forgotText}>Forgot password?</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.button} onPress={login} disabled={loading} activeOpacity={0.7}>
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.buttonText}>Login</Text>
-            )}
-          </TouchableOpacity>
-
+          {passwordError ? (
+            <Text style={styles.passwordErrorText}>{passwordError}</Text>
+          ) : null}
           {!!error && <Text style={styles.errorText}>{error}</Text>}
 
-          <TouchableOpacity onPress={() => router.push('/register')} activeOpacity={0.7}>
-            <Text style={styles.linkText}>Don&apos;t have an account? Register</Text>
-          </TouchableOpacity>
+          <View style={styles.ctaContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={login}
+              disabled={loading}
+              activeOpacity={0.5}
+            >
+              {loading ? (
+                <ActivityIndicator color="#000" />
+              ) : (
+                <Text style={styles.buttonText}>Continue</Text>
+              )}
+            </TouchableOpacity>
+
+            <Text style={styles.linkText}>
+              Don’t have an account?{' '}
+              <Text
+                style={styles.signIn}
+                onPress={() => router.push('/register')}
+              >
+                Register
+              </Text>
+            </Text>
+          </View>
         </View>
       </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#010101',
     padding: 24,
+    paddingTop: 60,
+  },
+  backButton: {
+    marginBottom: 24,
+    width: 42,
+    height: 42,
+    borderRadius: 12,
+    borderWidth: 0.5,
+    borderColor: '#7D7F82',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    alignItems: 'center',
     justifyContent: 'center',
   },
-  image: {
-    width: 151,
-    height: 139,
-    marginBottom: 32,
-    alignSelf: 'center',
+  headerTitle: {
+    fontSize: 34,
+    lineHeight: 50,
+    fontFamily: 'Manrope-ExtraBold',
+    color: '#DFF1E2',
+    marginBottom: 8,
   },
-  title: {
-    fontSize: 26,
-    fontWeight: '600',
-    fontFamily: 'Manrope-SemiBold',
-    marginBottom: 28,
-    color: '#2ACE99',
-    textAlign: 'center',
+  subText: {
+    fontSize: 14,
+    lineHeight: 24,
+    fontFamily: 'Manrope-Medium',
+    color: '#DFF1E2',
+    marginBottom: 32,
+  },
+  label: {
+    fontSize: 16,
+    lineHeight: 24,
+    fontFamily: 'Manrope-Medium',
+    color: '#DDDDDD',
+    marginBottom: 10,
   },
   input: {
-    backgroundColor: '#F7FDF9',
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderRadius: 50,
-    marginBottom: 18,
+    backgroundColor: 'transparent',
+    borderWidth: 0.5,
+    padding: 14,
+    borderRadius: 12,
+    marginBottom: 24,
     fontSize: 16,
     fontFamily: 'Manrope-Regular',
-    borderWidth: 1,
-    borderColor: '#DDF7EC',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 1,
-  },
-  forgotText: {
-    color: '#2ACE99',
-    fontSize: 14,
-    textAlign: 'right',
-    marginBottom: 20,
-    fontFamily: 'Manrope-Regular',
-  },
-  button: {
-    backgroundColor: '#2ACE99',
-    paddingVertical: 16,
-    borderRadius: 50,
-    alignItems: 'center',
-    marginBottom: 20,
-    shadowColor: '#2ACE99',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 2,
-  },
-  buttonText: {
     color: '#fff',
-    fontWeight: '600',
-    fontSize: 16,
-    fontFamily: 'Manrope-SemiBold',
-  },
-  linkText: {
-    color: '#2ACE99',
-    textAlign: 'center',
-    fontSize: 14,
-    fontFamily: 'Manrope-Regular',
-  },
-  errorText: {
-    color: 'red',
-    textAlign: 'center',
-    fontSize: 14,
-    fontFamily: 'Manrope-Regular',
-    marginBottom: 8,
+    height: 54,
   },
   passwordWrapper: {
     position: 'relative',
@@ -192,7 +205,88 @@ const styles = StyleSheet.create({
   },
   eyeIcon: {
     position: 'absolute',
-    right: 20,
-    top: 22,
+    right: 16,
+    top: 18,
+  },
+  ctaContainer: {
+    position: 'absolute',
+    bottom: 24,
+    width: '100%',
+  },
+  button: {
+    backgroundColor: '#fff',
+    paddingVertical: 14,
+    borderRadius: 50,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  buttonText: {
+    color: '#000',
+    fontWeight: '600',
+    fontSize: 16,
+    fontFamily: 'Manrope-SemiBold',
+  },
+  linkText: {
+    color: '#7D7F82',
+    textAlign: 'center',
+    fontSize: 16,
+    lineHeight: 24,
+    fontFamily: 'Manrope-Medium',
+  },
+  signIn: {
+    color: '#fff',
+    textDecorationLine: 'underline',
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    fontSize: 12,
+    fontFamily: 'Manrope-Regular',
+    marginBottom: 12,
+  },
+  passwordErrorText: {
+    color: 'red',
+    textAlign: 'left',
+    fontSize: 12,
+    fontFamily: 'Manrope-Regular',
+    marginTop: -16,
+    marginBottom: 12,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    backgroundColor: '#fff',
+    padding: 24,
+    borderRadius: 16,
+    width: '85%',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontFamily: 'Manrope-SemiBold',
+    color: '#000',
+    marginBottom: 12,
+  },
+  modalText: {
+    fontSize: 14,
+    fontFamily: 'Manrope-Regular',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  modalButton: {
+    backgroundColor: '#000',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+  },
+  modalButtonText: {
+    color: '#fff',
+    fontFamily: 'Manrope-SemiBold',
+    fontSize: 16,
   },
 });
