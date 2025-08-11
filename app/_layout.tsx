@@ -12,7 +12,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { PaperProvider } from 'react-native-paper';
-import 'react-native-reanimated';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 const queryClient = new QueryClient();

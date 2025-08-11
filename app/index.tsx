@@ -1,15 +1,27 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function OnboardingScreen() {
   const router = useRouter();
 
   return (
-    <ImageBackground
-      source={require('@/assets/images/Onboard.png')}
-      style={styles.container}
-      resizeMode="cover"
-    >
+    <View style={styles.container}>
+      <StatusBar translucent backgroundColor="transparent" />
+
+      <ImageBackground
+        source={require('@/assets/images/Onboard.png')}
+        style={styles.imgBg}
+        resizeMode="cover"
+      >
+        <LinearGradient
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          colors={['#67676729', '#010101E5']}
+          style={styles.backgroundImageGradient}
+        />
+      </ImageBackground>
+
       <View style={styles.overlay}>
         <Text style={styles.title}>Eventro.</Text>
         <Text style={styles.subtitle}>
@@ -29,17 +41,25 @@ export default function OnboardingScreen() {
           <Text style={styles.signInButtonText}>Sign in</Text>
         </TouchableOpacity>
       </View>
-    </ImageBackground>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  overlay: {
+  container: {
     flex: 1,
-    justifyContent: 'flex-end',
+    backgroundColor: '#010101',
+  },
+  imgBg: {
+    flex: 0.7,
+  },
+  backgroundImageGradient: {
+    flex: 1,
+  },
+  overlay: {
+    position: 'absolute',
+    bottom: 0,
     padding: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   title: {
     fontSize: 40,

@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "EventSync",
-    "slug": "EventSync",
+    "name": "Eventro",
+    "slug": "Eventro",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "eventsync",
+    "scheme": "eventro",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -16,7 +16,7 @@
         {
           "action": "VIEW",
           "data": {
-            "scheme": "eventsync",
+            "scheme": "eventro",
             "host": "*"
           },
           "category": [

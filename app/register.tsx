@@ -47,7 +47,7 @@ export default function RegisterScreen() {
       password,
       options: {
         data: { name },
-        emailRedirectTo: 'eventsync://auth/callback',
+        emailRedirectTo: 'eventro://auth/callback',
       },
     });
 
@@ -101,7 +101,7 @@ export default function RegisterScreen() {
 
           <Text style={styles.label}>Enter full name</Text>
           <TextInput
-            placeholder=""
+            placeholder="Enter your full name here"
             placeholderTextColor="#888"
             style={styles.input}
             onChangeText={setName}
@@ -201,7 +201,7 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#010101',
     padding: 24,
     paddingTop: 60,
   },
