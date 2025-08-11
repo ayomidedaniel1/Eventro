@@ -76,14 +76,14 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   date: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Manrope-SemiBold',
     fontSize: 12,
     lineHeight: 16,
     textAlign: 'center',
     color: '#1D1D1D',
   },
   month: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     fontSize: 12,
     lineHeight: 16,
     textAlign: 'center',
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 14,
     lineHeight: 19,
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Manrope-Medium',
     marginTop: 5,
     color: '#1D1D1D',
   },
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   location: {
     fontSize: 14,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     color: '#333',
   },
 });

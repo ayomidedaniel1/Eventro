@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 60,
     color: 'red',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
   },
   actionsContainer: {
     flexDirection: 'column',
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
   logoutText: {
     color: '#CC0000',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     fontSize: 14,
     lineHeight: 19,
   },

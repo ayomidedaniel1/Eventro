@@ -83,6 +83,6 @@ const styles = StyleSheet.create({
     fontSize: 45,
     lineHeight: 50,
     fontWeight: "bold",
-    fontFamily: "Poppins-ExtraBold",
+    fontFamily: "Manrope-ExtraBold",
   },
 });

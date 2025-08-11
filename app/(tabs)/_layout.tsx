@@ -21,7 +21,7 @@ export default function TabsLayout() {
           overflow: 'hidden',
         },
         tabBarLabelStyle: {
-          fontFamily: 'Poppins-SemiBold',
+          fontFamily: 'Manrope-SemiBold',
           fontSize: 12,
           marginBottom: 4,
         },

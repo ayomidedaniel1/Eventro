@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 16,
     color: '#2ACE99',
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Manrope-SemiBold',
     textAlign: 'center',
   },
   input: {
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 16,
     fontSize: 16,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     borderColor: '#B8FAD6',
     borderWidth: 1,
   },
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Manrope-SemiBold',
     fontSize: 16,
   },
   error: {

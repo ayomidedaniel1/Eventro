@@ -72,14 +72,14 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
   },
   welcomeText: {
-    fontFamily: 'ManropPoppins-Regular',
+    fontFamily: 'Manrope-Regular',
     fontSize: 16,
     lineHeight: 22,
     letterSpacing: -0.02,
     color: 'rgba(29, 29, 29, 0.5)',
   },
   name: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 20,
     lineHeight: 27,
     letterSpacing: -0.02,

@@ -51,13 +51,13 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   name: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 14,
     lineHeight: 19,
     color: '#1D1D1D',
   },
   email: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     fontSize: 14,
     lineHeight: 19,
     color: 'rgba(29, 29, 29, 0.5)',

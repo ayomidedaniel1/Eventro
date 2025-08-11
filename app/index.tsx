@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { ImageBackground, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -31,12 +32,15 @@ export default function OnboardingScreen() {
         <TouchableOpacity
           style={styles.createButton}
           onPress={() => router.push('/register')}
+          activeOpacity={0.5}
         >
           <Text style={styles.createButtonText}>Create account</Text>
+          <Ionicons name="chevron-forward" size={12} style={{ backgroundColor: '#01010100' }} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.signInButton}
           onPress={() => router.push('/login')}
+          activeOpacity={0.5}
         >
           <Text style={styles.signInButtonText}>Sign in</Text>
         </TouchableOpacity>
@@ -59,42 +63,53 @@ const styles = StyleSheet.create({
   overlay: {
     position: 'absolute',
     bottom: 0,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 40,
   },
   title: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    color: 'white',
+    fontSize: 45,
+    lineHeight: 50,
+    fontFamily: 'Manrope-ExtraBold',
+    color: '#DFF1E2',
     marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
-    color: '#d1d5db',
-    marginBottom: 30,
+    lineHeight: 24,
+    fontFamily: 'Manrope-Medium',
+    color: '#DFF1E2',
+    marginBottom: 80,
   },
   createButton: {
-    backgroundColor: 'white',
-    paddingVertical: 15,
-    borderRadius: 50,
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 100,
     marginBottom: 15,
+    gap: 12,
+    height: 64,
   },
   createButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'black',
+    fontSize: 20,
+    lineHeight: 30,
+    fontFamily: 'Manrope-Medium',
+    color: '#010101',
   },
   signInButton: {
-    borderWidth: 1,
-    borderColor: 'white',
-    paddingVertical: 15,
-    borderRadius: 50,
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 30,
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    gap: 12,
+    height: 64,
+    borderRadius: 100,
   },
   signInButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'white',
+    fontSize: 20,
+    lineHeight: 30,
+    fontFamily: 'Manrope-Medium',
+    color: '#FFFFFF',
   },
 });

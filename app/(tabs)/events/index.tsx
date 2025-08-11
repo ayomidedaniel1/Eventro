@@ -110,6 +110,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 60,
     color: 'red',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
   },
 });

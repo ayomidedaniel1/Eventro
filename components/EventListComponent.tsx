@@ -43,6 +43,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     color: '#888',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
   },
 });

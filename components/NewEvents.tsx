@@ -72,14 +72,14 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   headerText: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Manrope-SemiBold',
     fontSize: 16,
     lineHeight: 22,
     color: '#1D1D1D',
     textAlign: 'left',
   },
   navText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 14,
     lineHeight: 19,
     color: '#2ACE99',
@@ -108,13 +108,13 @@ const styles = StyleSheet.create({
     height: 88,
   },
   date: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 14,
     lineHeight: 19,
     color: '#655CBB',
   },
   title: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 14,
     lineHeight: 19,
     color: '#1D1D1D',
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   location: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     fontSize: 14,
     lineHeight: 19,
     color: 'rgba(29, 29, 29, 0.5)',

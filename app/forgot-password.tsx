@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '600',
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Manrope-SemiBold',
     marginBottom: 24,
     color: '#2ACE99',
     textAlign: 'center',
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     fontSize: 16,
     borderWidth: 1,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     borderColor: '#B8FAD6',
   },
   button: {
@@ -105,13 +105,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
     fontSize: 16,
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Manrope-SemiBold',
   },
   linkText: {
     color: '#2ACE99',
     textAlign: 'center',
     fontSize: 14,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
   },
   errorText: {
     color: 'red',

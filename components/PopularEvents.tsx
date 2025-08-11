@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     marginTop: 36,
   },
   headerText: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Manrope-SemiBold',
     fontSize: 16,
     lineHeight: 22,
     color: '#1D1D1D',
@@ -145,14 +145,14 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   date: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Manrope-SemiBold',
     fontSize: 12,
     lineHeight: 16,
     textAlign: 'center',
     color: '#1D1D1D',
   },
   month: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     fontSize: 12,
     lineHeight: 16,
     textAlign: 'center',
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 14,
     lineHeight: 19,
     alignItems: 'center',
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   location: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     fontSize: 14,
     lineHeight: 19,
     alignItems: 'center',

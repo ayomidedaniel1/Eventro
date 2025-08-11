@@ -111,18 +111,18 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   messageText: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     color: '#fff',
     fontSize: 16,
   },
   username: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Manrope-SemiBold',
     color: '#333',
     fontSize: 12,
     marginTop: 5,
   },
   timeText: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     color: '#888',
     fontSize: 12,
     textAlign: 'right',
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 20,
     padding: 10,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     color: '#333',
     borderWidth: 1,
     borderColor: '#ddd',
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   },
   sendText: {
     color: '#fff',
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Manrope-SemiBold',
     fontSize: 16,
   },
 });

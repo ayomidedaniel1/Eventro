@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   actionText: {
     color: '#1D1D1D',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     fontSize: 14,
     lineHeight: 19,
   },

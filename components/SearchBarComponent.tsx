@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     height: 45,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     fontSize: 14,
     lineHeight: 19,
     color: '#C4C4C4',

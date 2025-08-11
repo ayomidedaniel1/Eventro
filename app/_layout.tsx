@@ -9,7 +9,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
@@ -27,12 +26,11 @@ export default function RootLayout() {
 
   const setEvents = useEventStore((state) => state.setEvents);
   const [fontsLoaded, error] = useFonts({
-    "Poppins-Regular": require('@/assets/fonts/Poppins-Regular.ttf'),
-    "Poppins-Medium": require('@/assets/fonts/Poppins-Medium.ttf'),
-    "Poppins-SemiBold": require('@/assets/fonts/Poppins-SemiBold.ttf'),
-    "Poppins-Bold": require('@/assets/fonts/Poppins-Bold.ttf'),
-    "Poppins-ExtraBold": require('@/assets/fonts/Poppins-ExtraBold.ttf'),
-    "Poppins-Black": require('@/assets/fonts/Poppins-Black.ttf'),
+    "Manrope-Regular": require('@/assets/fonts/Manrope-Regular.ttf'),
+    "Manrope-Medium": require('@/assets/fonts/Manrope-Medium.ttf'),
+    "Manrope-SemiBold": require('@/assets/fonts/Manrope-SemiBold.ttf'),
+    "Manrope-Bold": require('@/assets/fonts/Manrope-Bold.ttf'),
+    "Manrope-ExtraBold": require('@/assets/fonts/Manrope-ExtraBold.ttf'),
   });
 
   useEffect(() => {
@@ -100,7 +98,6 @@ export default function RootLayout() {
                 {/* Tab group shown after login */}
                 <Stack.Screen name="(tabs)" />
               </Stack>
-              <StatusBar style="dark" />
             </Animated.View>
           )}
         </PaperProvider>

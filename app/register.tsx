@@ -216,19 +216,19 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 28,
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Manrope-SemiBold',
     color: '#fff',
     marginBottom: 8,
   },
   subText: {
     fontSize: 14,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     color: '#ccc',
     marginBottom: 32,
   },
   label: {
     fontSize: 14,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     color: '#fff',
     marginBottom: 8,
   },
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 24,
     fontSize: 16,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     color: '#fff',
   },
   passwordWrapper: {
@@ -263,13 +263,13 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: '600',
     fontSize: 16,
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Manrope-SemiBold',
   },
   linkText: {
     color: '#fff',
     textAlign: 'center',
     fontSize: 14,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
   },
   signIn: {
     color: '#fff',
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     fontSize: 14,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     marginBottom: 12,
   },
   modalBackdrop: {
@@ -297,13 +297,13 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 20,
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Manrope-SemiBold',
     color: '#000',
     marginBottom: 12,
   },
   modalText: {
     fontSize: 14,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     color: '#333',
     textAlign: 'center',
     marginBottom: 20,
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
   },
   modalButtonText: {
     color: '#fff',
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Manrope-SemiBold',
     fontSize: 16,
   },
 });

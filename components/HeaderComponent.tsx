@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   headerText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 20,
     lineHeight: 27,
     alignItems: 'center',

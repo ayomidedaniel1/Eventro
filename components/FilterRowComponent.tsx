@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     fontSize: 12,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     color: '#333',
   },
 });

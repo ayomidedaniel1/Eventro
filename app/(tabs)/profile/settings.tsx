@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   title: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Manrope-Regular',
     fontSize: 14,
     color: '#1E1E1E',
   },
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     marginTop: 7,
   },
   btnText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 16,
     lineHeight: 22,
     textAlign: 'center',
