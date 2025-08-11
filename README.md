@@ -1,4 +1,4 @@
-# EventSync
+# Eventro
 
 ## Run locally
 
@@ -6,8 +6,8 @@ To install all dependencies, you need to run the following command:
 
 ```bash
 
-git clone https://github.com/ayomidedaniel1/EventSync.git
-cd eventsync
+git clone https://github.com/ayomidedaniel1/Eventro.git
+cd eventro
 
 npm install
 npx expo start

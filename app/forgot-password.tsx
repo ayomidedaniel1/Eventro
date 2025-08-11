@@ -1,13 +1,17 @@
 import { supabase } from '@/utils/supabase';
+import { FontAwesome6 } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import {
   ActivityIndicator,
+  Keyboard,
+  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  TouchableWithoutFeedback,
+  View
 } from 'react-native';
 
 export default function ForgotPasswordScreen() {
@@ -15,6 +19,7 @@ export default function ForgotPasswordScreen() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [isFocused, setIsFocused] = useState<string | null>(null);
 
   const handleReset = async () => {
     if (!email) return setError('Please enter your email');
@@ -24,7 +29,7 @@ export default function ForgotPasswordScreen() {
     setError('');
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'eventsync:/reset-password',
+      redirectTo: 'eventro://reset-password',
     });
 
     if (error) {
@@ -38,91 +43,135 @@ export default function ForgotPasswordScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Reset Password</Text>
+    <SafeAreaView style={styles.container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{ flex: 1 }}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+            <FontAwesome6 name="arrow-left-long" size={20} color="#fff" />
+          </TouchableOpacity>
 
-      <TextInput
-        placeholder="Enter your email"
-        placeholderTextColor="#888"
-        style={styles.input}
-        onChangeText={setEmail}
-        value={email}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
+          <Text style={styles.headerTitle}>Reset Password</Text>
+          <Text style={styles.subText}>Enter your email and we&apos;ll send you a reset link.</Text>
 
-      <TouchableOpacity style={styles.button} onPress={handleReset} disabled={loading}>
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Send Reset Link</Text>
-        )}
-      </TouchableOpacity>
+          <Text style={styles.label}>Enter email address</Text>
+          <TextInput
+            placeholder="Enter your email address"
+            placeholderTextColor="#7B7B7B"
+            style={[
+              styles.input,
+              { borderColor: isFocused === 'email' ? '#FFF' : '#A2A4B2' }
+            ]}
+            onChangeText={setEmail}
+            value={email}
+            autoCapitalize="none"
+            keyboardType="email-address"
+            cursorColor="#FFF"
+            onFocus={() => setIsFocused('email')}
+            onBlur={() => setIsFocused(null)}
+          />
 
-      {!!error && <Text style={styles.errorText}>{error}</Text>}
-      {!!message && <Text style={styles.successText}>{message}</Text>}
+          {!!error && <Text style={styles.errorText}>{error}</Text>}
+          {!!message && <Text style={styles.successText}>{message}</Text>}
 
-      <TouchableOpacity onPress={() => router.back()}>
-        <Text style={styles.linkText}>Back to Login</Text>
-      </TouchableOpacity>
-    </View>
+          <View style={styles.ctaContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleReset}
+              disabled={loading}
+              activeOpacity={0.5}
+            >
+              {loading ? <ActivityIndicator color="#000" /> : <Text style={styles.buttonText}>Send Reset Link</Text>}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#010101',
     padding: 24,
+    paddingTop: 60,
+  },
+  backButton: {
+    marginBottom: 24,
+    width: 42,
+    height: 42,
+    borderRadius: 12,
+    borderWidth: 0.5,
+    borderColor: '#7D7F82',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: '600',
-    fontFamily: 'Manrope-SemiBold',
-    marginBottom: 24,
-    color: '#2ACE99',
-    textAlign: 'center',
+  headerTitle: {
+    fontSize: 34,
+    lineHeight: 50,
+    fontFamily: 'Manrope-ExtraBold',
+    color: '#DFF1E2',
+    marginBottom: 8,
+  },
+  subText: {
+    fontSize: 14,
+    lineHeight: 24,
+    fontFamily: 'Manrope-Medium',
+    color: '#DFF1E2',
+    marginBottom: 32,
+  },
+  label: {
+    fontSize: 16,
+    lineHeight: 24,
+    fontFamily: 'Manrope-Medium',
+    color: '#DDDDDD',
+    marginBottom: 10,
   },
   input: {
-    backgroundColor: '#DCFDE7',
+    backgroundColor: 'transparent',
+    borderWidth: 0.5,
     padding: 14,
-    borderRadius: 8,
-    marginBottom: 16,
+    borderRadius: 12,
+    marginBottom: 24,
     fontSize: 16,
-    borderWidth: 1,
     fontFamily: 'Manrope-Regular',
-    borderColor: '#B8FAD6',
+    color: '#fff',
+    height: 54,
+  },
+  ctaContainer: {
+    position: 'absolute',
+    bottom: 24,
+    width: '100%',
   },
   button: {
-    backgroundColor: '#2ACE99',
+    backgroundColor: '#fff',
     paddingVertical: 14,
-    borderRadius: 8,
+    borderRadius: 100,
+    justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
+    height: 64,
   },
   buttonText: {
-    color: '#fff',
+    color: '#010101',
     fontWeight: '600',
-    fontSize: 16,
-    fontFamily: 'Manrope-SemiBold',
-  },
-  linkText: {
-    color: '#2ACE99',
-    textAlign: 'center',
-    fontSize: 14,
-    fontFamily: 'Manrope-Regular',
+    fontSize: 20,
+    lineHeight: 30,
+    fontFamily: 'Manrope-Medium',
   },
   errorText: {
     color: 'red',
     textAlign: 'center',
-    fontSize: 14,
-    marginBottom: 8,
+    fontSize: 12,
+    fontFamily: 'Manrope-Regular',
+    marginBottom: 12,
   },
   successText: {
     color: 'green',
     textAlign: 'center',
-    fontSize: 14,
-    marginBottom: 8,
+    fontSize: 12,
+    fontFamily: 'Manrope-Regular',
+    marginBottom: 12,
   },
 });

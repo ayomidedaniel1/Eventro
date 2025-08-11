@@ -1,20 +1,26 @@
 import { supabase } from '@/utils/supabase';
+import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import {
   ActivityIndicator,
+  Keyboard,
+  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  TouchableWithoutFeedback,
+  View
 } from 'react-native';
 
 export default function ResetPasswordScreen() {
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
+  const [isFocused, setIsFocused] = useState<string | null>(null);
 
   const handleReset = async () => {
     if (!password) return setError('Please enter a new password');
@@ -39,70 +45,156 @@ export default function ResetPasswordScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Set New Password</Text>
+    <SafeAreaView style={styles.container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{ flex: 1 }}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+            <FontAwesome6 name="arrow-left-long" size={20} color="#fff" />
+          </TouchableOpacity>
 
-      <TextInput
-        placeholder="New Password"
-        secureTextEntry
-        style={styles.input}
-        onChangeText={setPassword}
-        value={password}
-      />
+          <Text style={styles.headerTitle}>Set New Password</Text>
+          <Text style={styles.subText}>Enter your new password to continue.</Text>
 
-      <TouchableOpacity style={styles.button} onPress={handleReset} disabled={loading}>
-        {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Reset Password</Text>}
-      </TouchableOpacity>
+          <Text style={styles.label}>Enter new password</Text>
+          <View style={styles.passwordWrapper}>
+            <TextInput
+              placeholder="Password must contain 8 characters"
+              placeholderTextColor="#7B7B7B"
+              style={[
+                styles.input,
+                { borderColor: isFocused === 'password' ? '#FFF' : '#A2A4B2' }
+              ]}
+              secureTextEntry={!showPassword}
+              onChangeText={setPassword}
+              value={password}
+              cursorColor="#FFF"
+              onFocus={() => setIsFocused('password')}
+              onBlur={() => setIsFocused(null)}
+            />
+            <TouchableOpacity
+              style={styles.eyeIcon}
+              onPress={() => setShowPassword(prev => !prev)}
+              activeOpacity={0.6}
+            >
+              <Ionicons
+                name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                size={22}
+                color="#7B7B7B"
+              />
+            </TouchableOpacity>
+          </View>
 
-      {!!error && <Text style={styles.error}>{error}</Text>}
-      {!!success && <Text style={styles.success}>{success}</Text>}
-    </View>
+          {!!error && <Text style={styles.errorText}>{error}</Text>}
+          {!!success && <Text style={styles.successText}>{success}</Text>}
+
+          <View style={styles.ctaContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleReset}
+              disabled={loading}
+              activeOpacity={0.5}
+            >
+              {loading ? <ActivityIndicator color="#000" /> : <Text style={styles.buttonText}>Reset Password</Text>}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#010101',
     padding: 24,
-    justifyContent: 'center',
-    backgroundColor: '#fff',
+    paddingTop: 60,
   },
-  title: {
-    fontSize: 24,
-    marginBottom: 16,
-    color: '#2ACE99',
-    fontFamily: 'Manrope-SemiBold',
-    textAlign: 'center',
+  backButton: {
+    marginBottom: 24,
+    width: 42,
+    height: 42,
+    borderRadius: 12,
+    borderWidth: 0.5,
+    borderColor: '#7D7F82',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: {
+    fontSize: 34,
+    lineHeight: 50,
+    fontFamily: 'Manrope-ExtraBold',
+    color: '#DFF1E2',
+    marginBottom: 8,
+  },
+  subText: {
+    fontSize: 14,
+    lineHeight: 24,
+    fontFamily: 'Manrope-Medium',
+    color: '#DFF1E2',
+    marginBottom: 32,
+  },
+  label: {
+    fontSize: 16,
+    lineHeight: 24,
+    fontFamily: 'Manrope-Medium',
+    color: '#DDDDDD',
+    marginBottom: 10,
   },
   input: {
-    backgroundColor: '#DCFDE7',
+    backgroundColor: 'transparent',
+    borderWidth: 0.5,
     padding: 14,
-    borderRadius: 8,
-    marginBottom: 16,
+    borderRadius: 12,
+    marginBottom: 24,
     fontSize: 16,
     fontFamily: 'Manrope-Regular',
-    borderColor: '#B8FAD6',
-    borderWidth: 1,
+    color: '#fff',
+    height: 54,
+  },
+  passwordWrapper: {
+    position: 'relative',
+    justifyContent: 'center',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 16,
+    top: 18,
+  },
+  ctaContainer: {
+    position: 'absolute',
+    bottom: 24,
+    width: '100%',
   },
   button: {
-    backgroundColor: '#2ACE99',
-    padding: 14,
-    borderRadius: 8,
+    backgroundColor: '#fff',
+    paddingVertical: 14,
+    borderRadius: 100,
+    justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 16,
+    height: 64,
   },
   buttonText: {
-    color: '#fff',
-    fontFamily: 'Manrope-SemiBold',
-    fontSize: 16,
+    color: '#010101',
+    fontWeight: '600',
+    fontSize: 20,
+    lineHeight: 30,
+    fontFamily: 'Manrope-Medium',
   },
-  error: {
+  errorText: {
     color: 'red',
     textAlign: 'center',
-    marginTop: 8,
+    fontSize: 12,
+    fontFamily: 'Manrope-Regular',
+    marginBottom: 12,
   },
-  success: {
+  successText: {
     color: 'green',
     textAlign: 'center',
-    marginTop: 8,
+    fontSize: 12,
+    fontFamily: 'Manrope-Regular',
+    marginBottom: 12,
   },
 });
