@@ -8,9 +8,17 @@ export default function OnboardingScreen() {
   const router = useRouter();
   const scale = useSharedValue(1);
 
-  const buttonStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
+  const createScale = useSharedValue(1);
+  const signInScale = useSharedValue(1);
+
+  const createButtonStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: createScale.value }],
   }));
+
+  const signInButtonStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: signInScale.value }],
+  }));
+
 
   return (
     <View style={styles.container}>
@@ -40,14 +48,11 @@ export default function OnboardingScreen() {
         <Animated.View entering={FadeInUp.delay(800).duration(800)}>
           <TouchableOpacity
             activeOpacity={0.5}
-            onPressIn={() => (scale.value = withSpring(0.96))}
-            onPressOut={() => (scale.value = withSpring(1))}
+            onPressIn={() => (createScale.value = withSpring(0.96))}
+            onPressOut={() => (createScale.value = withSpring(1))}
             onPress={() => router.push('/register')}
           >
-            <Animated.View
-              style={[styles.createButton, buttonStyle]}
-              entering={FadeInUp.delay(600).duration(800)}
-            >
+            <Animated.View style={[styles.createButton, createButtonStyle]}>
               <Text style={styles.createButtonText}>Create account</Text>
               <Ionicons name="chevron-forward" size={14} color="#010101" />
             </Animated.View>
@@ -57,13 +62,13 @@ export default function OnboardingScreen() {
         <Animated.View entering={FadeInUp.delay(1200).duration(800)}>
           <TouchableOpacity
             activeOpacity={0.5}
-            onPressIn={() => (scale.value = withSpring(0.96))}
-            onPressOut={() => (scale.value = withSpring(1))}
+            onPressIn={() => (signInScale.value = withSpring(0.96))}
+            onPressOut={() => (signInScale.value = withSpring(1))}
             onPress={() => router.push('/login')}
           >
-            <View style={styles.signInButton}>
+            <Animated.View style={[styles.signInButton, signInButtonStyle]}>
               <Text style={styles.signInButtonText}>Sign in</Text>
-            </View>
+            </Animated.View>
           </TouchableOpacity>
         </Animated.View>
       </View>
