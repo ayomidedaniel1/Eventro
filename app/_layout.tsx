@@ -58,15 +58,15 @@ export default function RootLayout() {
     if (fontsLoaded) checkAndSeedEvents();
   }, [fontsLoaded, setEvents]);
 
-  const nextScreenOpacity = useSharedValue(0); // Control fade-in of next screen
+  const nextScreenOpacity = useSharedValue(0);
 
   useEffect(() => {
     if (!showSplash && fontsLoaded) {
       const nextRoute = user ? '/(tabs)' : '/';
       router.replace(nextRoute);
-      nextScreenOpacity.value = withTiming(1, { duration: 400 }); // Fade in next screen over 400ms
+      nextScreenOpacity.value = withTiming(1, { duration: 400 });
     }
-  }, [showSplash, fontsLoaded, user, router]);
+  }, [showSplash, fontsLoaded, user, router, nextScreenOpacity]);
 
   const nextScreenStyle = useAnimatedStyle(() => ({
     opacity: nextScreenOpacity.value,

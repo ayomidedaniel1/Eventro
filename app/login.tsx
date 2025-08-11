@@ -216,15 +216,18 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#fff',
     paddingVertical: 14,
-    borderRadius: 50,
+    borderRadius: 100,
+    justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
+    height: 64,
   },
   buttonText: {
-    color: '#000',
+    color: '#010101',
     fontWeight: '600',
-    fontSize: 16,
-    fontFamily: 'Manrope-SemiBold',
+    fontSize: 20,
+    lineHeight: 30,
+    fontFamily: 'Manrope-Medium',
   },
   linkText: {
     color: '#7D7F82',

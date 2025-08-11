@@ -72,9 +72,16 @@ export default function OnboardingScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#010101' },
-  imgBg: { flex: 0.7 },
-  backgroundImageGradient: { flex: 1 },
+  container: {
+    flex: 1,
+    backgroundColor: '#010101',
+  },
+  imgBg: {
+    flex: 0.7,
+  },
+  backgroundImageGradient: {
+    flex: 1,
+  },
   overlay: {
     position: 'absolute',
     bottom: 0,
