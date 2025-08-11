@@ -6,7 +6,6 @@ import Animated, { FadeInDown, FadeInUp, useAnimatedStyle, useSharedValue, withS
 
 export default function OnboardingScreen() {
   const router = useRouter();
-  const scale = useSharedValue(1);
 
   const createScale = useSharedValue(1);
   const signInScale = useSharedValue(1);
