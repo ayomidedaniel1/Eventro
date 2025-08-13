@@ -4,7 +4,7 @@ import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React from 'react';
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import NewEventSkeleton from './skeletons/NewEventSkeleton';
+import MostRatedEventSkeleton from './skeletons/MostRatedEventSkeleton';
 
 const NewEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
   const newEvents = [...events]
@@ -25,7 +25,7 @@ const NewEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: bo
         ? Array(5)
           .fill(null)
           .map((_, index) => (
-            <NewEventSkeleton key={`skeleton-${index}`} />
+            <MostRatedEventSkeleton key={`skeleton-${index}`} />
           ))
         : newEvents.map((event) => (
           <TouchableOpacity

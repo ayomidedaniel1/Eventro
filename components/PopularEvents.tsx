@@ -4,7 +4,7 @@ import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import PopularEventSkeleton from './skeletons/PopularEventSkeleton';
+import UpcomingEventSkeleton from './skeletons/UpcomingEventSkeleton';
 
 const PopularEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
   // Function to calculate events popularity score since it doesn't exist on API
@@ -43,7 +43,7 @@ const PopularEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading
           ? Array(5)
             .fill(null)
             .map((_, index) => (
-              <PopularEventSkeleton key={`skeleton-${index}`} />
+              <UpcomingEventSkeleton key={`skeleton-${index}`} />
             ))
           : popularEvents.map((event) => (
             <TouchableOpacity

@@ -1,6 +1,6 @@
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 
-export default function NewEventSkeleton() {
+export default function UpcomingEventSkeleton() {
   const fadeValue = new Animated.Value(0);
 
   Animated.loop(
@@ -19,7 +19,7 @@ export default function NewEventSkeleton() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.imageContainer}>
+      <View style={styles.imgContainer}>
         <Animated.View
           style={[
             styles.image,
@@ -29,9 +29,12 @@ export default function NewEventSkeleton() {
             },
           ]}
         />
+        <View style={styles.dateContainer}>
+          <View style={styles.date} />
+          <View style={styles.month} />
+        </View>
       </View>
-      <View style={styles.dataContainer}>
-        <View style={styles.date} />
+      <View style={styles.contentContainer}>
         <View style={styles.title} />
         <View style={styles.locationContainer}>
           <View style={styles.locationIcon} />
@@ -44,43 +47,71 @@ export default function NewEventSkeleton() {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'flex-start',
-    gap: 16,
-    width: 335,
-    height: 88,
-    marginBottom: 14,
+    width: 210,
+    height: 248,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#F4F4F4',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    marginRight: 18,
   },
-  imageContainer: {
-    width: 64,
-    height: 88,
-    borderRadius: 12,
+  imgContainer: {
+    width: 210,
+    height: 140,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    position: 'relative',
   },
   image: {
-    width: 64,
-    height: 88,
-    borderRadius: 12,
+    width: 210,
+    height: 140,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
-  dataContainer: {
+  dateContainer: {
+    position: 'absolute',
+    top: 82,
+    left: 12,
     flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    paddingVertical: 4,
-    gap: 6,
-    width: 255,
-    height: 88,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 6,
+    gap: 2,
+    width: 46,
+    height: 46,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
   },
   date: {
-    width: 120,
-    height: 19,
+    width: 20,
+    height: 16,
     backgroundColor: '#E0E0E0',
     borderRadius: 4,
   },
+  month: {
+    width: 30,
+    height: 12,
+    backgroundColor: '#E0E0E0',
+    borderRadius: 4,
+  },
+  contentContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 16,
+    flex: 1,
+  },
   title: {
-    width: 200,
+    width: 150,
     height: 19,
     backgroundColor: '#E0E0E0',
     borderRadius: 4,
+    marginBottom: 10,
   },
   locationContainer: {
     flexDirection: 'row',
@@ -94,7 +125,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   location: {
-    width: 100,
+    width: 80,
     height: 14,
     backgroundColor: '#E0E0E0',
     borderRadius: 4,
