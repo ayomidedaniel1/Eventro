@@ -1,54 +1,108 @@
-import NewEvents from '@/components/NewEvents';
-import PopularEvents from '@/components/PopularEvents';
+import EventCardWrapper from '@/components/EventCardWrapper';
+import EventListComponent from '@/components/EventListComponent';
+import FilterRowComponent from '@/components/FilterRowComponent';
+import HeaderComponent from '@/components/HeaderComponent';
+import MostRatedEvents from '@/components/MostRatedEvents';
+import SearchBarComponent from '@/components/SearchBarComponent';
 import { useEvents } from '@/hooks/useEvents';
-import { useAuthStore } from '@/store/authStore';
 import { useEventStore } from '@/store/eventStore';
-import { Image } from 'expo-image';
-import { router } from 'expo-router';
-import { useEffect } from 'react';
-import { ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { EventInsert } from '@/types';
+import { useRouter } from 'expo-router';
+import debounce from 'lodash/debounce';
+import { useCallback, useState } from 'react';
+import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import UpcomingEvents from '@/components/UpcomingEvents';
 
 export default function HomeScreen() {
-  const { user } = useAuthStore();
-  const { data: events = [], isLoading } = useEvents();
+  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterDate, setFilterDate] = useState('');
+  const [filterLocation, setFilterLocation] = useState('');
+  const [filterGenre, setFilterGenre] = useState('');
+  const [filterStatus, setFilterStatus] = useState('');
+  const { data: events, isLoading, error, refetch } = useEvents({
+    keyword: searchTerm,
+    startDateTime: filterDate,
+    city: filterLocation,
+    genre: filterGenre,
+    status: filterStatus,
+  });
   const setEvents = useEventStore((state) => state.setEvents);
 
-  useEffect(() => {
-    if (!user) {
-      router.replace('/login');
-    } else {
-      setEvents(events);
-    }
-  }, [user, events, setEvents]);
+  if (events && events.length > 0) {
+    setEvents(events);
+  }
+
+  const debouncedRefetch = useCallback(
+    debounce(() => {
+      refetch();
+    }, 300),
+    [refetch, filterDate, filterLocation, filterGenre, filterStatus]
+  );
+
+  const handleSearch = (text: string) => {
+    setSearchTerm(text);
+    debouncedRefetch();
+  };
+
+  const handleFilterChange = () => {
+    debouncedRefetch();
+  };
+
+  if (error) return <Text style={styles.error}>Error: {error.message}</Text>;
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 30 }} style={{ flex: 1, }}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View>
 
-        <View style={styles.headerContainer}>
-          <View style={styles.nameContainer}>
-            <Text style={styles.welcomeText}>
-              Welcome Back
-            </Text>
-            <Text style={styles.name}>
-              {user?.user_metadata?.name || ''}
-            </Text>
-          </View>
+          <HeaderComponent title="Events" />
 
-          <Image
-            //  source={{ uri: user.image }} 
-            source={{ uri: '../../assets/images/icons/smile.png' }}
-            style={styles.image}
-            contentFit='cover'
+          <SearchBarComponent
+            value={searchTerm}
+            onChangeText={handleSearch}
+            isLoading={isLoading}
+            placeholder="Search events..."
+            placeholderTextColor="#888"
           />
+
+          <FilterRowComponent
+            filterDate={filterDate}
+            setFilterDate={(value) => {
+              setFilterDate(value);
+              handleFilterChange();
+            }}
+            filterLocation={filterLocation}
+            setFilterLocation={(value) => {
+              setFilterLocation(value);
+              handleFilterChange();
+            }}
+            filterGenre={filterGenre}
+            setFilterGenre={(value) => {
+              setFilterGenre(value);
+              handleFilterChange();
+            }}
+            filterStatus={filterStatus}
+            setFilterStatus={(value) => {
+              setFilterStatus(value);
+              handleFilterChange();
+            }}
+          />
+
+          <UpcomingEvents events={events} isLoading={isLoading} />
+
+          <MostRatedEvents events={events} isLoading={isLoading} />
+
+          <EventListComponent
+            data={isLoading ? Array(4).fill({}) : events || []}
+            renderItem={(item: EventInsert) => <EventCardWrapper item={item} router={router} />}
+            keyExtractor={(item: EventInsert, index: number) => item.id || index.toString()}
+            isLoading={isLoading}
+          />
+
         </View>
-
-        <PopularEvents events={events} isLoading={isLoading} />
-
-        <NewEvents events={events} isLoading={isLoading} />
-
-      </ScrollView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }
@@ -56,41 +110,12 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingHorizontal: 14,
-    paddingTop: (StatusBar.currentHeight ?? 0) - 18,
+    backgroundColor: '#F9FFF9',
   },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  nameContainer: {
-    flexDirection: 'column',
-    textAlign: 'left',
-    justifyContent: 'space-between',
-    alignItems: 'stretch',
-  },
-  welcomeText: {
+  error: {
+    textAlign: 'center',
+    marginTop: 60,
+    color: 'red',
     fontFamily: 'Manrope-Regular',
-    fontSize: 16,
-    lineHeight: 22,
-    letterSpacing: -0.02,
-    color: 'rgba(29, 29, 29, 0.5)',
-  },
-  name: {
-    fontFamily: 'Manrope-Medium',
-    fontSize: 20,
-    lineHeight: 27,
-    letterSpacing: -0.02,
-    color: '#1D1D1D',
-  },
-  image: {
-    width: 45,
-    height: 45,
-    backgroundColor: '#D9D9D9',
-    borderRadius: 50,
-    borderWidth: 1,
-    borderColor: '#2ACE99',
   },
 });

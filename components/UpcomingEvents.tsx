@@ -6,7 +6,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import UpcomingEventSkeleton from './skeletons/UpcomingEventSkeleton';
 
-const PopularEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
+const UpcomingEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
   // Function to calculate events popularity score since it doesn't exist on API
   const calculatePopularityScore = (event: EventInsert): number => {
     const now = new Date();
@@ -84,7 +84,7 @@ const PopularEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading
   );
 };
 
-export default PopularEvents;
+export default UpcomingEvents;
 
 const styles = StyleSheet.create({
   container: {
