@@ -6,27 +6,31 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#FFFFFF',
-        tabBarInactiveTintColor: '#010101',
+        tabBarActiveTintColor: '#010101',
+        tabBarInactiveTintColor: '#FFFFFF',
+        tabBarActiveBackgroundColor: '#FFFFFF',
+        tabBarInactiveBackgroundColor: '#010101',
+        tabBarItemStyle: {
+          height: 90,
+          paddingHorizontal: 32,
+          borderTopEndRadius: 12,
+          borderTopLeftRadius: 12,
+          // marginBottom: 8,
+        },
         tabBarStyle: {
           backgroundColor: '#010101',
-          borderTopColor: '#B8FAD6',
-          borderTopWidth: 1,
-          paddingBottom: 10,
-          paddingTop: 6,
-          height: 70,
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
+          paddingBottom: 0,
+          paddingTop: 0,
+          height: 90,
           position: 'absolute',
           overflow: 'hidden',
+          justifyContent: 'center',
+          alignItems: 'center',
         },
         tabBarLabelStyle: {
           fontFamily: 'Manrope-SemiBold',
           fontSize: 14,
           lineHeight: 24,
-          textAlign: 'center',
-          marginBottom: 4,
-          // color:'#010101',
         },
       }}
       initialRouteName="index"
