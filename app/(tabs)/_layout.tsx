@@ -5,6 +5,7 @@ import { Text, View } from 'react-native';
 export default function TabsLayout() {
   return (
     <Tabs
+      initialRouteName='events'
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: true,
@@ -37,7 +38,7 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="events"
         options={{
           title: 'Events',
           tabBarIcon: ({ color, focused }) => (

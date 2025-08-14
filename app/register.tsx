@@ -31,7 +31,7 @@ export default function RegisterScreen() {
   const [passwordError, setPasswordError] = useState('');
 
   useEffect(() => {
-    if (user) router.replace('/');
+    if (user) router.replace('/(tabs)/events');
   }, [user]);
 
   const handlePasswordChange = (text: string) => {

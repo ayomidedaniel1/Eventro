@@ -62,7 +62,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (!showSplash && fontsLoaded) {
-      const nextRoute = user ? '/(tabs)' : '/';
+      const nextRoute = user ? '/(tabs)/events' : '/';
       router.replace(nextRoute);
       nextScreenOpacity.value = withTiming(1, { duration: 400 });
     }
