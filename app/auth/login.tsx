@@ -137,7 +137,7 @@ export default function LoginScreen() {
               Don’t have an account?{' '}
               <Text
                 style={styles.signIn}
-                onPress={() => router.push('/register')}
+                onPress={() => router.push('/auth/register')}
               >
                 Register
               </Text>

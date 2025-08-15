@@ -6,7 +6,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MostRatedEventSkeleton from './skeletons/MostRatedEventSkeleton';
 
-const NewEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
+const MostRatedEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
   const newEvents = [...events]
     .filter(event => event.startDateTime && new Date(event.startDateTime) > new Date())
     .sort((a, b) => new Date(b.startDateTime!).getTime() - new Date(a.startDateTime!).getTime())
@@ -58,7 +58,7 @@ const NewEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: bo
   );
 };
 
-export default NewEvents;
+export default MostRatedEvents;
 
 const styles = StyleSheet.create({
   container: {

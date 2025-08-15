@@ -90,10 +90,12 @@ export default function RootLayout() {
               <Stack screenOptions={{ headerShown: false }}>
                 {/* Public Screens */}
                 <Stack.Screen name="index" />
-                <Stack.Screen name="login" />
-                <Stack.Screen name="register" />
-                <Stack.Screen name="forgot-password" />
-                <Stack.Screen name="reset-password" />
+
+                {/* Auth Screens */}
+                <Stack.Screen name="auth/login" />
+                <Stack.Screen name="auth/register" />
+                <Stack.Screen name="auth/forgot-password" />
+                <Stack.Screen name="auth/reset-password" />
 
                 {/* Tab group shown after login */}
                 <Stack.Screen name="(tabs)" />

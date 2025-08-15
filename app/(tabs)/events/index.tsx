@@ -90,9 +90,9 @@ export default function HomeScreen() {
             }}
           />
 
-          {/* <UpcomingEvents events={events} isLoading={isLoading} /> */}
+          <UpcomingEvents events={events ?? []} isLoading={isLoading} />
 
-          {/* <MostRatedEvents events={events} isLoading={isLoading} /> */}
+          <MostRatedEvents events={events ?? []} isLoading={isLoading} />
 
           <EventListComponent
             data={isLoading ? Array(4).fill({}) : events || []}
@@ -110,7 +110,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FFF9',
+    backgroundColor: '#010101',
   },
   error: {
     textAlign: 'center',

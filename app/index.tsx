@@ -49,7 +49,7 @@ export default function OnboardingScreen() {
             activeOpacity={0.5}
             onPressIn={() => (createScale.value = withSpring(0.96))}
             onPressOut={() => (createScale.value = withSpring(1))}
-            onPress={() => router.push('/register')}
+            onPress={() => router.push('/auth/register')}
           >
             <Animated.View style={[styles.createButton, createButtonStyle]}>
               <Text style={styles.createButtonText}>Create account</Text>
@@ -63,7 +63,7 @@ export default function OnboardingScreen() {
             activeOpacity={0.5}
             onPressIn={() => (signInScale.value = withSpring(0.96))}
             onPressOut={() => (signInScale.value = withSpring(1))}
-            onPress={() => router.push('/login')}
+            onPress={() => router.push('/auth/login')}
           >
             <Animated.View style={[styles.signInButton, signInButtonStyle]}>
               <Text style={styles.signInButtonText}>Sign in</Text>
