@@ -57,14 +57,14 @@ export default function HomeScreen() {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View>
 
-          <HeaderComponent title="Events" />
+          <HeaderComponent title="Eventro." />
 
           <SearchBarComponent
             value={searchTerm}
             onChangeText={handleSearch}
             isLoading={isLoading}
-            placeholder="Search events..."
-            placeholderTextColor="#888"
+            placeholder="Discover"
+            placeholderTextColor="#7D7F82"
           />
 
           <FilterRowComponent

@@ -11,14 +11,15 @@ export default function HeaderComponent({ title }: HeaderProps) {
 
 const styles = StyleSheet.create({
   header: {
-    paddingTop: (StatusBar.currentHeight ?? 0) - 18,
+    paddingTop: (StatusBar.currentHeight ?? 0) - 16,
     paddingHorizontal: 20,
   },
   headerText: {
-    fontFamily: 'Manrope-Medium',
-    fontSize: 20,
-    lineHeight: 27,
+    fontFamily: 'Manrope-Bold',
+    fontSize: 24,
+    lineHeight: 30,
     alignItems: 'center',
-    color: '#1D1D1D',
+    textAlign: "left",
+    color: '#DFF1E2',
   },
 });
