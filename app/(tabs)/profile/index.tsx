@@ -18,7 +18,7 @@ export default function ProfileScreen() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setAuth(null);
-    router.replace('/login');
+    router.replace('/');
   };
 
   return (

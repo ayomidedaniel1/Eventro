@@ -45,7 +45,7 @@ export default function LoginScreen() {
     } else if (!data.user?.confirmed_at) {
       setError('Please confirm your email before logging in');
     } else {
-      router.replace('/');
+      router.replace('/(tabs)/events');
     }
 
     setLoading(false);

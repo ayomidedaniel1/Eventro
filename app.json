@@ -8,10 +8,16 @@
     "scheme": "eventro",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#010101",
+      "image": "./assets/images/splash-icon.png"
+    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "backgroundColor": "#010101"
     },
     "android": {
+      "backgroundColor": "#010101",
       "intentFilters": [
         {
           "action": "VIEW",

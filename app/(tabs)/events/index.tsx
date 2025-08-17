@@ -90,9 +90,9 @@ export default function HomeScreen() {
             }}
           />
 
-          <UpcomingEvents events={events ?? []} isLoading={isLoading} />
+          <UpcomingEvents events={events} isLoading={isLoading} />
 
-          <MostRatedEvents events={events ?? []} isLoading={isLoading} />
+          <MostRatedEvents events={events} isLoading={isLoading} />
 
           <EventListComponent
             data={isLoading ? Array(4).fill({}) : events || []}

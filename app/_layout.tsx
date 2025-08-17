@@ -86,8 +86,8 @@ export default function RootLayout() {
               }}
             />
           ) : (
-            <Animated.View style={[{ flex: 1 }, nextScreenStyle]}>
-              <Stack screenOptions={{ headerShown: false }}>
+            <Animated.View style={[{ flex: 1, backgroundColor: "#010101", }, nextScreenStyle]}>
+              <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#010101' } }}>
                 {/* Public Screens */}
                 <Stack.Screen name="index" />
 
