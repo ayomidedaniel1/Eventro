@@ -4,14 +4,14 @@ import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import MostRatedEventSkeleton from './skeletons/MostRatedEventSkeleton';
+import SavedEventSkeleton from './skeletons/SavedEventSkeleton';
 
 // Placeholder function to calculate dummy rating
 const calculateRating = (event: EventInsert): number => {
   return Math.random() * (5.0 - 3.5) + 3.5;
 };
 
-const MostRatedEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
+const SavedEvent = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
   const mostRatedEvents = [...events]
     .filter(event => event.startDateTime && new Date(event.startDateTime) > new Date())
     .map(event => ({ ...event, rating: calculateRating(event) }))
@@ -20,18 +20,12 @@ const MostRatedEvents = ({ events, isLoading }: { events: EventInsert[]; isLoadi
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Most rated</Text>
-        <TouchableOpacity activeOpacity={0.9} onPress={() => router.push('/events')} style={styles.viewAllBtn}>
-          <Text style={styles.viewAll}>View all</Text>
-        </TouchableOpacity>
-      </View>
 
       {isLoading
         ? Array(5)
           .fill(null)
           .map((_, index) => (
-            <MostRatedEventSkeleton key={`skeleton-${index}`} />
+            <SavedEventSkeleton key={`skeleton-${index}`} />
           ))
         : mostRatedEvents.map((event) => (
           <TouchableOpacity
@@ -76,56 +70,31 @@ const MostRatedEvents = ({ events, isLoading }: { events: EventInsert[]; isLoadi
                     </Text>
                   </View>
                 </View>
+
+                <View style={styles.locationContainer}>
+                  <Ionicons name="ticket-outline" size={14} color="#FFFFFF" />
+                  <Text style={styles.location}>₦8,000</Text>
+                </View>
               </View>
             </View>
 
             <View style={styles.ratingContainer}>
-              <Ionicons name="star" size={16} color={'#FBFB15'} />
-              <Text style={styles.rating}>
-                {event.rating ? event.rating.toFixed(1) : '4.5'}
-              </Text>
+              <Ionicons name="heart" size={14} color={'#FFFFFF'} />
             </View>
           </TouchableOpacity>
         ))}
+
     </View>
   );
 };
 
-export default MostRatedEvents;
+export default SavedEvent;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 36,
     paddingHorizontal: 14,
-  },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 18,
-    width: '100%',
-    height: 42,
-  },
-  headerText: {
-    fontFamily: 'Manrope-SemiBold',
-    fontSize: 20,
-    lineHeight: 30,
-    color: '#FFFFFF',
-    textAlign: 'left',
-  },
-  viewAllBtn: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 56,
-    height: 36,
-  },
-  viewAll: {
-    fontFamily: 'Manrope-Medium',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#CBC6C6',
   },
   eventContainer: {
     flexDirection: 'row',
@@ -134,15 +103,15 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 10,
     width: '100%',
-    height: 100,
+    height: 120,
     backgroundColor: '#1C1C1E',
     borderRadius: 16,
     marginBottom: 14,
   },
   image: {
-    width: 80,
-    height: 80,
-    borderRadius: 14,
+    width: 100,
+    height: 100,
+    borderRadius: 12,
   },
   dataContainer: {
     flexDirection: 'row',
@@ -194,23 +163,11 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   ratingContainer: {
-    width: 58,
-    height: 32,
-    backgroundColor: '#3C3C3F',
-    borderWidth: 0.2,
-    borderColor: 'rgba(221, 221, 221, 0.2)',
-    backdropFilter: 'blur(50px)',
-    borderRadius: 30,
-    flexDirection: 'row',
+    width: 30,
+    height: 30,
+    backgroundColor: '#434344',
+    borderRadius: 88,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 2,
-  },
-  rating: {
-    fontFamily: 'Manrope-Medium',
-    fontSize: 12,
-    lineHeight: 20,
-    textAlign: 'center',
-    color: '#FFFFFF',
   },
 });

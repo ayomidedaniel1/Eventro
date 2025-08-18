@@ -1,7 +1,7 @@
 import React from "react";
 import { Animated, Easing, StyleSheet, View } from "react-native";
 
-export default function MostRatedEventSkeleton() {
+export default function SavedEventSkeleton() {
   const fadeValue = new Animated.Value(0);
 
   Animated.loop(
