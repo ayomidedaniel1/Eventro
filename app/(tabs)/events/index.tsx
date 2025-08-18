@@ -17,16 +17,10 @@ import UpcomingEvents from '@/components/UpcomingEvents';
 export default function HomeScreen() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterDate, setFilterDate] = useState('');
-  const [filterLocation, setFilterLocation] = useState('');
   const [filterGenre, setFilterGenre] = useState('');
-  const [filterStatus, setFilterStatus] = useState('');
   const { data: events, isLoading, error, refetch } = useEvents({
     keyword: searchTerm,
-    startDateTime: filterDate,
-    city: filterLocation,
     genre: filterGenre,
-    status: filterStatus,
   });
   const setEvents = useEventStore((state) => state.setEvents);
 
@@ -38,7 +32,7 @@ export default function HomeScreen() {
     debounce(() => {
       refetch();
     }, 300),
-    [refetch, filterDate, filterLocation, filterGenre, filterStatus]
+    [refetch, filterGenre]
   );
 
   const handleSearch = (text: string) => {
@@ -68,38 +62,23 @@ export default function HomeScreen() {
           />
 
           <FilterRowComponent
-            filterDate={filterDate}
-            setFilterDate={(value) => {
-              setFilterDate(value);
-              handleFilterChange();
-            }}
-            filterLocation={filterLocation}
-            setFilterLocation={(value) => {
-              setFilterLocation(value);
-              handleFilterChange();
-            }}
             filterGenre={filterGenre}
             setFilterGenre={(value) => {
               setFilterGenre(value);
-              handleFilterChange();
-            }}
-            filterStatus={filterStatus}
-            setFilterStatus={(value) => {
-              setFilterStatus(value);
               handleFilterChange();
             }}
           />
 
           <UpcomingEvents events={events ?? []} isLoading={isLoading} />
 
-          <MostRatedEvents events={events ?? []} isLoading={isLoading} />
+          {/* <MostRatedEvents events={events ?? []} isLoading={isLoading} /> */}
 
-          <EventListComponent
+          {/* <EventListComponent
             data={isLoading ? Array(4).fill({}) : events || []}
             renderItem={(item: EventInsert) => <EventCardWrapper item={item} router={router} />}
             keyExtractor={(item: EventInsert, index: number) => item.id || index.toString()}
             isLoading={isLoading}
-          />
+          /> */}
 
         </View>
       </TouchableWithoutFeedback>

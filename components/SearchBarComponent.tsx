@@ -34,12 +34,11 @@ const styles = StyleSheet.create({
   searchWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 10,
+    marginVertical: 20,
     marginHorizontal: 20,
     padding: 0,
     gap: 8,
     height: 54,
-    flex: 1,
     backgroundColor: 'transparent',
   },
   searchContainer: {

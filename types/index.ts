@@ -44,7 +44,7 @@ export type EventInsert = {
   status: string | null;
   promoter: string | null;
   location: string | null;
-  priceRanges: { min?: number; max?: number; currency?: string }[] | null;
+  priceRanges: { min?: number; max?: number; currency?: string; }[] | null;
 
   // Timestamps
   created_at: string;
@@ -62,7 +62,7 @@ export type TicketmasterEvent = {
   pleaseNote?: string;
   url?: string;
   locale?: string;
-  images?: { url: string }[];
+  images?: { url: string; }[];
   priceRanges?: any[];
 
   dates: {
@@ -87,9 +87,9 @@ export type TicketmasterEvent = {
     venues?: {
       id?: string;
       name?: string;
-      city?: { name?: string };
-      country?: { name?: string; countryCode?: string };
-      address?: { line1?: string };
+      city?: { name?: string; };
+      country?: { name?: string; countryCode?: string; };
+      address?: { line1?: string; };
       location?: {
         latitude?: string;
         longitude?: string;
@@ -102,8 +102,8 @@ export type TicketmasterEvent = {
   };
 
   classifications?: {
-    genre?: { name?: string };
-    segment?: { name?: string };
+    genre?: { name?: string; };
+    segment?: { name?: string; };
   }[];
 };
 
@@ -164,14 +164,8 @@ export type SearchBarProps = {
 };
 
 export type FilterRowProps = {
-  filterDate: string;
-  setFilterDate: (value: string) => void;
-  filterLocation: string;
-  setFilterLocation: (value: string) => void;
   filterGenre: string;
   setFilterGenre: (value: string) => void;
-  filterStatus: string;
-  setFilterStatus: (value: string) => void;
 };
 
 export type FilterModalProps = {

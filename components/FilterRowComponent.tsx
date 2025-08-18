@@ -1,73 +1,75 @@
 import { FilterRowProps } from '@/types';
-import { Picker } from '@react-native-picker/picker';
-import { StyleSheet, View } from 'react-native';
+import { Image } from 'expo-image';
+import { useState } from 'react';
+import { ScrollView, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 export default function FilterRowComponent({
-  filterDate,
-  setFilterDate,
-  filterLocation,
-  setFilterLocation,
   filterGenre,
   setFilterGenre,
-  filterStatus,
-  setFilterStatus,
 }: FilterRowProps) {
+  const filters = [
+    { name: 'All', img: require('@/assets/images/tags/all.png') },
+    { name: 'Movies', img: require('@/assets/images/tags/movies.png') },
+    { name: 'Art', img: require('@/assets/images/tags/art.png') },
+    { name: 'Music', img: require('@/assets/images/tags/music.png') },
+    { name: 'Comedy', img: require('@/assets/images/tags/comedy.png') },
+    { name: 'Books', img: require('@/assets/images/tags/books.png') },
+  ];
+
+  const [tagSelect, setTagSelect] = useState<string | null>(filterGenre);
+
+  const handleTagPress = (tagName: string) => {
+    if (tagSelect === tagName) {
+      setTagSelect(null);
+      setFilterGenre('');
+    } else {
+      setTagSelect(tagName);
+      setFilterGenre(tagName);
+    }
+  };
+
   return (
     <View style={styles.filterRow}>
 
-      <Picker
-        selectedValue={filterDate}
-        onValueChange={setFilterDate}
-        style={{ flex: 1 }}
-        mode='dropdown'
+      <ScrollView
+        style={styles.tagsContainer}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ alignItems: 'center', gap: 12, }}
+        horizontal
       >
-        <Picker.Item label="Date" value="" style={styles.picker} />
-        <Picker.Item label="Today" value={new Date().toISOString().split('T')[0]} style={styles.picker} />
-        <Picker.Item label="Tomorrow" value={new Date(Date.now() + 86400000).toISOString().split('T')[0]} style={styles.picker} />
-        <Picker.Item label="This Week" value={new Date(Date.now() + 604800000).toISOString().split('T')[0]} style={styles.picker} />
-      </Picker>
+        {filters.map(tag => (
+          <TouchableOpacity
+            activeOpacity={0.9}
+            key={tag.name}
+            style={[
+              styles.tags,
+              tagSelect === tag.name
+                ? { backgroundColor: '#FFFFFF', }
+                : { backgroundColor: '#1C1C1E' }]}
+            onPress={() => handleTagPress(tag.name)}
+          >
+            <View style={[
+              styles.imageContainer,
+              tagSelect === tag.name
+                ? { backgroundColor: 'transparent' }
+                : { backgroundColor: 'rgba(221, 221, 221, 0.2)', }]}>
+              <Image
+                style={styles.image}
+                source={tag.img}
+                contentFit='cover'
+              />
+            </View>
 
-      <Picker
-        selectedValue={filterLocation}
-        onValueChange={setFilterLocation}
-        style={{ flex: 1 }}
-        mode='dropdown'
-      >
-        <Picker.Item label="Location" value="" style={styles.picker} />
-        <Picker.Item label="New York" value="New York" style={styles.picker} />
-        <Picker.Item label="Boston" value="Boston" style={styles.picker} />
-        <Picker.Item label="Los Angeles" value="Los Angeles" style={styles.picker} />
-        <Picker.Item label="London" value="London" style={styles.picker} />
-        <Picker.Item label="Bronx" value="Bronx" style={styles.picker} />
-      </Picker>
-
-      <Picker
-        selectedValue={filterGenre}
-        onValueChange={setFilterGenre}
-        style={{ flex: 1 }}
-        mode='dropdown'
-      >
-        <Picker.Item label="Genre" value="" style={styles.picker} />
-        <Picker.Item label="Country" value="Country" style={styles.picker} />
-        <Picker.Item label="Football" value="Football" style={styles.picker} />
-        <Picker.Item label="Theatre" value="Theatre" style={styles.picker} />
-        <Picker.Item label="R&B" value="R&B" style={styles.picker} />
-        <Picker.Item label="Rock" value="Rock" style={styles.picker} />
-        <Picker.Item label="Baseball" value="Baseball" style={styles.picker} />
-        <Picker.Item label="Performance Art" value="Performance Art" style={styles.picker} />
-      </Picker>
-
-      <Picker
-        selectedValue={filterStatus}
-        onValueChange={setFilterStatus}
-        style={{ flex: 1 }}
-        mode='dropdown'
-      >
-        <Picker.Item label="Status" value="" style={styles.picker} />
-        <Picker.Item label="Onsale" value="onsale" style={styles.picker} />
-        <Picker.Item label="Offsale" value="offsale" style={styles.picker} />
-      </Picker>
-
+            <Text style={[
+              styles.text,
+              tagSelect === tag.name
+                ? { color: '#010101' }
+                : { color: '#FFFFFF', }]}>
+              {tag.name}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
     </View>
   );
 }
@@ -77,10 +79,39 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     paddingHorizontal: 14,
+    height: 50,
   },
-  picker: {
-    fontSize: 12,
-    fontFamily: 'Manrope-Regular',
-    color: '#333',
+  tagsContainer: {
+    flexDirection: 'row',
+  },
+  tags: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 5,
+    paddingLeft: 7,
+    paddingRight: 20,
+    gap: 10,
+    minWidth: 94,
+    height: 48,
+    borderRadius: 100,
+  },
+  imageContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 8.26087,
+    gap: 8.26,
+    width: 38,
+    height: 38,
+    borderRadius: 82.6087,
+  },
+  image: {
+    width: 16,
+    height: 24,
+  },
+  text: {
+    fontFamily: 'Manrope-Medium',
+    fontSize: 14,
+    lineHeight: 24,
   },
 });

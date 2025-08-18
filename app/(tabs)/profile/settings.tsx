@@ -1,7 +1,6 @@
 import HeaderComponent from '@/components/HeaderComponent';
 import { useAuthStore } from '@/store/authStore';
 import { Ionicons } from '@expo/vector-icons';
-import { Picker } from '@react-native-picker/picker';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -54,19 +53,6 @@ export default function SettingsScreen() {
           // onChangeText={}
           // value={}
           />
-        </View>
-
-        <View style={styles.inputField}>
-          <Text style={styles.title}>Gender</Text>
-          <Picker
-            selectedValue={"Male"}
-            onValueChange={() => { }}
-            style={styles.input}
-            mode='dropdown'
-          >
-            <Picker.Item label="Male" value="Male" style={styles.input} />
-            <Picker.Item label="Female" value="Female" style={styles.input} />
-          </Picker>
         </View>
 
         <TouchableOpacity

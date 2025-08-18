@@ -7,30 +7,22 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import UpcomingEventSkeleton from './skeletons/UpcomingEventSkeleton';
 
 const UpcomingEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
-  // Function to calculate events popularity score since it doesn't exist on API
-  const calculatePopularityScore = (event: EventInsert): number => {
-    const now = new Date();
-    const updatedAt = new Date(event.updated_at);
-    const daysSinceUpdate = (now.getTime() - updatedAt.getTime()) / (1000 * 60 * 60 * 24);
-
-    const start = event.startDateTime ? new Date(event.startDateTime) : null;
-    const end = event.endDateTime ? new Date(event.endDateTime) : null;
-    const eventDurationInHours = start && end
-      ? (end.getTime() - start.getTime()) / (1000 * 60 * 60)
-      : 2;
-
-    return (daysSinceUpdate * 0.5) + (eventDurationInHours * 0.3);
-  };
-
-  // Sort by popularity score (lower score = more popular due to recent updates)
-  const popularEvents = [...events]
+  // Filter and sort events to show the next 5 upcoming events
+  const upcomingEvents = [...events]
     .filter(event => event.startDateTime && new Date(event.startDateTime) > new Date())
-    .sort((a, b) => calculatePopularityScore(a) - calculatePopularityScore(b))
+    .sort((a, b) => new Date(a.startDateTime!).getTime() - new Date(b.startDateTime!).getTime())
     .slice(0, 5);
+
+  console.log("upcoming events>>>>", upcomingEvents);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>🔥 Popular Events</Text>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerText}>Upcoming events</Text>
+        <TouchableOpacity onPress={() => { }} activeOpacity={0.9} style={styles.viewAllBtn}>
+          <Text style={styles.viewAll}>View all</Text>
+        </TouchableOpacity>
+      </View>
 
       <ScrollView
         showsHorizontalScrollIndicator={false}
@@ -38,14 +30,13 @@ const UpcomingEvents = ({ events, isLoading }: { events: EventInsert[]; isLoadin
         style={styles.eventsContainer}
         horizontal
       >
-
         {isLoading
           ? Array(5)
             .fill(null)
             .map((_, index) => (
               <UpcomingEventSkeleton key={`skeleton-${index}`} />
             ))
-          : popularEvents.map((event) => (
+          : upcomingEvents.map((event) => (
             <TouchableOpacity
               onPress={() => router.push(`/events/${event.id}/detail`)}
               activeOpacity={0.8}
@@ -58,27 +49,34 @@ const UpcomingEvents = ({ events, isLoading }: { events: EventInsert[]; isLoadin
                   style={styles.image}
                   contentFit="cover"
                 />
-                <View style={styles.dateContainer}>
-                  <Text style={styles.date}>
-                    {event.startDate ? new Date(event.startDate).getDate() : '20'}
-                  </Text>
-                  <Text style={styles.month}>
-                    {event.startDate
-                      ? new Date(event.startDate).toLocaleString('default', { month: 'short' })
-                      : 'Mar'}
-                  </Text>
+                <View style={styles.priceContainer}>
+                  <View style={styles.priceBox}>
+                    <Text style={styles.price}>
+                      {event.startDate ? new Date(event.startDate).getDate() : '20'}
+                    </Text>
+                  </View>
+                  <View style={styles.favouriteContainer}>
+                    <Ionicons name="heart-outline" size={18} color={'#FFF'} />
+                  </View>
                 </View>
               </View>
               <View style={styles.contentContainer}>
                 <Text style={styles.title}>{event.title}</Text>
-                <View style={styles.locationContainer}>
-                  <Ionicons name="location" size={12} color="#2ACE99" />
-                  <Text style={styles.location}>{event.city}</Text>
+                <View style={styles.dataContainer}>
+                  <View style={styles.locationContainer}>
+                    <Ionicons name="location" size={16} color="#2ACE99" />
+                    <Text style={styles.location}>{event.city}</Text>
+                  </View>
+                  <View style={styles.locationContainer}>
+                    <Ionicons name="calendar-clear" size={16} color="#2ACE99" />
+                    <Text style={styles.location}>
+                      {event.startDate ? new Date(event.startDate).getDate() : '20'}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </TouchableOpacity>
           ))}
-
       </ScrollView>
     </View>
   );
@@ -92,11 +90,32 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginTop: 36,
   },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 18,
+    width: '100%',
+    height: 42,
+  },
+  viewAllBtn: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 56,
+    height: 36,
+  },
+  viewAll: {
+    fontFamily: 'Manrope-Medium',
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#CBC6C6',
+  },
   headerText: {
     fontFamily: 'Manrope-SemiBold',
-    fontSize: 16,
-    lineHeight: 22,
-    color: '#1D1D1D',
+    fontSize: 20,
+    lineHeight: 30,
+    color: '#FFFFFF',
     textAlign: 'left',
   },
   eventsContainer: {
@@ -105,36 +124,32 @@ const styles = StyleSheet.create({
   eventCard: {
     flexDirection: 'column',
     alignItems: 'flex-start',
-    isolation: 'isolate',
-    width: 210,
-    height: 248,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#F4F4F4',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    marginRight: 18,
+    width: 290,
+    height: 300,
+    backgroundColor: '#1C1C1E',
+    borderRadius: 24,
+    borderWidth: 0.5,
+    borderColor: '#434344',
+    marginRight: 16,
   },
   imgContainer: {
-    width: 210,
-    height: 140,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    width: 270,
+    height: 180,
+    borderRadius: 20,
+    backgroundColor: '#E2EFFF',
     position: 'relative',
   },
   image: {
-    width: 210,
-    height: 140,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    width: 270,
+    height: 180,
+    borderRadius: 20,
   },
-  dateContainer: {
+  priceContainer: {
     position: 'absolute',
-    top: 82,
-    left: 12,
-    flexDirection: 'column',
-    justifyContent: 'center',
+    top: 136,
+    left: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     padding: 6,
     gap: 2,
@@ -144,47 +159,66 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     zIndex: 2,
   },
-  date: {
-    fontFamily: 'Manrope-SemiBold',
-    fontSize: 12,
-    lineHeight: 16,
-    textAlign: 'center',
-    color: '#1D1D1D',
+  priceBox: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    width: 80,
+    height: 34,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 100,
   },
-  month: {
+  price: {
     fontFamily: 'Manrope-Regular',
     fontSize: 12,
-    lineHeight: 16,
+    lineHeight: 20,
     textAlign: 'center',
-    color: 'rgba(29, 29, 29, 0.5)',
+    color: '#000000',
+  },
+  favouriteContainer: {
+    width: 34,
+    height: 34,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderWidth: 0.2,
+    borderColor: '#DDDDDD',
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   contentContainer: {
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 16,
     flex: 1,
+    padding: 0,
+    gap: 4,
+    height: 82,
   },
   title: {
     fontFamily: 'Manrope-Medium',
-    fontSize: 14,
-    lineHeight: 19,
-    alignItems: 'center',
-    color: '#1D1D1D',
+    fontSize: 18,
+    lineHeight: 30,
+    color: '#FFFFFF',
+  },
+  dataContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: 8,
+    height: 48,
   },
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 0,
     gap: 4,
+    height: 20,
   },
   location: {
     fontFamily: 'Manrope-Regular',
-    fontSize: 14,
-    lineHeight: 19,
-    alignItems: 'center',
-    color: 'rgba(29, 29, 29, 0.5)',
+    fontSize: 12,
+    lineHeight: 20,
+    textAlign: 'center',
+    color: '#FFF',
   },
 });
