@@ -1,4 +1,4 @@
-import { Animated, Easing, StyleSheet, View } from 'react-native';
+import { Animated, Easing, StyleSheet, View } from "react-native";
 
 export default function UpcomingEventSkeleton() {
   const fadeValue = new Animated.Value(0);
@@ -18,27 +18,44 @@ export default function UpcomingEventSkeleton() {
   });
 
   return (
-    <View style={styles.container}>
-      <View style={styles.imgContainer}>
+    <View style={styles.eventCard}>
+      <Animated.View
+        style={[styles.image, { backgroundColor: "#333", opacity: fade }]}
+      />
+
+      <View style={styles.priceContainer}>
+        <Animated.View
+          style={[styles.priceBox, { backgroundColor: "#444", opacity: fade }]}
+        />
         <Animated.View
           style={[
-            styles.image,
-            {
-              backgroundColor: '#E0E0E0',
-              opacity: fade,
-            },
+            styles.favouriteContainer,
+            { backgroundColor: "#444", opacity: fade },
           ]}
         />
-        <View style={styles.dateContainer}>
-          <View style={styles.date} />
-          <View style={styles.month} />
-        </View>
       </View>
+
       <View style={styles.contentContainer}>
-        <View style={styles.title} />
-        <View style={styles.locationContainer}>
-          <View style={styles.locationIcon} />
-          <View style={styles.location} />
+        <Animated.View
+          style={[styles.title, { backgroundColor: "#444", opacity: fade }]}
+        />
+        <View style={styles.dataContainer}>
+          <View style={styles.row}>
+            <Animated.View
+              style={[styles.icon, { backgroundColor: "#444", opacity: fade }]}
+            />
+            <Animated.View
+              style={[styles.text, { backgroundColor: "#444", opacity: fade }]}
+            />
+          </View>
+          <View style={styles.row}>
+            <Animated.View
+              style={[styles.icon, { backgroundColor: "#444", opacity: fade }]}
+            />
+            <Animated.View
+              style={[styles.text, { backgroundColor: "#444", opacity: fade }]}
+            />
+          </View>
         </View>
       </View>
     </View>
@@ -46,88 +63,74 @@ export default function UpcomingEventSkeleton() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    width: 210,
-    height: 248,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#F4F4F4',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    marginRight: 18,
-  },
-  imgContainer: {
-    width: 210,
-    height: 140,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    position: 'relative',
+  eventCard: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    width: 290,
+    height: 300,
+    backgroundColor: "#1C1C1E",
+    borderRadius: 24,
+    borderWidth: 0.5,
+    borderColor: "#434344",
+    marginRight: 16,
+    padding: 10,
   },
   image: {
-    width: 210,
-    height: 140,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    width: 270,
+    height: 180,
+    borderRadius: 20,
   },
-  dateContainer: {
-    position: 'absolute',
-    top: 82,
-    left: 12,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 6,
-    gap: 2,
-    width: 46,
-    height: 46,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
+  priceContainer: {
+    position: "absolute",
+    top: 136,
+    left: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: 250,
+    height: 34,
   },
-  date: {
-    width: 20,
-    height: 16,
-    backgroundColor: '#E0E0E0',
-    borderRadius: 4,
+  priceBox: {
+    width: 80,
+    height: 34,
+    borderRadius: 100,
   },
-  month: {
-    width: 30,
-    height: 12,
-    backgroundColor: '#E0E0E0',
-    borderRadius: 4,
+  favouriteContainer: {
+    width: 34,
+    height: 34,
+    borderRadius: 100,
   },
   contentContainer: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 16,
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "center",
     flex: 1,
+    gap: 6,
+    marginTop: 8,
   },
   title: {
-    width: 150,
-    height: 19,
-    backgroundColor: '#E0E0E0',
-    borderRadius: 4,
-    marginBottom: 10,
-  },
-  locationContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  locationIcon: {
-    width: 12,
-    height: 12,
-    backgroundColor: '#E0E0E0',
+    width: 200,
+    height: 20,
     borderRadius: 6,
   },
-  location: {
-    width: 80,
+  dataContainer: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: 8,
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  icon: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+  },
+  text: {
+    width: 120,
     height: 14,
-    backgroundColor: '#E0E0E0',
     borderRadius: 4,
   },
 });

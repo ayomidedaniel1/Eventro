@@ -1,5 +1,6 @@
 import { EventInsert } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React from 'react';
@@ -90,6 +91,16 @@ const UpcomingEvents = ({ events, isLoading }: { events: EventInsert[]; isLoadin
                   </View>
                 </View>
               </View>
+
+              <LinearGradient
+                colors={["#9D8BF9", "#2902EE"]}
+                // colors={["#F2D3D3", "#FA0F0F"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.genre}
+              >
+                <Text style={styles.genreText}>{event.genre}</Text>
+              </LinearGradient>
             </TouchableOpacity>
           ))}
       </ScrollView>
@@ -136,6 +147,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   eventCard: {
+    position: 'relative',
     flexDirection: 'column',
     alignItems: 'flex-start',
     width: 290,
@@ -146,6 +158,7 @@ const styles = StyleSheet.create({
     borderColor: '#434344',
     marginRight: 16,
     padding: 10,
+    overflow: 'hidden',
   },
   imgContainer: {
     width: 270,
@@ -226,5 +239,21 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     textAlign: 'center',
     color: '#FFF',
+  },
+  genre: {
+    position: "absolute",
+    top: 18,
+    left: -30,
+    width: 125.07,
+    height: 28,
+    transform: [{ rotate: "-45deg" }],
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 4,
+  },
+  genreText: {
+    fontFamily: "Manrope-Bold",
+    fontSize: 10,
+    color: "#FFF",
   },
 });
