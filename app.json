@@ -17,6 +17,7 @@
       "backgroundColor": "#010101"
     },
     "android": {
+      "package": "com.neon.eventro",
       "backgroundColor": "#010101",
       "intentFilters": [
         {
