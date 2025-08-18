@@ -7,11 +7,10 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import UpcomingEventSkeleton from './skeletons/UpcomingEventSkeleton';
 
 const UpcomingEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
-  // Filter and sort events to show the next 5 upcoming events
   const upcomingEvents = [...events]
     .filter(event => event.startDateTime && new Date(event.startDateTime) > new Date())
     .sort((a, b) => new Date(a.startDateTime!).getTime() - new Date(b.startDateTime!).getTime())
-    .slice(0, 5);
+    .slice(0, 7);
 
   console.log("upcoming events>>>>", upcomingEvents);
 
@@ -88,7 +87,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    marginTop: 36,
+    marginTop: 20,
+    paddingHorizontal: 14,
   },
   headerContainer: {
     flexDirection: 'row',

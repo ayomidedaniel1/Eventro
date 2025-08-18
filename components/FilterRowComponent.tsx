@@ -79,7 +79,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     paddingHorizontal: 14,
-    height: 50,
   },
   tagsContainer: {
     flexDirection: 'row',
