@@ -12,7 +12,19 @@ const UpcomingEvents = ({ events, isLoading }: { events: EventInsert[]; isLoadin
     .sort((a, b) => new Date(a.startDateTime!).getTime() - new Date(b.startDateTime!).getTime())
     .slice(0, 7);
 
-  console.log("upcoming events>>>>", upcomingEvents);
+  const formatDateTime = (dateString: string) => {
+    const date = new Date(dateString);
+
+    return new Intl.DateTimeFormat("en-US", {
+      weekday: "short",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }).format(date).replace(",", " |");
+  };
 
   return (
     <View style={styles.container}>
@@ -25,7 +37,6 @@ const UpcomingEvents = ({ events, isLoading }: { events: EventInsert[]; isLoadin
 
       <ScrollView
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingRight: 50 }}
         style={styles.eventsContainer}
         horizontal
       >
@@ -44,32 +55,37 @@ const UpcomingEvents = ({ events, isLoading }: { events: EventInsert[]; isLoadin
             >
               <View style={styles.imgContainer}>
                 <Image
-                  source={{ uri: event.image || '../../assets/images/icons/smile.png' }}
+                  source={{ uri: event.image || require('@/assets/images/icon.png') }}
                   style={styles.image}
                   contentFit="cover"
                 />
+
                 <View style={styles.priceContainer}>
                   <View style={styles.priceBox}>
                     <Text style={styles.price}>
-                      {event.startDate ? new Date(event.startDate).getDate() : '20'}
+                      ₦8,000
                     </Text>
                   </View>
-                  <View style={styles.favouriteContainer}>
+
+                  <TouchableOpacity activeOpacity={0.8} style={styles.favouriteContainer}>
                     <Ionicons name="heart-outline" size={18} color={'#FFF'} />
-                  </View>
+                  </TouchableOpacity>
                 </View>
               </View>
+
               <View style={styles.contentContainer}>
-                <Text style={styles.title}>{event.title}</Text>
+                <Text style={styles.title}>
+                  {event.title.length > 30 ? event.title.slice(0, 30) + "..." : event.title}
+                </Text>
                 <View style={styles.dataContainer}>
                   <View style={styles.locationContainer}>
-                    <Ionicons name="location" size={16} color="#2ACE99" />
-                    <Text style={styles.location}>{event.city}</Text>
+                    <Ionicons name="location-outline" size={16} color="#FFFFFF" />
+                    <Text style={styles.location}>{event.address}, {event.city}</Text>
                   </View>
                   <View style={styles.locationContainer}>
-                    <Ionicons name="calendar-clear" size={16} color="#2ACE99" />
+                    <Ionicons name="calendar-outline" size={16} color="#FFFFFF" />
                     <Text style={styles.location}>
-                      {event.startDate ? new Date(event.startDate).getDate() : '20'}
+                      {event.startDateTime ? formatDateTime(event.startDateTime) : "No date"}
                     </Text>
                   </View>
                 </View>
@@ -86,7 +102,6 @@ export default UpcomingEvents;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     marginTop: 20,
     paddingHorizontal: 14,
   },
@@ -94,7 +109,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 18,
     width: '100%',
     height: 42,
   },
@@ -131,12 +145,12 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: '#434344',
     marginRight: 16,
+    padding: 10,
   },
   imgContainer: {
     width: 270,
     height: 180,
     borderRadius: 20,
-    backgroundColor: '#E2EFFF',
     position: 'relative',
   },
   image: {
@@ -151,13 +165,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 6,
-    gap: 2,
-    width: 46,
-    height: 46,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
-    zIndex: 2,
+    width: 250,
+    height: 34,
   },
   priceBox: {
     flexDirection: 'row',
@@ -172,7 +181,6 @@ const styles = StyleSheet.create({
   price: {
     fontFamily: 'Manrope-Regular',
     fontSize: 12,
-    lineHeight: 20,
     textAlign: 'center',
     color: '#000000',
   },
@@ -189,11 +197,9 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexDirection: 'column',
     alignItems: 'flex-start',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     flex: 1,
-    padding: 0,
     gap: 4,
-    height: 82,
   },
   title: {
     fontFamily: 'Manrope-Medium',

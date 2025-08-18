@@ -47,42 +47,40 @@ export default function HomeScreen() {
   if (error) return <Text style={styles.error}>Error: {error.message}</Text>;
 
   return (
-    <SafeAreaView style={styles.container}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.container}>
 
-          <HeaderComponent title="Eventro." />
+        <HeaderComponent title="Eventro." />
 
-          <SearchBarComponent
-            value={searchTerm}
-            onChangeText={handleSearch}
-            isLoading={isLoading}
-            placeholder="Discover"
-            placeholderTextColor="#7D7F82"
-          />
+        <SearchBarComponent
+          value={searchTerm}
+          onChangeText={handleSearch}
+          isLoading={isLoading}
+          placeholder="Discover"
+          placeholderTextColor="#7D7F82"
+        />
 
-          <FilterRowComponent
-            filterGenre={filterGenre}
-            setFilterGenre={(value) => {
-              setFilterGenre(value);
-              handleFilterChange();
-            }}
-          />
+        <FilterRowComponent
+          filterGenre={filterGenre}
+          setFilterGenre={(value) => {
+            setFilterGenre(value);
+            handleFilterChange();
+          }}
+        />
 
-          <UpcomingEvents events={events ?? []} isLoading={isLoading} />
+        <UpcomingEvents events={events ?? []} isLoading={isLoading} />
 
-          {/* <MostRatedEvents events={events ?? []} isLoading={isLoading} /> */}
+        {/* <MostRatedEvents events={events ?? []} isLoading={isLoading} /> */}
 
-          {/* <EventListComponent
+        {/* <EventListComponent
             data={isLoading ? Array(4).fill({}) : events || []}
             renderItem={(item: EventInsert) => <EventCardWrapper item={item} router={router} />}
             keyExtractor={(item: EventInsert, index: number) => item.id || index.toString()}
             isLoading={isLoading}
           /> */}
 
-        </View>
-      </TouchableWithoutFeedback>
-    </SafeAreaView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
