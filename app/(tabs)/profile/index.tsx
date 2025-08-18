@@ -28,7 +28,7 @@ export default function ProfileScreen() {
       <ProfileHeaderComponent
         name={user.user_metadata?.name || ''}
         email={user.user_metadata?.email || ''}
-        avatar={user.user_metadata?.avatar_url || 'https://via.placeholder.com/150'}
+        avatar={user.user_metadata?.avatar_url || require('@/assets/images/icon.png')}
       />
 
       <View style={styles.actionsContainer}>
