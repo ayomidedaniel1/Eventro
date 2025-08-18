@@ -1,12 +1,6 @@
+import { ProfileActionsProps } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
-import type { ComponentProps } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
-type ProfileActionsProps = {
-  action: () => void;
-  title: string;
-  icon: ComponentProps<typeof Ionicons>['name'];
-};
 
 export default function ProfileActionsComponent({ action, title, icon }: ProfileActionsProps) {
   return (

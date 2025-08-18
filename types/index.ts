@@ -1,6 +1,7 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Session, User } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
-import { JSX } from "react";
+import { ComponentProps, JSX } from "react";
 
 export type AuthState = {
   user: User | null;
@@ -207,4 +208,10 @@ export type ProfileHeaderProps = {
   name: string;
   email: string;
   avatar: string;
+};
+
+export type ProfileActionsProps = {
+  action: () => void;
+  title: string;
+  icon: ComponentProps<typeof Ionicons>['name'];
 };
