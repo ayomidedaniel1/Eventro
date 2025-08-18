@@ -6,10 +6,16 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MostRatedEventSkeleton from './skeletons/MostRatedEventSkeleton';
 
+// Placeholder function to calculate dummy rating
+const calculateRating = (event: EventInsert): number => {
+  return Math.random() * (5.0 - 3.5) + 3.5;
+};
+
 const MostRatedEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
-  const newEvents = [...events]
+  const mostRatedEvents = [...events]
     .filter(event => event.startDateTime && new Date(event.startDateTime) > new Date())
-    .sort((a, b) => new Date(b.startDateTime!).getTime() - new Date(a.startDateTime!).getTime())
+    .map(event => ({ ...event, rating: calculateRating(event) }))
+    .sort((a, b) => b.rating - a.rating)
     .slice(0, 5);
 
   return (
@@ -27,7 +33,7 @@ const MostRatedEvents = ({ events, isLoading }: { events: EventInsert[]; isLoadi
           .map((_, index) => (
             <MostRatedEventSkeleton key={`skeleton-${index}`} />
           ))
-        : newEvents.map((event) => (
+        : mostRatedEvents.map((event) => (
           <TouchableOpacity
             onPress={() => router.push(`/events/${event.id}/detail`)}
             activeOpacity={0.8}
@@ -53,7 +59,7 @@ const MostRatedEvents = ({ events, isLoading }: { events: EventInsert[]; isLoadi
 
                 <View style={styles.bottomContainer}>
                   <View style={styles.dateContainer}>
-                    <Ionicons name='calendar-outline' size={14} color={'#FFFFFF'} />
+                    <Ionicons name="calendar-outline" size={14} color={'#FFFFFF'} />
                     <Text style={styles.date}>
                       {event.startDateTime
                         ? new Date(event.startDateTime).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
@@ -62,7 +68,7 @@ const MostRatedEvents = ({ events, isLoading }: { events: EventInsert[]; isLoadi
                   </View>
 
                   <View style={styles.dateContainer}>
-                    <Ionicons name='ticket-outline' size={14} color={'#FFFFFF'} />
+                    <Ionicons name="ticket-outline" size={14} color={'#FFFFFF'} />
                     <Text style={styles.date}>
                       {event.startDateTime
                         ? new Date(event.startDateTime).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
@@ -74,14 +80,13 @@ const MostRatedEvents = ({ events, isLoading }: { events: EventInsert[]; isLoadi
             </View>
 
             <View style={styles.ratingContainer}>
-              <Ionicons name='star' size={16} color={'#FBFB15'} />
+              <Ionicons name="star" size={16} color={'#FBFB15'} />
               <Text style={styles.rating}>
-                4.5
+                {event.rating ? event.rating.toFixed(1) : '4.5'} {/* Display calculated rating */}
               </Text>
             </View>
           </TouchableOpacity>
         ))}
-
     </View>
   );
 };
@@ -192,7 +197,7 @@ const styles = StyleSheet.create({
     width: 58,
     height: 32,
     backgroundColor: '#3C3C3F',
-    borderWidth: .2,
+    borderWidth: 0.2,
     borderColor: 'rgba(221, 221, 221, 0.2)',
     backdropFilter: 'blur(50px)',
     borderRadius: 30,
