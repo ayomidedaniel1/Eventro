@@ -239,6 +239,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     textAlign: 'center',
     color: '#FFF',
+    marginLeft: 1,
   },
   genre: {
     position: "absolute",
