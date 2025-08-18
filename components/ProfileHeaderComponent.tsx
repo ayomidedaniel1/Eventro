@@ -1,11 +1,7 @@
+import { ProfileHeaderProps } from '@/types';
+import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
-import { StyleSheet, Text, View } from 'react-native';
-
-type ProfileHeaderProps = {
-  name: string;
-  email: string;
-  avatar: string;
-};
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function ProfileHeaderComponent({ name, email, avatar }: ProfileHeaderProps) {
   return (
@@ -17,7 +13,14 @@ export default function ProfileHeaderComponent({ name, email, avatar }: ProfileH
       />
 
       <View style={styles.textContainer}>
-        <Text style={styles.name}>{name}</Text>
+        <View style={styles.nameContainer}>
+          <TextInput
+            style={styles.name}
+            placeholder={name}
+          />
+          <Ionicons name='pencil' size={20} color={'#DDDDDD'} />
+        </View>
+
         <Text style={styles.email}>{email}</Text>
       </View>
     </View>
@@ -26,40 +29,39 @@ export default function ProfileHeaderComponent({ name, email, avatar }: ProfileH
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
-    marginVertical: 24,
-    marginHorizontal: 20,
-    paddingVertical: 20,
-    paddingHorizontal: 24,
-    gap: 16,
-    height: 100,
-    borderWidth: 1,
-    borderColor: '#E2E2E2',
-    borderRadius: 16,
+    gap: 12,
+    marginTop: 20,
+    // height: 192,
   },
   avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: '#E2E2E2',
+    width: 120,
+    height: 120,
+    borderRadius: 120,
   },
   textContainer: {
     flexDirection: 'column',
     alignItems: 'flex-start',
     gap: 4,
   },
+  nameContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    width: 139,
+  },
   name: {
-    fontFamily: 'Manrope-Medium',
-    fontSize: 14,
-    lineHeight: 19,
-    color: '#1D1D1D',
+    fontFamily: 'Manrope-SemiBold',
+    fontSize: 18,
+    lineHeight: 30,
+    color: '#FFFFFF',
   },
   email: {
     fontFamily: 'Manrope-Regular',
-    fontSize: 14,
-    lineHeight: 19,
-    color: 'rgba(29, 29, 29, 0.5)',
+    fontSize: 16,
+    lineHeight: 30,
+    textAlign: 'center',
+    color: '#E5E6E6',
   },
 });

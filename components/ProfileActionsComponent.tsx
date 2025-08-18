@@ -12,10 +12,12 @@ export default function ProfileActionsComponent({ action, title, icon }: Profile
   return (
     <TouchableOpacity activeOpacity={0.8} style={styles.actionsContainer} onPress={action}>
       <View style={styles.textContainer}>
-        <Ionicons name={icon} size={20} color="#1D1D1D" />
+        <View style={styles.icon}>
+          <Ionicons name={icon} size={16} color="#012508" />
+        </View>
         <Text style={styles.actionText}>{title}</Text>
       </View>
-      <Ionicons name="chevron-forward-outline" size={20} color="rgba(30, 30, 30, 0.5)" />
+      <Ionicons name="chevron-forward-outline" size={24} color="#FFFFFF" />
     </TouchableOpacity>
   );
 }
@@ -25,8 +27,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '100%',
     paddingVertical: 12,
+    paddingHorizontal: 20,
+    marginTop: 12,
+    width: '100%',
+    gap: 10,
   },
   textContainer: {
     flexDirection: 'row',
@@ -34,10 +39,18 @@ const styles = StyleSheet.create({
     gap: 10,
     justifyContent: 'flex-start',
   },
+  icon: {
+    width: 34,
+    height: 34,
+    backgroundColor: '#FFFFFF',
+    borderWidth: .34,
+    borderColor: '#FFFFFF',
+    borderRadius: 34,
+  },
   actionText: {
-    color: '#1D1D1D',
-    fontFamily: 'Manrope-Regular',
-    fontSize: 14,
-    lineHeight: 19,
+    color: '#FFFFFF',
+    fontFamily: 'Manrope-Medium',
+    fontSize: 16,
+    lineHeight: 24,
   },
 });

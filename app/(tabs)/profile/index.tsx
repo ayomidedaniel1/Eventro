@@ -23,7 +23,7 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderComponent title="My Account" />
+      <HeaderComponent title="Eventro." />
 
       <ProfileHeaderComponent
         name={user.user_metadata?.name || ''}
@@ -56,8 +56,13 @@ export default function ProfileScreen() {
       </View>
 
       <TouchableOpacity activeOpacity={0.8} style={styles.logoutButton} onPress={handleLogout}>
-        <Ionicons name="log-out-outline" size={24} color="#CC0000" />
-        <Text style={styles.logoutText}>Logout</Text>
+        <View style={styles.textContainer}>
+          <View style={styles.icon}>
+            <Ionicons name="log-out-outline" size={16} color="#012508" />
+          </View>
+          <Text style={styles.logoutText}>Log out</Text>
+        </View>
+        <Ionicons name="chevron-forward-outline" size={24} color="#FFFFFF" />
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -66,7 +71,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FFF9',
+    backgroundColor: '#010101',
   },
   error: {
     textAlign: 'center',
@@ -77,13 +82,16 @@ const styles = StyleSheet.create({
   actionsContainer: {
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 12,
+    gap: 20,
     paddingHorizontal: 20,
+    // height: 400, 360
+    backgroundColor: '#1C1C1E',
+    borderRadius: 30,
   },
   line: {
     width: '100%',
-    borderWidth: 1,
-    borderColor: '#EDEDED',
+    borderWidth: .2,
+    borderColor: '#7D7F82',
   },
   logoutButton: {
     flexDirection: 'row',
@@ -93,10 +101,23 @@ const styles = StyleSheet.create({
     marginTop: 12,
     gap: 10,
   },
+  textContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  icon: {
+    width: 34,
+    height: 34,
+    backgroundColor: '#FFFFFF',
+    borderWidth: .34,
+    borderColor: '#FFFFFF',
+    borderRadius: 34,
+  },
   logoutText: {
-    color: '#CC0000',
-    fontFamily: 'Manrope-Regular',
-    fontSize: 14,
-    lineHeight: 19,
+    color: '#FFFFFF',
+    fontFamily: 'Manrope-Medium',
+    fontSize: 16,
+    lineHeight: 24,
   },
 });

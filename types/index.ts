@@ -202,3 +202,9 @@ export type SearchParam = {
   genre?: string;
   status?: string;
 };
+
+export type ProfileHeaderProps = {
+  name: string;
+  email: string;
+  avatar: string;
+};
