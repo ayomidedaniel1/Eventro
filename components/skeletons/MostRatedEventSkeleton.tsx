@@ -2,18 +2,16 @@ import { Animated, Easing, StyleSheet, View } from "react-native";
 import React, { useRef, useEffect } from "react";
 
 export default function MostRatedEventSkeleton() {
-  const fadeValue = useRef(new Animated.Value(0)).current;
+  const fadeValue = new Animated.Value(0);
 
-  useEffect(() => {
-    Animated.loop(
-      Animated.timing(fadeValue, {
-        toValue: 1,
-        duration: 1500,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      })
-    ).start();
-  }, [fadeValue]);
+  Animated.loop(
+    Animated.timing(fadeValue, {
+      toValue: 1,
+      duration: 1500,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    })
+  ).start();
 
   const fade = fadeValue.interpolate({
     inputRange: [0, 0.5, 1],
@@ -72,7 +70,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 14,
-    backgroundColor: "#E0E0E0",
+    backgroundColor: "#333",
   },
   dataContainer: {
     flex: 1,
@@ -91,7 +89,7 @@ const styles = StyleSheet.create({
     width: 160,
     height: 18,
     borderRadius: 4,
-    backgroundColor: "#E0E0E0",
+    backgroundColor: "#333",
   },
   locationContainer: {
     flexDirection: "row",
@@ -102,13 +100,13 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: "#E0E0E0",
+    backgroundColor: "#333",
   },
   location: {
     width: 100,
     height: 14,
     borderRadius: 4,
-    backgroundColor: "#E0E0E0",
+    backgroundColor: "#333",
   },
   bottomContainer: {
     flexDirection: "row",
@@ -124,13 +122,13 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: "#E0E0E0",
+    backgroundColor: "#333",
   },
   date: {
     width: 80,
     height: 14,
     borderRadius: 4,
-    backgroundColor: "#E0E0E0",
+    backgroundColor: "#333",
   },
   ratingContainer: {
     width: 58,
@@ -146,12 +144,12 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: "#E0E0E0",
+    backgroundColor: "#333",
   },
   rating: {
     width: 20,
     height: 12,
     borderRadius: 4,
-    backgroundColor: "#E0E0E0",
+    backgroundColor: "#333",
   },
 });
