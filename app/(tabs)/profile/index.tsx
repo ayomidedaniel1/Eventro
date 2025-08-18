@@ -21,6 +21,34 @@ export default function ProfileScreen() {
     router.replace('/');
   };
 
+  const actionComponent = [
+    {
+      route: router.push("/profile/payment-methods"),
+      title: "Payment methods",
+      icon: 'card-outline'
+    },
+    {
+      route: router.push("/profile/notifications"),
+      title: "Notifications",
+      icon: 'notifications-outline'
+    },
+    {
+      route: router.push("/profile/support"),
+      title: "Support",
+      icon: 'chatbox-outline'
+    },
+    {
+      route: router.push("/profile/about-us"),
+      title: "About us",
+      icon: 'chatbubbles-outline'
+    },
+    {
+      route: handleLogout(),
+      title: "Log out",
+      icon: 'log-out-outline'
+    },
+  ];
+
   return (
     <SafeAreaView style={styles.container}>
       <HeaderComponent title="Eventro." />
@@ -32,38 +60,19 @@ export default function ProfileScreen() {
       />
 
       <View style={styles.actionsContainer}>
-        <ProfileActionsComponent
-          action={() => router.push('/profile/settings')}
-          title='Personal Info'
-          icon='person-outline'
-        />
-        <View style={styles.line} />
-
-        {/* <ProfileActionsComponent
-          action={() => router.push('/profile/password')}
-          title='Change Password'
-          icon='lock-closed-outline'
-        />
-        <View style={styles.line} /> */}
-
-        <ProfileActionsComponent
-          action={() => router.push('/profile/tickets')}
-          title='My Tickets'
-          icon='ticket-outline'
-        />
-        <View style={styles.line} />
-
+        {actionComponent.map(action => (
+          <>
+            <ProfileActionsComponent
+              key={action.title}
+              action={() => action.route}
+              title={action.title}
+              icon={action.icon}
+            />
+            <View style={styles.line} />
+          </>
+        ))}
       </View>
 
-      <TouchableOpacity activeOpacity={0.8} style={styles.logoutButton} onPress={handleLogout}>
-        <View style={styles.textContainer}>
-          <View style={styles.icon}>
-            <Ionicons name="log-out-outline" size={16} color="#012508" />
-          </View>
-          <Text style={styles.logoutText}>Log out</Text>
-        </View>
-        <Ionicons name="chevron-forward-outline" size={24} color="#FFFFFF" />
-      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -92,32 +101,5 @@ const styles = StyleSheet.create({
     width: '100%',
     borderWidth: .2,
     borderColor: '#7D7F82',
-  },
-  logoutButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    marginTop: 12,
-    gap: 10,
-  },
-  textContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  icon: {
-    width: 34,
-    height: 34,
-    backgroundColor: '#FFFFFF',
-    borderWidth: .34,
-    borderColor: '#FFFFFF',
-    borderRadius: 34,
-  },
-  logoutText: {
-    color: '#FFFFFF',
-    fontFamily: 'Manrope-Medium',
-    fontSize: 16,
-    lineHeight: 24,
   },
 });
