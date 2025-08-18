@@ -69,16 +69,23 @@ export default function HomeScreen() {
             }}
           />
 
-          <UpcomingEvents events={events ?? []} isLoading={isLoading} />
-
-          <MostRatedEvents events={events ?? []} isLoading={isLoading} />
-
-          {/* <EventListComponent
-            data={isLoading ? Array(4).fill({}) : events || []}
-            renderItem={(item: EventInsert) => <EventCardWrapper item={item} router={router} />}
-            keyExtractor={(item: EventInsert, index: number) => item.id || index.toString()}
-            isLoading={isLoading}
-          /> */}
+          {searchTerm.trim() ? (
+            <EventListComponent
+              data={isLoading ? Array(4).fill({}) : events || []}
+              renderItem={(item: EventInsert) => (
+                <EventCardWrapper item={item} router={router} />
+              )}
+              keyExtractor={(item: EventInsert, index: number) =>
+                item.id || index.toString()
+              }
+              isLoading={isLoading}
+            />
+          ) : (
+            <>
+              <UpcomingEvents events={events ?? []} isLoading={isLoading} />
+              <MostRatedEvents events={events ?? []} isLoading={isLoading} />
+            </>
+          )}
         </ScrollView>
 
       </SafeAreaView>
