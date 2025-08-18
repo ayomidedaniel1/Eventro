@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React from 'react';
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MostRatedEventSkeleton from './skeletons/MostRatedEventSkeleton';
 
 const MostRatedEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
@@ -36,22 +36,24 @@ const MostRatedEvents = ({ events, isLoading }: { events: EventInsert[]; isLoadi
           >
             <View style={styles.dataContainer}>
               <Image
-                source={{ uri: event.image || '../../assets/images/icons/smile.png' }}
+                source={{ uri: event.image || require('@/assets/images/icon.png') }}
                 style={styles.image}
                 contentFit="cover"
               />
 
               <View style={styles.detailsContainer}>
-                <Text style={styles.title}>{event.title}</Text>
+                <Text style={styles.title}>
+                  {event.title.length > 26 ? event.title.slice(0, 26) + "..." : event.title}
+                </Text>
 
                 <View style={styles.locationContainer}>
-                  <Ionicons name="location" size={14} color="#2ACE99" />
+                  <Ionicons name="location-outline" size={14} color="#FFFFFF" />
                   <Text style={styles.location}>{event.city}</Text>
                 </View>
 
                 <View style={styles.bottomContainer}>
                   <View style={styles.dateContainer}>
-                    <Ionicons name='calendar-clear-outline' size={14} color={'#FFFFFF'} />
+                    <Ionicons name='calendar-outline' size={14} color={'#FFFFFF'} />
                     <Text style={styles.date}>
                       {event.startDateTime
                         ? new Date(event.startDateTime).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: 12,
     padding: 10,
-    width: 392,
+    width: '100%',
     height: 100,
     backgroundColor: '#1C1C1E',
     borderRadius: 16,
@@ -136,23 +138,19 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 14,
-    backgroundColor: '#F5F5F5',
   },
   dataContainer: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 4,
     gap: 10,
-    width: 302,
     height: 80,
   },
   detailsContainer: {
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'flex-start',
-    gap: 2,
-    width: 212,
-    height: 75,
+    gap: 5,
   },
   date: {
     fontFamily: 'Manrope-Regular',
@@ -200,9 +198,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 2,
-    // left: calc(50 % - 36px / 2),
-    // top: calc(50 % - 20px / 2),
   },
   rating: {
     fontFamily: 'Manrope-Medium',
