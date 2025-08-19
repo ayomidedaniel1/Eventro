@@ -12,7 +12,7 @@ export default function EventCardWrapper({ item, router }: EventCardWrapperProps
         </Text>
 
         <View style={styles.filterContainer}>
-          <Ionicons name='filter' size={14} color={'#FFFFFF'} />
+          <Ionicons name='filter' size={16} color={'#FFFFFF'} />
         </View>
       </View>
 
@@ -35,7 +35,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    marginVertical: 12,
+    marginTop: 12,
+    marginBottom: 16,
   },
   result: {
     flexDirection: 'row',
@@ -52,5 +53,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1A1A1D',
     backdropFilter: 'blur(25px)',
     borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

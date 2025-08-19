@@ -1,10 +1,11 @@
 import { ProfileActionsProps } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
+import { Key } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function ProfileActionsComponent({ action, title, icon }: ProfileActionsProps) {
+export default function ProfileActionsComponent({ action, title, icon }: ProfileActionsProps, key?: Key) {
   return (
-    <TouchableOpacity activeOpacity={0.8} style={styles.actionsContainer} onPress={action}>
+    <TouchableOpacity activeOpacity={0.8} style={styles.actionsContainer} onPress={action} key={key}>
       <View style={styles.textContainer}>
         <View style={styles.icon}>
           <Ionicons name={icon} size={16} color="#012508" />
@@ -40,6 +41,8 @@ const styles = StyleSheet.create({
     borderWidth: .34,
     borderColor: '#FFFFFF',
     borderRadius: 34,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   actionText: {
     color: '#FFFFFF',
