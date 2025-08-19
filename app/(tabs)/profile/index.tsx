@@ -43,7 +43,7 @@ export default function ProfileScreen() {
       icon: 'chatbubbles-outline' as const
     },
     {
-      route: handleLogout(),
+      route: handleLogout,
       title: "Log out",
       icon: 'log-out-outline' as const
     },
