@@ -23,29 +23,29 @@ export default function ProfileScreen() {
 
   const actionComponent = [
     {
-      route: router.push("/profile/payment-methods"),
+      route: () => router.push("/profile/payment-methods"),
       title: "Payment methods",
-      icon: 'card-outline'
+      icon: 'card-outline' as const
     },
     {
-      route: router.push("/profile/notifications"),
+      route: () => router.push("/profile/notifications"),
       title: "Notifications",
-      icon: 'notifications-outline'
+      icon: 'notifications-outline' as const
     },
     {
-      route: router.push("/profile/support"),
+      route: () => router.push("/profile/support"),
       title: "Support",
-      icon: 'chatbox-outline'
+      icon: 'chatbox-outline' as const
     },
     {
-      route: router.push("/profile/about-us"),
+      route: () => router.push("/profile/about-us"),
       title: "About us",
-      icon: 'chatbubbles-outline'
+      icon: 'chatbubbles-outline' as const
     },
     {
       route: handleLogout(),
       title: "Log out",
-      icon: 'log-out-outline'
+      icon: 'log-out-outline' as const
     },
   ];
 
@@ -64,7 +64,7 @@ export default function ProfileScreen() {
           <>
             <ProfileActionsComponent
               key={action.title}
-              action={() => action.route}
+              action={action.route}
               title={action.title}
               icon={action.icon}
             />
