@@ -1,6 +1,6 @@
 import EventCard from '@/components/EventCard';
 import { EventCardWrapperProps } from '@/types';
-import { Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function EventCardWrapper({ item, router }: EventCardWrapperProps) {
@@ -12,7 +12,7 @@ export default function EventCardWrapper({ item, router }: EventCardWrapperProps
         </Text>
 
         <View style={styles.filterContainer}>
-          <Ionicons name='filter' size={16} color={'#FFFFFF'} />
+          <AntDesign name='swap' size={16} color={'#FFFFFF'} />
         </View>
       </View>
 
@@ -55,5 +55,6 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
+    transform: [{ rotate: "90deg" }],
   },
 });
