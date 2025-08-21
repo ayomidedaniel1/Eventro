@@ -8,7 +8,7 @@ export default function EventCardWrapper({ item, router }: EventCardWrapperProps
     <View style={styles.container}>
       <View style={styles.resultContainer}>
         <Text style={styles.result}>
-          32 results
+          30 results
         </Text>
 
         <View style={styles.filterContainer}>
