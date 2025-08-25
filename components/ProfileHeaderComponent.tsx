@@ -7,7 +7,7 @@ export default function ProfileHeaderComponent({ name, email, avatar }: ProfileH
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: avatar }}
+        source={{ uri:  }}
         style={styles.avatar}
         contentFit='cover'
       />
