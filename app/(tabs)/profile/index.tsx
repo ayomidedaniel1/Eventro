@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 20,
     paddingHorizontal: 20,
-    // height: 400, 360
+    height: 400, // 360
     backgroundColor: '#1C1C1E',
     borderRadius: 30,
   },
