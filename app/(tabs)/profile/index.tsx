@@ -3,9 +3,8 @@ import ProfileActionsComponent from '@/components/ProfileActionsComponent';
 import ProfileHeaderComponent from '@/components/ProfileHeaderComponent';
 import { useAuthStore } from '@/store/authStore';
 import { supabase } from '@/utils/supabase';
-import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
