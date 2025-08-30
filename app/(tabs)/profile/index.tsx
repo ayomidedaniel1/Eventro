@@ -53,8 +53,8 @@ export default function ProfileScreen() {
       <HeaderComponent title="Eventro." />
 
       <ProfileHeaderComponent
-        name={user.user_metadata?.name || ''}
-        email={user.user_metadata?.email || ''}
+        name={user.user_metadata?.name || 'Sly'}
+        email={user.user_metadata?.email || 'sly@gmail.com'}
         avatar={user.user_metadata?.avatar_url || require('@/assets/images/icon.png')}
       />
 
