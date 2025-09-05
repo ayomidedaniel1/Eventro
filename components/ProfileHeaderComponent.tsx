@@ -1,9 +1,10 @@
 import { ProfileHeaderProps } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function ProfileHeaderComponent({ name, email, avatar }: ProfileHeaderProps) {
+
   return (
     <View style={styles.container}>
       <Image
@@ -13,13 +14,14 @@ export default function ProfileHeaderComponent({ name, email, avatar }: ProfileH
       />
 
       <View style={styles.textContainer}>
-        <View style={styles.nameContainer}>
+        <Pressable style={styles.nameContainer} onPress={() => { }}>
           <TextInput
             style={styles.name}
+            placeholderTextColor={'#FFF'}
             placeholder={name}
           />
-          <Ionicons name='pencil' size={20} color={'#DDDDDD'} />
-        </View>
+          <Ionicons name='pencil' size={16} color={'#DDDDDD'} />
+        </Pressable>
 
         <Text style={styles.email}>{email}</Text>
       </View>
@@ -31,25 +33,26 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 12,
     marginTop: 20,
-    // height: 192,
+    marginBottom: 32,
   },
   avatar: {
     width: 120,
     height: 120,
     borderRadius: 120,
+    marginTop: 21,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
   },
   textContainer: {
     flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: 4,
+    alignItems: 'center',
   },
   nameContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 12,
-    width: 139,
+    gap: 1,
   },
   name: {
     fontFamily: 'Manrope-SemiBold',
@@ -60,7 +63,6 @@ const styles = StyleSheet.create({
   email: {
     fontFamily: 'Manrope-Regular',
     fontSize: 16,
-    lineHeight: 30,
     textAlign: 'center',
     color: '#E5E6E6',
   },

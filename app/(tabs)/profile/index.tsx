@@ -4,7 +4,7 @@ import ProfileHeaderComponent from '@/components/ProfileHeaderComponent';
 import { useAuthStore } from '@/store/authStore';
 import { supabase } from '@/utils/supabase';
 import { useRouter } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { Keyboard, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
@@ -49,30 +49,35 @@ export default function ProfileScreen() {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
-      <HeaderComponent title="Eventro." />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.container}>
 
-      <ProfileHeaderComponent
-        name={user.user_metadata?.name || ''}.
-      email={user.user_metadata?.email || ''}
-      avatar={user.user_metadata?.avatar_url || require('@/assets/images/icon.png')}
-      />
+        <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1, }} contentContainerStyle={{ paddingBottom: 100, }}>
+          <HeaderComponent title="Eventro." />
 
-      <View style={styles.actionsContainer}>
-        {actionComponent.map(action => (
-          <>
-            <ProfileActionsComponent
-              key={action.title}
-              action={action.route}
-              title={action.title}
-              icon={action.icon}
-            />
-            <View style={styles.line} />
-          </>
-        ))}
-      </View>
+          <ProfileHeaderComponent
+            name={user.user_metadata?.name || ''}
+            email={user.user_metadata?.email || ''}
+            avatar={user.user_metadata?.avatar_url || require('@/assets/images/icon.png')}
+          />
 
-    </SafeAreaView>
+          <View style={styles.actionsContainer}>
+            {actionComponent.map(action => (
+              <>
+                <ProfileActionsComponent
+                  key={action.title}
+                  action={action.route}
+                  title={action.title}
+                  icon={action.icon}
+                />
+                <View style={styles.line} />
+              </>
+            ))}
+          </View>
+
+        </ScrollView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
