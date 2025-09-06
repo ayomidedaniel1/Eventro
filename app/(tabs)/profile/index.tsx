@@ -5,10 +5,14 @@ import { useAuthStore } from '@/store/authStore';
 import { supabase } from '@/utils/supabase';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
 import { Alert, Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { Snackbar } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const { user, setAuth } = useAuthStore();
   const router = useRouter();
   console.log('User >>', user?.user_metadata);
@@ -71,7 +75,7 @@ export default function ProfileScreen() {
         });
 
       if (uploadError) {
-        Alert.alert('Upload failed', uploadError.message);
+        setSnackbarMessage('Upload failed');
         return;
       }
 
@@ -84,12 +88,13 @@ export default function ProfileScreen() {
       });
 
       if (updateError) {
-        Alert.alert('Update failed', updateError.message);
+        setSnackbarMessage(`Update failed, ${updateError.message}`);
       } else if (data.user) {
         setAuth(data.user);
-        Alert.alert('Success', 'Profile image updated!');
+        setSnackbarMessage("You have successfully updated your profile image!");
       }
     }
+    setSnackbarVisible(true);
   };
 
   const handleNameUpdate = async (newName: string) => {
@@ -98,12 +103,14 @@ export default function ProfileScreen() {
     });
 
     if (error) {
-      Alert.alert('Update failed', error.message);
+      setSnackbarMessage(`'Update failed', ${error.message}`);
     } else if (data.user) {
       setAuth(data.user);
-      Alert.alert('Success', 'Name updated!');
+      setSnackbarMessage('You have successfully updated your name!');
     }
   };
+
+  const onDismissSnackbar = () => setSnackbarVisible(false);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -130,6 +137,19 @@ export default function ProfileScreen() {
             </View>
           ))}
         </View>
+
+        <Snackbar
+          visible={snackbarVisible}
+          onDismiss={onDismissSnackbar}
+          duration={3000}
+          style={styles.snackbar}
+          action={{
+            label: 'Dismiss',
+            onPress: onDismissSnackbar,
+          }}
+        >
+          {snackbarMessage}
+        </Snackbar>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -161,5 +181,13 @@ const styles = StyleSheet.create({
     height: 0,
     borderColor: '#7D7F82',
     marginTop: 5,
+  },
+  snackbar: {
+    top: 0,
+    position: 'absolute',
+    width: '100%',
+    backgroundColor: '#2ACE99',
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
   },
 });

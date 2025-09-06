@@ -2,12 +2,11 @@ import { ProfileHeaderProps } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, useColorScheme, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function ProfileHeaderComponent({ name, email, avatar, onUpload, onNameUpdate }: ProfileHeaderProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(name);
-  const colorScheme = useColorScheme();
 
   const handleSave = () => {
     if (onNameUpdate && editedName !== name) {
@@ -25,14 +24,11 @@ export default function ProfileHeaderComponent({ name, email, avatar, onUpload, 
               ? { uri: avatar }
               : avatar && typeof avatar === 'object' && avatar.uri
                 ? { uri: avatar.uri }
-                : { uri: 'https://via.placeholder.com/120' }
+                : { uri: 'https://cdn-icons-png.flaticon.com/512/149/149071.png' }
           }
           style={styles.avatar}
           contentFit='cover'
         />
-        <View style={styles.uploadIcon}>
-          <Ionicons name='camera' size={20} color='#FFFFFF' />
-        </View>
       </Pressable>
 
       <View style={styles.textContainer}>
@@ -40,7 +36,7 @@ export default function ProfileHeaderComponent({ name, email, avatar, onUpload, 
           {isEditing ? (
             <View style={styles.editContainer}>
               <TextInput
-                style={[styles.name, { borderColor: colorScheme === 'dark' ? '#FFFFFF' : '#000000', borderWidth: 1, padding: 5, borderRadius: 5 }]}
+                style={styles.name}
                 value={editedName}
                 onChangeText={setEditedName}
                 placeholderTextColor={'#FFF'}
@@ -70,26 +66,13 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   avatarContainer: {
-    position: 'relative',
+    marginBottom: 7,
   },
   avatar: {
     width: 120,
     height: 120,
     borderRadius: 120,
     marginTop: 21,
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
-  },
-  uploadIcon: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 30,
-    height: 30,
-    backgroundColor: '#2ACE99',
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   textContainer: {
     flexDirection: 'column',
