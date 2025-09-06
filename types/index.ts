@@ -210,6 +210,7 @@ export type ProfileHeaderProps = {
   avatar: string | { uri: string; };
   onUpload?: () => void;
   onNameUpdate?: (newName: string) => void;
+  isUploading?: boolean;
 };
 
 export type ProfileActionsProps = {

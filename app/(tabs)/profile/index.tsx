@@ -6,13 +6,14 @@ import { supabase } from '@/utils/supabase';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { Alert, Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View, ActivityIndicator } from 'react-native';
 import { Snackbar } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
   const { user, setAuth } = useAuthStore();
   const router = useRouter();
   console.log('User >>', user?.user_metadata);
@@ -54,6 +55,15 @@ export default function ProfileScreen() {
   ];
 
   const handleImageUpload = async () => {
+    setIsUploading(true);
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      setIsUploading(false);
+      setSnackbarMessage('Permission denied to access camera roll.');
+      setSnackbarVisible(true);
+      return;
+    }
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       allowsEditing: true,
@@ -63,38 +73,41 @@ export default function ProfileScreen() {
 
     if (!result.canceled && result.assets && result.assets[0].uri) {
       const fileUri = result.assets[0].uri;
-      const fileName = `${user.id}-${Date.now()}.jpg`;
       const file = await fetch(fileUri);
       const blob = await file.blob();
+      const fileExt = fileUri.split('.').pop();
+      const filePath = `${user.id}/avatar.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(`public/${fileName}`, blob, {
-          cacheControl: '3600',
-          upsert: true,
-        });
+        .upload(filePath, blob, { upsert: true });
 
       if (uploadError) {
-        setSnackbarMessage('Upload failed');
+        setIsUploading(false);
+        setSnackbarMessage(`Upload failed: ${uploadError.message}`);
+        setSnackbarVisible(true);
         return;
       }
 
-      const { data: urlData } = supabase.storage
+      const { data: { publicUrl } } = supabase.storage
         .from('avatars')
-        .getPublicUrl(`public/${fileName}`);
+        .getPublicUrl(filePath);
 
       const { data, error: updateError } = await supabase.auth.updateUser({
-        data: { avatar_url: urlData.publicUrl },
+        data: { avatar_url: publicUrl },
       });
 
+      setIsUploading(false);
       if (updateError) {
-        setSnackbarMessage(`Update failed, ${updateError.message}`);
+        setSnackbarMessage(`Update failed: ${updateError.message}`);
       } else if (data.user) {
         setAuth(data.user);
-        setSnackbarMessage("You have successfully updated your profile image!");
+        setSnackbarMessage('Profile image updated successfully!');
       }
+      setSnackbarVisible(true);
+    } else {
+      setIsUploading(false);
     }
-    setSnackbarVisible(true);
   };
 
   const handleNameUpdate = async (newName: string) => {
@@ -103,11 +116,12 @@ export default function ProfileScreen() {
     });
 
     if (error) {
-      setSnackbarMessage(`'Update failed', ${error.message}`);
+      setSnackbarMessage(`Update failed: ${error.message}`);
     } else if (data.user) {
       setAuth(data.user);
-      setSnackbarMessage('You have successfully updated your name!');
+      setSnackbarMessage('Name updated successfully!');
     }
+    setSnackbarVisible(true);
   };
 
   const onDismissSnackbar = () => setSnackbarVisible(false);
@@ -120,9 +134,10 @@ export default function ProfileScreen() {
         <ProfileHeaderComponent
           name={user.user_metadata?.name || ''}
           email={user.user_metadata?.email || ''}
-          avatar={user.user_metadata?.avatar_url}
+          avatar={user.user_metadata?.avatar_url || require('@/assets/images/icon.png')}
           onUpload={handleImageUpload}
           onNameUpdate={handleNameUpdate}
+          isUploading={isUploading}
         />
 
         <View style={styles.actionsContainer}>

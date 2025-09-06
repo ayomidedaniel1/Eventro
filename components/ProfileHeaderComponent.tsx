@@ -2,9 +2,9 @@ import { ProfileHeaderProps } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
-export default function ProfileHeaderComponent({ name, email, avatar, onUpload, onNameUpdate }: ProfileHeaderProps) {
+export default function ProfileHeaderComponent({ name, email, avatar, onUpload, onNameUpdate, isUploading }: ProfileHeaderProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(name);
 
@@ -17,7 +17,7 @@ export default function ProfileHeaderComponent({ name, email, avatar, onUpload, 
 
   return (
     <View style={styles.container}>
-      <Pressable onPress={onUpload} style={styles.avatarContainer}>
+      <Pressable onPress={onUpload} style={styles.avatarContainer} disabled={isUploading} >
         <Image
           source={
             typeof avatar === 'string'
@@ -26,9 +26,10 @@ export default function ProfileHeaderComponent({ name, email, avatar, onUpload, 
                 ? { uri: avatar.uri }
                 : { uri: 'https://cdn-icons-png.flaticon.com/512/149/149071.png' }
           }
-          style={styles.avatar}
+          style={[styles.avatar, isUploading && { opacity: 0.6 }]}
           contentFit='cover'
         />
+        {isUploading && <ActivityIndicator size="small" color="#FFFFFF" style={styles.indicator} />}
       </Pressable>
 
       <View style={styles.textContainer}>
@@ -66,7 +67,14 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   avatarContainer: {
+    position: 'relative',
     marginBottom: 7,
+  },
+  indicator: {
+    position: 'absolute',
+    top: '45%',
+    alignSelf: 'center',
+    zIndex: 1,
   },
   avatar: {
     width: 120,
