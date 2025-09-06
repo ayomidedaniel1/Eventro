@@ -1,26 +1,59 @@
 import { ProfileHeaderProps } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, StyleSheet, Text, TextInput, useColorScheme, View } from 'react-native';
 
-export default function ProfileHeaderComponent({ name, email, avatar }: ProfileHeaderProps) {
+export default function ProfileHeaderComponent({ name, email, avatar, onUpload, onNameUpdate }: ProfileHeaderProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedName, setEditedName] = useState(name);
+  const colorScheme = useColorScheme();
+
+  const handleSave = () => {
+    if (onNameUpdate && editedName !== name) {
+      onNameUpdate(editedName);
+    }
+    setIsEditing(false);
+  };
 
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: avatar }}
-        style={styles.avatar}
-        contentFit='cover'
-      />
+      <Pressable onPress={onUpload} style={styles.avatarContainer}>
+        <Image
+          source={
+            typeof avatar === 'string'
+              ? { uri: avatar }
+              : avatar && typeof avatar === 'object' && avatar.uri
+                ? { uri: avatar.uri }
+                : { uri: 'https://via.placeholder.com/120' }
+          }
+          style={styles.avatar}
+          contentFit='cover'
+        />
+        <View style={styles.uploadIcon}>
+          <Ionicons name='camera' size={20} color='#FFFFFF' />
+        </View>
+      </Pressable>
 
       <View style={styles.textContainer}>
-        <Pressable style={styles.nameContainer} onPress={() => { }}>
-          <TextInput
-            style={styles.name}
-            placeholderTextColor={'#FFF'}
-            placeholder={name}
-          />
-          <Ionicons name='pencil' size={16} color={'#DDDDDD'} />
+        <Pressable style={styles.nameContainer} onPress={() => setIsEditing(true)}>
+          {isEditing ? (
+            <View style={styles.editContainer}>
+              <TextInput
+                style={[styles.name, { borderColor: colorScheme === 'dark' ? '#FFFFFF' : '#000000', borderWidth: 1, padding: 5, borderRadius: 5 }]}
+                value={editedName}
+                onChangeText={setEditedName}
+                placeholderTextColor={'#FFF'}
+                autoFocus
+                onBlur={handleSave}
+              />
+            </View>
+          ) : (
+            <View style={styles.nameContainer}>
+              <Text style={styles.name}>{editedName}</Text>
+              <Ionicons name='pencil' size={16} color={'#DDDDDD'} />
+            </View>
+          )}
         </Pressable>
 
         <Text style={styles.email}>{email}</Text>
@@ -36,6 +69,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 32,
   },
+  avatarContainer: {
+    position: 'relative',
+  },
   avatar: {
     width: 120,
     height: 120,
@@ -44,6 +80,17 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#FFFFFF',
   },
+  uploadIcon: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 30,
+    height: 30,
+    backgroundColor: '#2ACE99',
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   textContainer: {
     flexDirection: 'column',
     alignItems: 'center',
@@ -51,6 +98,11 @@ const styles = StyleSheet.create({
   nameContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
+    gap: 1,
+  },
+  editContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
     gap: 1,
   },

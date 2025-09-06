@@ -7,7 +7,7 @@ export type AuthState = {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
-  setAuth: (session: Session | null) => void;
+  setAuth: (user: User | null) => void;
   logout: () => Promise<void>;
 };
 
@@ -207,7 +207,9 @@ export type SearchParam = {
 export type ProfileHeaderProps = {
   name: string;
   email: string;
-  avatar: string;
+  avatar: string | { uri: string; };
+  onUpload?: () => void;
+  onNameUpdate?: (newName: string) => void;
 };
 
 export type ProfileActionsProps = {
