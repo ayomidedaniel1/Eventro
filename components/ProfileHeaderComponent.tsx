@@ -1,12 +1,16 @@
 import { ProfileHeaderProps } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function ProfileHeaderComponent({ name, email, avatar, onUpload, onNameUpdate, isUploading }: ProfileHeaderProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(name);
+
+  useEffect(() => {
+    setEditedName(name);
+  }, [name]);
 
   const handleSave = () => {
     if (onNameUpdate && editedName !== name) {

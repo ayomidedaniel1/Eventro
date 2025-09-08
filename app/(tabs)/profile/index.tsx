@@ -5,7 +5,7 @@ import { useAuthStore } from '@/store/authStore';
 import { supabase } from '@/utils/supabase';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { Snackbar } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,11 +14,22 @@ export default function ProfileScreen() {
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [isUploading, setIsUploading] = useState(false);
-  const { user, setAuth } = useAuthStore();
+  const { user, setAuth, isLoading } = useAuthStore();
   const router = useRouter();
-  console.log('User >>', user?.user_metadata);
+  console.log('User state in ProfileScreen:', user?.user_metadata, 'Loading:', isLoading);
 
-  if (!user) return <Text style={styles.error}>Please log in</Text>;
+  useEffect(() => {
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setAuth(session.user);
+        console.log('Fetched session user:', session.user.user_metadata);
+      }
+    };
+    getSession();
+  }, [setAuth]);
+
+  if (isLoading || !user) return <Text style={styles.error}>Please log in</Text>;
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -56,13 +67,6 @@ export default function ProfileScreen() {
 
   const handleImageUpload = async () => {
     setIsUploading(true);
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      setIsUploading(false);
-      setSnackbarMessage('Permission denied to access camera roll.');
-      setSnackbarVisible(true);
-      return;
-    }
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
@@ -77,34 +81,46 @@ export default function ProfileScreen() {
       const blob = await file.blob();
       const fileExt = fileUri.split('.').pop();
       const filePath = `${user.id}/avatar.${fileExt}`;
+      console.log("Uploading image: ", filePath, "URI: ", fileUri);
 
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, blob, { upsert: true });
+      try {
+        const { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(filePath, blob, {
+            cacheControl: '3600',
+            upsert: true,
+            contentType: `image/${fileExt}`,
+          });
 
-      if (uploadError) {
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('avatars')
+          .getPublicUrl(filePath);
+
+        const { data, error: updateError } = await supabase.auth.updateUser({
+          data: { avatar_url: publicUrl },
+        });
+
+        if (updateError) {
+          throw updateError;
+        }
+
+        if (data.user) {
+          setAuth(data.user);
+          setSnackbarMessage('Profile image updated successfully!');
+        }
+      } catch (error) {
         setIsUploading(false);
-        setSnackbarMessage(`Upload failed: ${uploadError.message}`);
+        const errorMessage = (error instanceof Error) ? error.message : String(error);
+        setSnackbarMessage(`Upload failed: ${errorMessage}`);
+        console.error('Image upload error:', error);
+      } finally {
+        setIsUploading(false);
         setSnackbarVisible(true);
-        return;
       }
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
-
-      const { data, error: updateError } = await supabase.auth.updateUser({
-        data: { avatar_url: publicUrl },
-      });
-
-      setIsUploading(false);
-      if (updateError) {
-        setSnackbarMessage(`Update failed: ${updateError.message}`);
-      } else if (data.user) {
-        setAuth(data.user);
-        setSnackbarMessage('Profile image updated successfully!');
-      }
-      setSnackbarVisible(true);
     } else {
       setIsUploading(false);
     }
@@ -118,7 +134,7 @@ export default function ProfileScreen() {
     if (error) {
       setSnackbarMessage(`Update failed: ${error.message}`);
     } else if (data.user) {
-      setAuth(data.user);
+      setAuth({ ...data.user, user_metadata: data.user.user_metadata });
       setSnackbarMessage('Name updated successfully!');
     }
     setSnackbarVisible(true);
