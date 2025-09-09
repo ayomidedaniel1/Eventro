@@ -61,10 +61,12 @@ export default function RootLayout() {
   const nextScreenOpacity = useSharedValue(0);
 
   useEffect(() => {
-    if (!showSplash && fontsLoaded) {
-      const nextRoute = user ? '/(tabs)/events' : '/';
+    if (!showSplash && fontsLoaded && user) {
+      const nextRoute = '/(tabs)/events';
       router.replace(nextRoute);
       nextScreenOpacity.value = withTiming(1, { duration: 400 });
+    } else if (!showSplash && fontsLoaded && !user) {
+      router.replace('/');
     }
   }, [showSplash, fontsLoaded, user, router, nextScreenOpacity]);
 

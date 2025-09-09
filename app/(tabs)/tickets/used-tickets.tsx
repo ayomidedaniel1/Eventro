@@ -2,17 +2,17 @@ import HeaderComponent from '@/components/HeaderComponent';
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text } from 'react-native';
 
-const ActiveTicketsScreen = () => {
+const UsedTicketsScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <HeaderComponent title="Eventro." />
 
-      <Text>Sctive Ticket Screen</Text>
+      <Text>Used Ticket Screen</Text>
     </SafeAreaView>
   );
 };
 
-export default ActiveTicketsScreen;
+export default UsedTicketsScreen;
 
 const styles = StyleSheet.create({
   container: {
