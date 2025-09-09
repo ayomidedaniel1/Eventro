@@ -1,11 +1,8 @@
-import HeaderComponent from '@/components/HeaderComponent';
-import React from 'react';
 import { SafeAreaView, StyleSheet, Text } from 'react-native';
 
 const ActiveTicketsScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderComponent title="Eventro." />
 
       <Text>Sctive Ticket Screen</Text>
     </SafeAreaView>
