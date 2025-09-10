@@ -1,37 +1,10 @@
-import CustomTopTabBar from "@/components/CustomTopTabBar";
-import HeaderComponent from "@/components/HeaderComponent";
-import { Tabs } from "expo-router";
-import React from "react";
-import {
-  SafeAreaView
-} from "react-native";
+import { Stack } from "expo-router";
 
-export default function TabsLayout() {
+export default function TicketsLayout() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#010101", }}>
-      <HeaderComponent title="Eventro." />
-
-      <Tabs
-        initialRouteName="index"
-        screenOptions={{
-          headerShown: false,
-          tabBarPosition: "top",
-        }}
-        tabBar={(props) => <CustomTopTabBar {...props} />}
-      >
-        <Tabs.Screen
-          name="index"
-          options={{
-            title: "Active tickets",
-          }}
-        />
-        <Tabs.Screen
-          name="used-tickets"
-          options={{
-            title: "Used tickets",
-          }}
-        />
-      </Tabs>
-    </SafeAreaView>
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="[id]/detail" options={{ headerShown: false }} />
+    </Stack>
   );
 }
