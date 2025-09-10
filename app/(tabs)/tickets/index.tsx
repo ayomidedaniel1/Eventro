@@ -4,7 +4,7 @@ const ActiveTicketsScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
 
-      <Text>Sctive Ticket Screen</Text>
+      <Text>Active Ticket Screen</Text>
     </SafeAreaView>
   );
 };
