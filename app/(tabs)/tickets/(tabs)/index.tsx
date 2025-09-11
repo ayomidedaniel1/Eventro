@@ -1,10 +1,24 @@
-import { StyleSheet, Text, View } from 'react-native';
+import TicketSkeleton from '@/components/skeletons/TicketSkeleton';
+import ActiveTicket from '@/components/tickets/ActiveTicket';
+import { EventInsert } from '@/types';
+import { StyleSheet, View } from 'react-native';
 
-const ActiveTicketsScreen = () => {
+const ActiveTicketsScreen = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
   return (
     <View style={styles.container}>
 
-      <Text>Active Ticket Screen</Text>
+      {isLoading
+        ? Array(5)
+          .fill(null)
+          .map((_, index) => (
+            <TicketSkeleton key={`skeleton-${index}`} />
+          ))
+        : events.map((event) => (
+          <View key={event.id}>
+            <ActiveTicket event={event} />
+          </View>
+        ))}
+
     </View>
   );
 };
