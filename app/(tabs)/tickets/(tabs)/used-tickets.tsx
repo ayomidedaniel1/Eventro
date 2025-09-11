@@ -1,11 +1,11 @@
-import { SafeAreaView, StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 const UsedTicketsScreen = () => {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
 
       <Text>Used Ticket Screen</Text>
-    </SafeAreaView>
+    </View>
   );
 };
 
