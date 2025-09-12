@@ -186,7 +186,7 @@ export type FilterModalProps = {
 
 export type EventCardWrapperProps = {
   item: EventInsert;
-  router: ReturnType<typeof useRouter>;
+  onPress: (event: EventInsert) => void;
 };
 
 export type EventListProps = {

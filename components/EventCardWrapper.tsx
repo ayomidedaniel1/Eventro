@@ -1,9 +1,10 @@
 import EventCard from '@/components/EventCard';
 import { EventCardWrapperProps } from '@/types';
 import { AntDesign } from '@expo/vector-icons';
+import { JSX } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function EventCardWrapper({ item, router }: EventCardWrapperProps) {
+export default function EventCardWrapper({ item, onPress }: EventCardWrapperProps): JSX.Element {
   return (
     <View style={styles.container}>
       <View style={styles.resultContainer}>
@@ -17,7 +18,7 @@ export default function EventCardWrapper({ item, router }: EventCardWrapperProps
       </View>
 
       <TouchableOpacity
-        onPress={() => router.push(`/events/${item.id}/detail`)}
+        onPress={() => onPress(item)}
         activeOpacity={0.8}
       >
         <EventCard event={item} />
