@@ -10,6 +10,7 @@ import { useFonts } from 'expo-font';
 import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PaperProvider } from 'react-native-paper';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
@@ -77,35 +78,37 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <PaperProvider>
-          {showSplash ? (
-            <AnimatedSplashScreen
-              onFinish={async () => {
-                await SplashScreen.hideAsync();
-                setShowSplash(false);
-              }}
-            />
-          ) : (
-            <Animated.View style={[{ flex: 1, backgroundColor: "#010101", }, nextScreenStyle]}>
-              <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#010101' } }}>
-                {/* Public Screens */}
-                <Stack.Screen name="index" />
+    <GestureHandlerRootView>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <PaperProvider>
+            {showSplash ? (
+              <AnimatedSplashScreen
+                onFinish={async () => {
+                  await SplashScreen.hideAsync();
+                  setShowSplash(false);
+                }}
+              />
+            ) : (
+              <Animated.View style={[{ flex: 1, backgroundColor: "#010101", }, nextScreenStyle]}>
+                <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#010101' } }}>
+                  {/* Public Screens */}
+                  <Stack.Screen name="index" />
 
-                {/* Auth Screens */}
-                <Stack.Screen name="auth/login" />
-                <Stack.Screen name="auth/register" />
-                <Stack.Screen name="auth/forgot-password" />
-                <Stack.Screen name="auth/reset-password" />
+                  {/* Auth Screens */}
+                  <Stack.Screen name="auth/login" />
+                  <Stack.Screen name="auth/register" />
+                  <Stack.Screen name="auth/forgot-password" />
+                  <Stack.Screen name="auth/reset-password" />
 
-                {/* Tab group shown after login */}
-                <Stack.Screen name="(tabs)" />
-              </Stack>
-            </Animated.View>
-          )}
-        </PaperProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+                  {/* Tab group shown after login */}
+                  <Stack.Screen name="(tabs)" />
+                </Stack>
+              </Animated.View>
+            )}
+          </PaperProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 }
