@@ -12,8 +12,9 @@ import { EventInsert } from '@/types';
 import BottomSheet from '@gorhom/bottom-sheet';
 import debounce from 'lodash/debounce';
 import { JSX, useCallback, useMemo, useRef, useState } from 'react';
-import { Keyboard, ScrollView, StyleSheet, Text, TouchableWithoutFeedback } from 'react-native';
+import { Keyboard, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function HomeScreen(): JSX.Element {
   const [searchTerm, setSearchTerm] = useState('');
@@ -86,16 +87,27 @@ export default function HomeScreen(): JSX.Element {
           />
 
           {searchTerm.trim() ? (
-            <EventListComponent
-              data={isLoading ? Array(4).fill({}) : events || []}
-              renderItem={(item: EventInsert) => (
-                <EventCardWrapper item={item} onPress={handleEventPress} />
-              )}
-              keyExtractor={(item: EventInsert, index: number) =>
-                item.id || index.toString()
-              }
-              isLoading={isLoading}
-            />
+            <>
+              <View style={styles.resultContainer}>
+                <Text style={styles.result}>
+                  {isLoading ? 'Searching...' : `${events?.length || 0} results`}
+                </Text>
+
+                <View style={styles.filterContainer}>
+                  <AntDesign name='swap' size={16} color={'#FFFFFF'} />
+                </View>
+              </View>
+              <EventListComponent
+                data={isLoading ? Array(4).fill({}) : events || []}
+                renderItem={(item: EventInsert) => (
+                  <EventCardWrapper item={item} onPress={handleEventPress} />
+                )}
+                keyExtractor={(item: EventInsert, index: number) =>
+                  item.id || index.toString()
+                }
+                isLoading={isLoading}
+              />
+            </>
           ) : (
             <>
               <UpcomingEvents events={events ?? []} isLoading={isLoading} onPress={handleEventPress} />
@@ -150,5 +162,32 @@ const styles = StyleSheet.create({
   },
   bottomSheetHandle: {
     backgroundColor: '#FFFFFF',
+  },
+  resultContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    marginTop: 12,
+    marginBottom: 16,
+    paddingHorizontal: 14,
+  },
+  result: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 10,
+    fontFamily: 'Manrope-SemiBold',
+    fontSize: 26,
+    color: '#FFFFFF',
+  },
+  filterContainer: {
+    width: 54,
+    height: 54,
+    backgroundColor: '#1A1A1D',
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    transform: [{ rotate: "90deg" }],
   },
 });
