@@ -11,7 +11,15 @@ const calculateRating = (event: EventInsert): number => {
   return Math.random() * (5.0 - 3.5) + 3.5;
 };
 
-const MostRatedEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
+const MostRatedEvents = (
+  {
+    events, isLoading, onPress
+  }
+    : {
+      events: EventInsert[];
+      isLoading: boolean;
+      onPress: (event: EventInsert) => void;
+    }) => {
   const mostRatedEvents = [...events]
     .filter(event => event.startDateTime && new Date(event.startDateTime) > new Date())
     .map(event => ({ ...event, rating: calculateRating(event) }))
@@ -35,7 +43,7 @@ const MostRatedEvents = ({ events, isLoading }: { events: EventInsert[]; isLoadi
           ))
         : mostRatedEvents.map((event) => (
           <TouchableOpacity
-            onPress={() => router.push(`/events/${event.id}/detail`)}
+            onPress={() => onPress(event)}
             activeOpacity={0.8}
             key={event.id}
             style={styles.eventContainer}

@@ -1,20 +1,19 @@
 import EventCardWrapper from '@/components/EventCardWrapper';
 import EventListComponent from '@/components/EventListComponent';
+import EventInformation from '@/components/EventsInformation';
 import FilterRowComponent from '@/components/FilterRowComponent';
 import HeaderComponent from '@/components/HeaderComponent';
 import MostRatedEvents from '@/components/MostRatedEvents';
 import SearchBarComponent from '@/components/SearchBarComponent';
+import UpcomingEvents from '@/components/UpcomingEvents';
 import { useEvents } from '@/hooks/useEvents';
 import { useEventStore } from '@/store/eventStore';
 import { EventInsert } from '@/types';
-import { useRouter } from 'expo-router';
+import BottomSheet from '@gorhom/bottom-sheet';
 import debounce from 'lodash/debounce';
 import { JSX, useCallback, useMemo, useRef, useState } from 'react';
-import { Keyboard, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { Keyboard, ScrollView, StyleSheet, Text, TouchableWithoutFeedback } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import UpcomingEvents from '@/components/UpcomingEvents';
-import EventInformation from '@/components/EventsInformation';
-import BottomSheet from '@gorhom/bottom-sheet';
 
 export default function HomeScreen(): JSX.Element {
   const [searchTerm, setSearchTerm] = useState('');
@@ -99,8 +98,8 @@ export default function HomeScreen(): JSX.Element {
             />
           ) : (
             <>
-              <UpcomingEvents events={events ?? []} isLoading={isLoading} />
-              <MostRatedEvents events={events ?? []} isLoading={isLoading} />
+              <UpcomingEvents events={events ?? []} isLoading={isLoading} onPress={handleEventPress} />
+              <MostRatedEvents events={events ?? []} isLoading={isLoading} onPress={handleEventPress} />
             </>
           )}
         </ScrollView>

@@ -1,13 +1,20 @@
 import { EventInsert } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import UpcomingEventSkeleton from './skeletons/UpcomingEventSkeleton';
 
-const UpcomingEvents = ({ events, isLoading }: { events: EventInsert[]; isLoading: boolean; }) => {
+const UpcomingEvents = (
+  {
+    events, isLoading, onPress
+  }
+    : {
+      events: EventInsert[];
+      isLoading: boolean;
+      onPress: (event: EventInsert) => void;
+    }) => {
   const upcomingEvents = [...events]
     .filter(event => event.startDateTime && new Date(event.startDateTime) > new Date())
     .sort((a, b) => new Date(a.startDateTime!).getTime() - new Date(b.startDateTime!).getTime())
@@ -49,7 +56,7 @@ const UpcomingEvents = ({ events, isLoading }: { events: EventInsert[]; isLoadin
             ))
           : upcomingEvents.map((event) => (
             <TouchableOpacity
-              onPress={() => router.push(`/events/${event.id}/detail`)}
+              onPress={() => onPress(event)}
               activeOpacity={0.8}
               key={event.id}
               style={styles.eventCard}
