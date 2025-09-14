@@ -23,7 +23,6 @@ export default function HomeScreen(): JSX.Element {
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['50%', '90%'], []);
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   const { data: events, isLoading, error, refetch } = useEvents({
     keyword: searchTerm,
@@ -53,13 +52,9 @@ export default function HomeScreen(): JSX.Element {
 
   const handleEventPress = (event: EventInsert): void => {
     setSelectedEvent(event);
-    setIsBottomSheetOpen(true);
-    bottomSheetRef.current?.expand();
-  };
-
-  const closeBottomSheet = () => {
-    setIsBottomSheetOpen(false);
-    bottomSheetRef.current?.close();
+    requestAnimationFrame(() => {
+      bottomSheetRef.current?.expand();
+    });
   };
 
   const handleSheetChanges = useCallback((index: number): void => {
@@ -126,13 +121,13 @@ export default function HomeScreen(): JSX.Element {
         {selectedEvent && (
           <BottomSheet
             ref={bottomSheetRef}
-            index={isBottomSheetOpen ? 1 : -1}
+            index={-1}
             snapPoints={snapPoints}
-            style={styles.bottomSheet}
             enablePanDownToClose={true}
+            onChange={handleSheetChanges}
+            style={styles.bottomSheet}
             backgroundStyle={styles.bottomSheetBackground}
             handleIndicatorStyle={styles.bottomSheetHandle}
-            onChange={handleSheetChanges}
           >
             <EventInformation event={selectedEvent} />
           </BottomSheet>
