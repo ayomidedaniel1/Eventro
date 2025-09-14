@@ -18,7 +18,6 @@ export default function OnboardingScreen() {
     transform: [{ scale: signInScale.value }],
   }));
 
-
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />

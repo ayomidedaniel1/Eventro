@@ -9,7 +9,7 @@ import UpcomingEvents from '@/components/UpcomingEvents';
 import { useEvents } from '@/hooks/useEvents';
 import { useEventStore } from '@/store/eventStore';
 import { EventInsert } from '@/types';
-import BottomSheet from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import debounce from 'lodash/debounce';
 import { JSX, useCallback, useMemo, useRef, useState } from 'react';
 import { Keyboard, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
@@ -22,7 +22,7 @@ export default function HomeScreen(): JSX.Element {
   const [selectedEvent, setSelectedEvent] = useState<EventInsert | null>(null);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['50%', '90%'], []);
+  const snapPoints = useMemo(() => ['95%'], []);
 
   const { data: events, isLoading, error, refetch } = useEvents({
     keyword: searchTerm,
@@ -121,7 +121,6 @@ export default function HomeScreen(): JSX.Element {
         {selectedEvent && (
           <BottomSheet
             ref={bottomSheetRef}
-            index={-1}
             snapPoints={snapPoints}
             enablePanDownToClose={true}
             onChange={handleSheetChanges}
@@ -129,7 +128,9 @@ export default function HomeScreen(): JSX.Element {
             backgroundStyle={styles.bottomSheetBackground}
             handleIndicatorStyle={styles.bottomSheetHandle}
           >
-            <EventInformation event={selectedEvent} />
+            <BottomSheetView style={{ flex: 1 }}>
+              <EventInformation event={selectedEvent} />
+            </BottomSheetView>
           </BottomSheet>
         )}
 
@@ -150,21 +151,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Manrope-Regular',
   },
   bottomSheet: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
     zIndex: 10,
   },
   bottomSheetBackground: {
-    backgroundColor: '#1A1A1D',
+    backgroundColor: '#010101',
   },
   bottomSheetHandle: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#7D7F82',
   },
   resultContainer: {
     flexDirection: 'row',
