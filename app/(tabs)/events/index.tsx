@@ -22,7 +22,8 @@ export default function HomeScreen(): JSX.Element {
   const [selectedEvent, setSelectedEvent] = useState<EventInsert | null>(null);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['25%', '50%', '75%', '90%'], []);
+  const snapPoints = useMemo(() => ['50%', '90%'], []);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   const { data: events, isLoading, error, refetch } = useEvents({
     keyword: searchTerm,
@@ -52,7 +53,13 @@ export default function HomeScreen(): JSX.Element {
 
   const handleEventPress = (event: EventInsert): void => {
     setSelectedEvent(event);
+    setIsBottomSheetOpen(true);
     bottomSheetRef.current?.expand();
+  };
+
+  const closeBottomSheet = () => {
+    setIsBottomSheetOpen(false);
+    bottomSheetRef.current?.close();
   };
 
   const handleSheetChanges = useCallback((index: number): void => {
@@ -119,10 +126,10 @@ export default function HomeScreen(): JSX.Element {
         {selectedEvent && (
           <BottomSheet
             ref={bottomSheetRef}
-            index={-1}
+            index={isBottomSheetOpen ? 1 : -1}
             snapPoints={snapPoints}
-            enablePanDownToClose={true}
             style={styles.bottomSheet}
+            enablePanDownToClose={true}
             backgroundStyle={styles.bottomSheetBackground}
             handleIndicatorStyle={styles.bottomSheetHandle}
             onChange={handleSheetChanges}
@@ -156,6 +163,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    zIndex: 10,
   },
   bottomSheetBackground: {
     backgroundColor: '#1A1A1D',
