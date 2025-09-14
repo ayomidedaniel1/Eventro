@@ -218,3 +218,9 @@ export type ProfileActionsProps = {
   title: string;
   icon: ComponentProps<typeof Ionicons>['name'];
 };
+
+export type EventInfoProp = {
+  title: string;
+  icon: ComponentProps<typeof Ionicons>['name'];
+  data: string;
+};

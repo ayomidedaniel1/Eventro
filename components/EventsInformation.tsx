@@ -3,13 +3,26 @@ import { StyleSheet, Text, View } from 'react-native';
 import { EventInsert } from '@/types';
 import { ImageBackground } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
+import EventInfo from './EventInfo';
 
 type EventInformationProps = {
   event: EventInsert;
 };
 
 export default function EventInformation({ event }: EventInformationProps): JSX.Element {
-  console.log('event>>> ', event);
+  const formatDateTime = (dateString: string) => {
+    const date = new Date(dateString);
+
+    return new Intl.DateTimeFormat("en-US", {
+      weekday: "short",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }).format(date).replace(",", " |");
+  };
 
   return (
     <View style={styles.container}>
@@ -28,6 +41,35 @@ export default function EventInformation({ event }: EventInformationProps): JSX.
 
       <View style={styles.overlay}>
         <Text style={styles.title}>{event.title}</Text>
+        <Text style={styles.description}>{event.description}</Text>
+
+        <View style={styles.line} />
+
+        <Text style={styles.infoTitle}>Event Info</Text>
+
+        <EventInfo
+          title="Venue"
+          icon="location-outline"
+          data={`${event.venue}, ${event.city}`}
+        />
+
+        <EventInfo
+          title="Date"
+          icon="calendar-outline"
+          data={event.startDateTime ? formatDateTime(event.startDateTime) : "No date"}
+        />
+
+        <EventInfo
+          title="Ticket price"
+          icon="ticket-outline"
+          data={`#9,000`}
+        />
+
+        <EventInfo
+          title="Duration"
+          icon="location"
+          data={`${event.venue}, ${event.city}`}
+        />
       </View>
     </View>
   );
@@ -56,5 +98,26 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: '#FFFFFF',
     marginTop: -30,
+  },
+  description: {
+    fontFamily: 'Manrope-Regular',
+    fontSize: 16,
+    lineHeight: 30,
+    color: '#E5E6E6',
+  },
+  line: {
+    width: '100%',
+    alignSelf: 'center',
+    borderWidth: 0.5,
+    height: 0,
+    borderColor: '#7D7F82',
+    marginTop: 5,
+  },
+  infoTitle: {
+    fontFamily: 'Manrope-SemiBold',
+    fontSize: 20,
+    lineHeight: 30,
+    textAlign: 'center',
+    color: '#FFFFFF',
   },
 });
