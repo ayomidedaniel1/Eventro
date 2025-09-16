@@ -9,12 +9,12 @@ import UpcomingEvents from '@/components/UpcomingEvents';
 import { useEvents } from '@/hooks/useEvents';
 import { useEventStore } from '@/store/eventStore';
 import { EventInsert } from '@/types';
-import BottomSheet, { BottomSheetScrollView, BottomSheetView } from '@gorhom/bottom-sheet';
+import { AntDesign } from '@expo/vector-icons';
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import debounce from 'lodash/debounce';
 import { JSX, useCallback, useMemo, useRef, useState } from 'react';
 import { Keyboard, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AntDesign } from '@expo/vector-icons';
 
 export default function HomeScreen(): JSX.Element {
   const [searchTerm, setSearchTerm] = useState('');
@@ -22,7 +22,7 @@ export default function HomeScreen(): JSX.Element {
   const [selectedEvent, setSelectedEvent] = useState<EventInsert | null>(null);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['90%'], []);
+  const snapPoints = useMemo(() => ['95%'], []);
 
   const { data: events, isLoading, error, refetch } = useEvents({
     keyword: searchTerm,
@@ -127,6 +127,7 @@ export default function HomeScreen(): JSX.Element {
             style={styles.bottomSheet}
             backgroundStyle={styles.bottomSheetBackground}
             handleIndicatorStyle={styles.bottomSheetHandle}
+            enableOverDrag={false}
           >
             <BottomSheetScrollView style={{ flex: 1 }}>
               <EventInformation event={selectedEvent} />

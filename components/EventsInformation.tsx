@@ -1,8 +1,8 @@
-import React, { JSX } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { EventInsert } from '@/types';
 import { ImageBackground } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
+import React, { JSX } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import EventInfo from './EventInfo';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
@@ -42,7 +42,7 @@ export default function EventInformation({ event }: EventInformationProps): JSX.
 
       <View style={styles.overlay}>
         <Text style={styles.title}>{event.title}</Text>
-        <Text style={styles.description}>{event.description}</Text>
+        <Text style={styles.description} numberOfLines={5} ellipsizeMode='tail' >{event.description}</Text>
 
         <View style={styles.line} />
 
@@ -88,7 +88,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   overlay: {
-    marginTop: -40,
+    // marginTop: -40,
+    paddingBottom: 40,
     paddingHorizontal: 20,
   },
   title: {
