@@ -41,36 +41,39 @@ export default function EventInformation({ event }: EventInformationProps): JSX.
       </ImageBackground>
 
       <View style={styles.overlay}>
-        <Text style={styles.title}>{event.title}</Text>
+        <Text numberOfLines={1} ellipsizeMode='clip' style={styles.title}>{event.title}</Text>
+
         <Text style={styles.description} numberOfLines={5} ellipsizeMode='tail' >{event.description}</Text>
 
         <View style={styles.line} />
 
         <Text style={styles.infoTitle}>Event Info</Text>
 
-        <EventInfo
-          title="Venue"
-          icon="location-outline"
-          data={`${event.venue}, ${event.city}`}
-        />
+        <View style={styles.eventInfoContainer}>
+          <EventInfo
+            title="Venue"
+            icon="location-outline"
+            data={`${event.venue}, ${event.city}`}
+          />
 
-        <EventInfo
-          title="Date"
-          icon="calendar-outline"
-          data={event.startDateTime ? formatDateTime(event.startDateTime) : "No date"}
-        />
+          <EventInfo
+            title="Date"
+            icon="calendar-outline"
+            data={event.startDateTime ? formatDateTime(event.startDateTime) : "No date"}
+          />
 
-        <EventInfo
-          title="Ticket price"
-          icon="ticket-outline"
-          data={`#9,000`}
-        />
+          <EventInfo
+            title="Ticket price"
+            icon="ticket-outline"
+            data={`#9,000`}
+          />
 
-        <EventInfo
-          title="Duration"
-          icon="location"
-          data={`${event.venue}, ${event.city}`}
-        />
+          <EventInfo
+            title="Duration"
+            icon="location"
+            data={`${event.venue}, ${event.city}`}
+          />
+        </View>
       </View>
     </View>
   );
@@ -88,7 +91,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   overlay: {
-    // marginTop: -40,
+    // marginTop: -70,
+    flexGrow: 1,
     paddingBottom: 40,
     paddingHorizontal: 20,
   },
@@ -98,12 +102,12 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     textAlign: 'left',
     color: '#FFFFFF',
-    marginTop: -30,
   },
   description: {
     fontFamily: 'Manrope-Regular',
     fontSize: 16,
     lineHeight: 30,
+    marginTop: 8,
     color: '#E5E6E6',
   },
   line: {
@@ -112,13 +116,20 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     height: 0,
     borderColor: '#7D7F82',
-    marginTop: 5,
+    marginVertical: 14,
   },
   infoTitle: {
     fontFamily: 'Manrope-SemiBold',
     fontSize: 20,
     lineHeight: 30,
-    textAlign: 'center',
+    textAlign: 'left',
+    marginVertical: 12,
     color: '#FFFFFF',
+  },
+  eventInfoContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: 12,
+    marginTop: 4,
   },
 });

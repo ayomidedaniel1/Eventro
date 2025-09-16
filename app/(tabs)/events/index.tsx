@@ -22,7 +22,7 @@ export default function HomeScreen(): JSX.Element {
   const [selectedEvent, setSelectedEvent] = useState<EventInsert | null>(null);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['95%'], []);
+  const snapPoints = useMemo(() => ['90%'], []);
 
   const { data: events, isLoading, error, refetch } = useEvents({
     keyword: searchTerm,

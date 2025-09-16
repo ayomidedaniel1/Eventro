@@ -7,7 +7,7 @@ const EventInfo = ({ title, icon, data }: EventInfoProp) => {
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
-        <Ionicons color={'#F5F5F5'} size={20} name={icon} />
+        <Ionicons color={'#012508'} size={20} name={icon} />
       </View>
 
       <View style={styles.contentContainer}>
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     width: '100%',
-    height: 56,
+    marginBottom: 12,
   },
   iconContainer: {
     width: 46,
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexDirection: 'column',
     alignItems: 'flex-start',
-    height: 56,
+    justifyContent: 'space-between',
     gap: 2,
   },
   title: {
