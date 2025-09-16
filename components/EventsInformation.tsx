@@ -1,9 +1,10 @@
 import React, { JSX } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { EventInsert } from '@/types';
 import { ImageBackground } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import EventInfo from './EventInfo';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
 type EventInformationProps = {
   event: EventInsert;
@@ -87,8 +88,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   overlay: {
-    position: 'absolute',
-    bottom: 0,
+    marginTop: -40,
     paddingHorizontal: 20,
   },
   title: {
