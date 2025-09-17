@@ -1,6 +1,5 @@
 import EventCardWrapper from '@/components/EventCardWrapper';
 import EventListComponent from '@/components/EventListComponent';
-import EventInformation from '@/components/EventsInformation';
 import FilterRowComponent from '@/components/FilterRowComponent';
 import HeaderComponent from '@/components/HeaderComponent';
 import MostRatedEvents from '@/components/MostRatedEvents';
@@ -10,19 +9,15 @@ import { useEvents } from '@/hooks/useEvents';
 import { useEventStore } from '@/store/eventStore';
 import { EventInsert } from '@/types';
 import { AntDesign } from '@expo/vector-icons';
-import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { router } from 'expo-router';
 import debounce from 'lodash/debounce';
-import { JSX, useCallback, useMemo, useRef, useState } from 'react';
+import { JSX, useCallback, useState } from 'react';
 import { Keyboard, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen(): JSX.Element {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterGenre, setFilterGenre] = useState('');
-  const [selectedEvent, setSelectedEvent] = useState<EventInsert | null>(null);
-
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['90%'], []);
 
   const { data: events, isLoading, error, refetch } = useEvents({
     keyword: searchTerm,
@@ -51,17 +46,8 @@ export default function HomeScreen(): JSX.Element {
   };
 
   const handleEventPress = (event: EventInsert): void => {
-    setSelectedEvent(event);
-    requestAnimationFrame(() => {
-      bottomSheetRef.current?.expand();
-    });
+    router.push(`/events/${event.id}/detail`);
   };
-
-  const handleSheetChanges = useCallback((index: number): void => {
-    if (index === -1) {
-      setSelectedEvent(null);
-    }
-  }, []);
 
   if (error) return <Text style={styles.error}>Error: {error.message}</Text>;
 
@@ -118,23 +104,6 @@ export default function HomeScreen(): JSX.Element {
           )}
         </ScrollView>
 
-        {selectedEvent && (
-          <BottomSheet
-            ref={bottomSheetRef}
-            snapPoints={snapPoints}
-            enablePanDownToClose={true}
-            onChange={handleSheetChanges}
-            style={styles.bottomSheet}
-            backgroundStyle={styles.bottomSheetBackground}
-            handleIndicatorStyle={styles.bottomSheetHandle}
-            enableOverDrag={false}
-          >
-            <BottomSheetScrollView style={{ flex: 1 }}>
-              <EventInformation event={selectedEvent} />
-            </BottomSheetScrollView>
-          </BottomSheet>
-        )}
-
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -150,15 +119,6 @@ const styles = StyleSheet.create({
     marginTop: 60,
     color: 'red',
     fontFamily: 'Manrope-Regular',
-  },
-  bottomSheet: {
-    zIndex: 10,
-  },
-  bottomSheetBackground: {
-    backgroundColor: '#010101',
-  },
-  bottomSheetHandle: {
-    backgroundColor: '#7D7F82',
   },
   resultContainer: {
     flexDirection: 'row',

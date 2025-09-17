@@ -1,13 +1,13 @@
+import EventInfo from '@/components/EventInfo';
 import { useAuthStore } from '@/store/authStore';
 import { useEventStore } from '@/store/eventStore';
 import { EventInsert, TicketmasterPriceRange } from '@/types';
 import { supabase } from '@/utils/supabase';
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import { ImageBackground } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { PayWithFlutterwave } from 'flutterwave-react-native';
 import { useEffect, useState } from 'react';
-import { Image, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Snackbar } from 'react-native-paper';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 interface RedirectParams {
   status: 'successful' | 'cancelled';
@@ -128,173 +128,134 @@ export default function EventsDetailScreen() {
     router.push(`/events/${id}/chat`);
   };
 
+  const formatDateTime = (dateString: string) => {
+    const date = new Date(dateString);
+
+    return new Intl.DateTimeFormat("en-US", {
+      weekday: "short",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }).format(date).replace(",", " |");
+  };
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
+    <View style={styles.container}>
+      <ImageBackground
+        source={{ uri: event.image }}
+        style={styles.imgBg}
+        contentFit="cover"
+      >
+        <LinearGradient
+          start={{ x: 0, y: 0.6 }}
+          end={{ x: 0, y: 1 }}
+          colors={['#67676729', '#010101E5']}
+          style={styles.backgroundImageGradient}
+        />
+      </ImageBackground>
 
-      <TouchableOpacity onPress={() => router.back()} style={styles.backButton} activeOpacity={0.7}>
-        <Ionicons name="arrow-back" size={30} color="#fff" />
-      </TouchableOpacity>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.overlay}
+        contentContainerStyle={{ paddingBottom: 100 }}
+      >
+        <Text numberOfLines={1} ellipsizeMode='clip' style={styles.title}>{event.title}</Text>
 
-      <TouchableOpacity onPress={() => Linking.openURL(event.url!)} style={styles.shareButton} activeOpacity={0.7}>
-        <FontAwesome name="share-square-o" size={30} color="#fff" />
-      </TouchableOpacity>
+        <Text style={styles.description} numberOfLines={5} ellipsizeMode='tail' >{event.description}</Text>
 
-      <Image source={{ uri: event.image }} style={styles.image} />
-
-      <View style={styles.content}>
-        <Text style={styles.title}>{event.title}</Text>
-        <Text style={styles.segmentText}>{event.segment}</Text>
-        <Text style={styles.sale}>• {event.status}</Text>
-
-        <Text style={styles.about}>About</Text>
-        <Text style={styles.detail}>
-          {event.genre || ''} • {event.venue || ''} • {event.startDate || event.startDateTime || 'TBA'}
-        </Text>
-        <Text style={styles.description}>{event.description || 'No description available'}</Text>
         <View style={styles.line} />
 
-        {loading ? (
-          <Text style={styles.detail}>Loading price...</Text>
-        ) : error ? (
-          <Text style={styles.error}>{error}</Text>
-        ) : priceRange?.min ? (
-          <PayWithFlutterwave
-            onRedirect={handleOnRedirect}
-            options={{
-              tx_ref: generateTransactionRef(10),
-              authorization: process.env.EXPO_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || '',
-              customer: { email: user.email ?? '' },
-              amount: priceRange?.min || 1000,
-              currency: 'NGN' as any,
-              payment_options: 'card',
-            }}
-            customButton={(props) => (
-              <TouchableOpacity
-                style={[styles.linkButton, { marginTop: 15 }]}
-                activeOpacity={0.7}
-                onPress={props.onPress}
-                disabled={props.disabled}
-              >
-                <Text style={styles.linkText}>Book Ticket - ${priceRange.min}</Text>
-              </TouchableOpacity>
-            )}
+        <Text style={styles.infoTitle}>Event Info</Text>
+
+        <View style={styles.eventInfoContainer}>
+          <EventInfo
+            title="Venue"
+            icon="location-outline"
+            data={`${event.venue}, ${event.city}`}
           />
-        ) : null}
 
-        <TouchableOpacity onPress={navigateToChat} style={[styles.linkButton, { marginTop: 15 }]}>
-          <Text style={styles.linkText}>Chat with Support</Text>
-        </TouchableOpacity>
-      </View>
+          <EventInfo
+            title="Date"
+            icon="calendar-outline"
+            data={event.startDateTime ? formatDateTime(event.startDateTime) : "No date"}
+          />
 
-      <Snackbar
-        visible={snackbarVisible}
-        onDismiss={onDismissSnackbar}
-        duration={3000}
-        style={styles.snackbar}
-        action={{
-          label: 'Dismiss',
-          onPress: onDismissSnackbar,
-        }}
-      >
-        {snackbarMessage}
-      </Snackbar>
-    </ScrollView>
+          <EventInfo
+            title="Ticket price"
+            icon="ticket-outline"
+            data={`#9,000`}
+          />
+
+          <EventInfo
+            title="Duration"
+            icon="location"
+            data={`${event.venue}, ${event.city}`}
+          />
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
-    position: 'relative',
+    backgroundColor: '#010101',
   },
-  backButton: {
-    position: 'absolute',
-    left: 20,
-    top: 59,
-    width: 30,
-    height: 30,
-    zIndex: 10,
+  bottomSheetHandle: {
+    backgroundColor: '#7D7F82',
   },
-  shareButton: {
-    position: 'absolute',
-    right: 20,
-    top: 59,
-    width: 30,
-    height: 30,
-    zIndex: 10,
-  },
-  image: {
+  imgBg: {
     width: '100%',
-    height: 234,
+    height: 330,
   },
-  content: {
-    padding: 14,
+  backgroundImageGradient: {
+    flex: 1,
+  },
+  overlay: {
+    // marginTop: -70,
+    flexGrow: 1,
+    paddingBottom: 40,
+    paddingHorizontal: 20,
   },
   title: {
-    fontSize: 20,
-    lineHeight: 28,
     fontFamily: 'Manrope-SemiBold',
-    color: '#1C1B19',
-    marginBottom: 7,
-  },
-  segmentText: {
-    height: 20,
-    paddingHorizontal: 8,
-    backgroundColor: '#ECF1FF',
-    borderRadius: 2,
-    marginBottom: 3,
-    fontFamily: 'Manrope-Regular',
-    fontSize: 12,
-    lineHeight: 18,
-    color: '#1C1B19',
-  },
-  sale: {
-    fontFamily: 'Manrope-Regular',
-    fontSize: 12,
-    lineHeight: 18,
-    color: '#1C1B19',
-  },
-  about: {
-    fontFamily: 'Manrope-Medium',
-    fontSize: 18,
-    lineHeight: 27,
-    color: '#1C1B19',
-    marginTop: 14,
-    marginBottom: 7,
-  },
-  detail: {
-    fontSize: 12,
-    lineHeight: 18,
-    fontFamily: 'Manrope-Regular',
-    color: '#6A6A6A',
-    marginBottom: 12,
+    fontSize: 24,
+    lineHeight: 30,
+    textAlign: 'left',
+    color: '#FFFFFF',
   },
   description: {
-    fontSize: 14,
     fontFamily: 'Manrope-Regular',
-    color: '#666',
-    marginBottom: 15,
+    fontSize: 16,
+    lineHeight: 30,
+    marginTop: 8,
+    color: '#E5E6E6',
   },
   line: {
-    width: 1000,
-    height: 0,
+    width: '100%',
+    alignSelf: 'center',
     borderWidth: 0.5,
-    borderColor: '#C4C4C4',
-    marginLeft: -200,
-    marginBottom: 40,
+    height: 0,
+    borderColor: '#7D7F82',
+    marginVertical: 14,
   },
-  linkButton: {
-    backgroundColor: '#2ACE99',
-    padding: 10,
-    marginTop: 20,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  linkText: {
-    color: '#fff',
+  infoTitle: {
     fontFamily: 'Manrope-SemiBold',
-    fontSize: 16,
+    fontSize: 20,
+    lineHeight: 30,
+    textAlign: 'left',
+    marginVertical: 12,
+    color: '#FFFFFF',
+  },
+  eventInfoContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: 12,
+    marginTop: 4,
   },
   errorContainer: {
     flex: 1,
@@ -312,13 +273,5 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     backgroundColor: '#FFE6E6',
     borderRadius: 8,
-  },
-  snackbar: {
-    top: 0,
-    position: 'absolute',
-    width: '100%',
-    backgroundColor: '#2ACE99',
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 8,
   },
 });
