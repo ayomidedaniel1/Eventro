@@ -3,11 +3,12 @@ import { useAuthStore } from '@/store/authStore';
 import { useEventStore } from '@/store/eventStore';
 import { EventInsert, TicketmasterPriceRange } from '@/types';
 import { supabase } from '@/utils/supabase';
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { ImageBackground } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface RedirectParams {
   status: 'successful' | 'cancelled';
@@ -128,6 +129,20 @@ export default function EventsDetailScreen() {
     router.push(`/events/${id}/chat`);
   };
 
+  const handleShare = async () => {
+    try {
+      if (event.url) {
+        await Share.share({
+          message: `Check out this event: ${event.url}`,
+        });
+      } else {
+        console.warn("Event URL is missing");
+      }
+    } catch (error) {
+      console.error("Error sharing event URL:", error);
+    }
+  };
+
   const formatDateTime = (dateString: string) => {
     const date = new Date(dateString);
 
@@ -164,7 +179,7 @@ export default function EventsDetailScreen() {
       >
         <Text numberOfLines={1} ellipsizeMode='clip' style={styles.title}>{event.title}</Text>
 
-        <Text style={styles.description} numberOfLines={5} ellipsizeMode='tail' >{event.description}</Text>
+        <Text style={styles.description} ellipsizeMode='tail' >{event.description}</Text>
 
         <View style={styles.line} />
 
@@ -191,11 +206,43 @@ export default function EventsDetailScreen() {
 
           <EventInfo
             title="Duration"
-            icon="location"
+            icon="location-outline"
             data={`${event.venue}, ${event.city}`}
           />
         </View>
+
+        <View style={styles.line} />
+
+        <Text style={styles.infoTitle}>Organizers</Text>
+
+        <View style={styles.organizerContainer}>
+          <View style={styles.detailContainer}>
+            <View style={styles.crownContainer}>
+              <AntDesign color={'#F5F5F5'} size={20} name={'crown'} />
+            </View>
+
+            <View style={styles.contentContainer}>
+              <Text style={styles.organizerTitle}>{event.promoter ? event.promoter : 'TBA'}</Text>
+
+              <Text numberOfLines={1} ellipsizeMode='tail' style={styles.data}>{event.url?.slice(0, 30)}</Text>
+            </View>
+          </View>
+
+          <TouchableOpacity
+            style={styles.iconContainer}
+            onPress={handleShare}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <AntDesign color={'#012508'} size={20} name={'link'} />
+          </TouchableOpacity>
+        </View>
       </ScrollView>
+
+      <View style={styles.buyTicket}>
+        <MaterialCommunityIcons name="ticket-confirmation-outline" size={24} color="#010101" />
+
+        <Text style={styles.ticket}>Buy ticket (₦8,000)</Text>
+      </View>
     </View>
   );
 }
@@ -216,7 +263,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   overlay: {
-    // marginTop: -70,
+    marginTop: -70,
     flexGrow: 1,
     paddingBottom: 40,
     paddingHorizontal: 20,
@@ -273,5 +320,76 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     backgroundColor: '#FFE6E6',
     borderRadius: 8,
+  },
+  organizerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+    width: '100%',
+    marginBottom: 12,
+  },
+  detailContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  iconContainer: {
+    width: 46,
+    height: 46,
+    backgroundColor: '#F5F5F5',
+    borderWidth: 0.46,
+    borderColor: '#DDDDDD',
+    borderRadius: 46,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  crownContainer: {
+    width: 42,
+    height: 42,
+    backgroundColor: 'transparent',
+    borderWidth: 0.46,
+    borderColor: '#DDDDDD',
+    borderRadius: 46,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  contentContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: 2,
+  },
+  organizerTitle: {
+    fontFamily: 'Manrope-Medium',
+    fontSize: 14,
+    lineHeight: 24,
+    color: '#E5E6E6',
+  },
+  data: {
+    fontFamily: 'Manrope-Medium',
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#FFFFFF',
+  },
+  buyTicket: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+    gap: 12,
+    position: 'absolute',
+    width: 392,
+    height: 64,
+    bottom: 20,
+    elevation: 5,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 100,
+  },
+  ticket: {
+    fontFamily: 'Manrope-Medium',
+    fontSize: 20,
+    lineHeight: 30,
+    color: '#010101',
   },
 });
