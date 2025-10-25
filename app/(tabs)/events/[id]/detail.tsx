@@ -241,7 +241,7 @@ export default function EventsDetailScreen() {
       <View style={styles.buyTicket}>
         <MaterialCommunityIcons name="ticket-confirmation-outline" size={24} color="#010101" />
 
-        <Text style={styles.ticket}>Buy ticket (₦9,000)</Text>
+        <Text style={styles.ticket}>Buy ticket (₦8,000)</Text>
       </View>
     </View>
   );

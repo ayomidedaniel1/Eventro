@@ -24,6 +24,7 @@ export default function EventListComponent({
 
   return (
     <FlatList
+      scrollEnabled={false}
       data={data}
       renderItem={({ item }) => renderItem(item)}
       keyExtractor={keyExtractor}
