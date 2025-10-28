@@ -7,8 +7,7 @@ export async function getGeminiResponse(
   history: ChatContent[]
 ): Promise<string> {
   try {
-    // The invoke method automatically handles security (Authorization header)
-    // and correctly constructs the POST request to your deployed function.
+    // The invoke method is called to handle security (Authorization header)
     const { data, error } = await supabase.functions.invoke<ChatResponse>('gemini-chat', {
       method: 'POST',
       body: {
@@ -19,7 +18,6 @@ export async function getGeminiResponse(
 
     if (error) {
       console.error("Supabase Function Error:", error);
-      // For user-facing error messages:
       throw new Error(`AI Request Failed: ${error.message}`);
     }
 
@@ -31,7 +29,6 @@ export async function getGeminiResponse(
 
   } catch (error) {
     console.error("Caught error in API call:", error);
-    // Ensure we throw a proper Error instance for better handling in components
     const errorMessage = (error instanceof Error) ? error.message : "An unknown error occurred.";
     throw new Error(`Failed to communicate with the Gemini service: ${errorMessage}`);
   }
