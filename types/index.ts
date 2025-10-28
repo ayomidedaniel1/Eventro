@@ -2,18 +2,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { Session, User } from "@supabase/supabase-js";
 import { ComponentProps, JSX } from "react";
 
-// --- START: Gemini Chat Types ---
-export type ChatContent = {
-  role: "user" | "model";
-  parts: { text: string; }[];
-};
-
-export type ChatResponse = {
-  response: string;
-};
-// --- END: Gemini Chat Types ---
-
-
 export type AuthState = {
   user: User | null;
   session: Session | null;
@@ -234,4 +222,13 @@ export type EventInfoProp = {
   title: string;
   icon: ComponentProps<typeof Ionicons>['name'];
   data: string;
+};
+
+export type ChatContent = {
+  role: "user" | "model";
+  parts: { text: string; }[];
+};
+
+export type ChatResponse = {
+  response: string;
 };
