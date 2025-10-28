@@ -1,6 +1,6 @@
 import "react-native-url-polyfill/auto";
 
-import { Database, EventInsert } from "@/types";
+import { Database } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createClient } from "@supabase/supabase-js";
 
@@ -19,11 +19,3 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     detectSessionInUrl: true,
   },
 });
-
-export const seedEvents = async (): Promise<EventInsert[]> => {
-  const response = await supabase.functions.invoke("seed-events", {
-    method: "POST",
-  });
-  if (response.error) throw new Error(response.error.message);
-  return Array.isArray(response.data) ? response.data : [];
-};
