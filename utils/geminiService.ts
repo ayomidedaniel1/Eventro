@@ -1,22 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
+import { ChatContent, ChatResponse } from "@/types";
 
-// Define the shape of the data we send and receive
-type ChatContent = {
-  role: "user" | "model";
-  parts: { text: string; }[];
-};
-
-type ChatResponse = {
-  response: string;
-};
-
-/**
- * Sends a message to the deployed Supabase Edge Function for Gemini chat.
- * @param supabase The initialized Supabase client instance.
- * @param prompt The current user input message.
- * @param history The preceding conversation history.
- * @returns The AI's generated text response.
- */
 export async function getGeminiResponse(
   supabase: SupabaseClient,
   prompt: string,
