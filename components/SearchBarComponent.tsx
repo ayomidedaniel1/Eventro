@@ -1,6 +1,6 @@
 import { SearchBarProps } from '@/types';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
-import { ActivityIndicator, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function SearchBarComponent({
   value,
