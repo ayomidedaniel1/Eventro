@@ -86,7 +86,7 @@ export default function HomeScreen(): JSX.Element {
           <SearchBarComponent
             value={searchTerm}
             onChangeText={handleSearch}
-            isLoading={isLoading}
+            isLoading={overallLoading}
             placeholder="Discover"
             placeholderTextColor="#7D7F82"
           />
@@ -103,7 +103,7 @@ export default function HomeScreen(): JSX.Element {
             <>
               <View style={styles.resultContainer}>
                 <Text style={styles.result}>
-                  {isLoading ? 'Searching...' : `${events?.length || 0} results`}
+                  {overallLoading ? 'Searching with AI...' : `${events?.length || 0} results`}
                 </Text>
 
                 <View style={styles.filterContainer}>
@@ -111,14 +111,14 @@ export default function HomeScreen(): JSX.Element {
                 </View>
               </View>
               <EventListComponent
-                data={isLoading ? Array(4).fill({}) : events || []}
+                data={overallLoading ? Array(4).fill({}) : events || []}
                 renderItem={(item: EventInsert) => (
                   <EventCardWrapper item={item} onPress={handleEventPress} />
                 )}
                 keyExtractor={(item: EventInsert, index: number) =>
                   item.id || index.toString()
                 }
-                isLoading={isLoading}
+                isLoading={overallLoading}
               />
             </>
           ) : (
