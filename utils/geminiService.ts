@@ -7,7 +7,7 @@ type RefinedSearchResponse = {
 
 export async function getRefinedSearchQuery(
   supabase: SupabaseClient,
-  prompt: string,
+  prompt: string
 ): Promise<string> {
   try {
     const { data, error } = await supabase.functions.invoke<RefinedSearchResponse>('gemini-search-refiner', {
@@ -18,8 +18,9 @@ export async function getRefinedSearchQuery(
     });
 
     if (error) {
-      console.log('Supabase search refiner function error', error);
-      throw new Error(`AI Request Failed: ${error.message}`);
+      // Improved error logging to catch status codes and context
+      console.error("Supabase Search Refiner Function Error:", error);
+      throw new Error(`AI Request Failed: Edge Function returned a non-2xx status code (${error.status}) or error: ${error.message}`);
     }
 
     if (data?.refinedQuery) {
@@ -27,8 +28,9 @@ export async function getRefinedSearchQuery(
     }
 
     throw new Error("AI did not return a refined search query.");
+
   } catch (error) {
-    console.log("Caught error in AI search call:", error);
+    console.error("Caught error in AI search call:", error);
     const errorMessage = (error instanceof Error) ? error.message : "An unknown error occurred.";
     throw new Error(`Failed to communicate with the AI search service: ${errorMessage}`);
   }
