@@ -10,7 +10,7 @@ export async function getRefinedSearchQuery(
   prompt: string
 ): Promise<string> {
   try {
-    const { data, error } = await supabase.functions.invoke<RefinedSearchResponse>('gemini-search-refiner', {
+    const { data, error } = await supabase.functions.invoke<RefinedSearchResponse>('gemini-chat', {
       method: 'POST',
       body: {
         prompt: prompt,
