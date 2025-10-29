@@ -14,13 +14,17 @@ import debounce from 'lodash/debounce';
 import { JSX, useCallback, useState } from 'react';
 import { Keyboard, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { getRefinedSearchQuery } from '@/utils/geminiService';
+import { supabase } from '@/utils/supabase';
 
 export default function HomeScreen(): JSX.Element {
   const [searchTerm, setSearchTerm] = useState('');
+  const [queryToFetch, setQueryToFetch] = useState('');
   const [filterGenre, setFilterGenre] = useState('');
+  const [isAISearching, setIsAISearching] = useState(false);
 
   const { data: events, isLoading, error, refetch } = useEvents({
-    keyword: searchTerm,
+    keyword: queryToFetch,
     genre: filterGenre,
   });
   const setEvents = useEventStore((state) => state.setEvents);
@@ -29,20 +33,39 @@ export default function HomeScreen(): JSX.Element {
     setEvents(events);
   }
 
-  const debouncedRefetch = useCallback(
-    debounce(() => {
-      refetch();
-    }, 300),
-    [refetch, filterGenre]
+  const debouncedAISearch = useCallback(
+    debounce(async (text: string) => {
+      if (!text.trim()) {
+        setQueryToFetch('');
+        return;
+      }
+
+      setIsAISearching(true);
+      try {
+        // call edge function to refine users input
+        const refinedQuery = await getRefinedSearchQuery(supabase, text);
+        setQueryToFetch(refinedQuery);
+      } catch (error) {
+        console.error('AI Search failed. Falling back to raw query', error);
+        setQueryToFetch(text);
+      } finally {
+        setIsAISearching(false);
+      }
+    }, 500),
+    []
   );
 
   const handleSearch = (text: string) => {
     setSearchTerm(text);
-    debouncedRefetch();
+    debouncedAISearch(text);
   };
 
   const handleFilterChange = () => {
-    debouncedRefetch();
+    if (searchTerm.trim()) {
+      debouncedAISearch(searchTerm);
+    } else {
+      refetch();
+    }
   };
 
   const handleEventPress = (event: EventInsert): void => {
@@ -50,6 +73,8 @@ export default function HomeScreen(): JSX.Element {
   };
 
   if (error) return <Text style={styles.error}>Error: {error.message}</Text>;
+
+  const overallLoading = isLoading || isAISearching;
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
