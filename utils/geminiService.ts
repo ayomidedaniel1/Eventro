@@ -10,24 +10,29 @@ export async function getRefinedSearchQuery(
   prompt: string
 ): Promise<string> {
   try {
+    // Reverting function name back to the correct one as confirmed by the user: 'gemini-chat'
     const { data, error } = await supabase.functions.invoke<RefinedSearchResponse>('gemini-chat', {
       method: 'POST',
       body: {
         prompt: prompt,
+        // The Edge Function (gemini-chat) needs to be robust enough to handle the 
+        // absence of 'history' for this specific call, or expect it to be passed 
+        // as null/undefined. If it strictly requires 'history', it will fail 
+        // until the Edge Function code is updated.
       },
     });
 
     if (error) {
-      // Improved error logging to catch status codes and context
-      console.error("Supabase Search Refiner Function Error:", error);
+      console.error("Supabase Search Refiner Function Error:", error, JSON.stringify(error, null, 2));
       throw new Error(`AI Request Failed: Edge Function returned a non-2xx status code (${error.status}) or error: ${error.message}`);
     }
 
+    // This response structure is specifically expected from the search refinement logic 
     if (data?.refinedQuery) {
       return data.refinedQuery;
     }
 
-    throw new Error("AI did not return a refined search query.");
+    throw new Error("AI did not return a refined search query. Check Edge Function logs for details.");
 
   } catch (error) {
     console.error("Caught error in AI search call:", error);
@@ -56,6 +61,7 @@ export async function getGeminiResponse(
       throw new Error(`AI Request Failed: ${error.message}`);
     }
 
+    // This response structure is specifically expected from the chat logic.
     if (data?.response) {
       return data.response;
     }
