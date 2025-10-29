@@ -1,6 +1,39 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { ChatContent, ChatResponse } from "@/types";
 
+type RefinedSearchResponse = {
+  refinedQuery: string;
+};
+
+export async function getRefinedSearchQuery(
+  supabase: SupabaseClient,
+  prompt: string,
+): Promise<string> {
+  try {
+    const { data, error } = await supabase.functions.invoke<RefinedSearchResponse>('gemini-search-refiner', {
+      method: 'POST',
+      body: {
+        prompt: prompt,
+      },
+    });
+
+    if (error) {
+      console.log('Supabase search refiner function error', error);
+      throw new Error(`AI Request Failed: ${error.message}`);
+    }
+
+    if (data?.refinedQuery) {
+      return data.refinedQuery;
+    }
+
+    throw new Error("AI did not return a refined search query.");
+  } catch (error) {
+    console.log("Caught error in AI search call:", error);
+    const errorMessage = (error instanceof Error) ? error.message : "An unknown error occurred.";
+    throw new Error(`Failed to communicate with the AI search service: ${errorMessage}`);
+  }
+}
+
 export async function getGeminiResponse(
   supabase: SupabaseClient,
   prompt: string,
