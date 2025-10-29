@@ -3,7 +3,8 @@ import { AuthProvider } from '@/contexts/AuthProvider';
 import { useDeepLinkAuth } from '@/hooks/useDeepLink';
 import { useAuthStore } from '@/store/authStore';
 import { useEventStore } from '@/store/eventStore';
-import { seedEvents } from '@/utils/supabase';
+import { seedEvents } from '@/utils/eventsService';
+import { supabase } from '@/utils/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
@@ -45,7 +46,7 @@ export default function RootLayout() {
         const now = Date.now();
 
         if (!lastSeedTime || (now - parseInt(lastSeedTime, 10)) >= SEED_INTERVAL) {
-          const data = await seedEvents();
+          const data = await seedEvents(supabase);
           if (data) {
             setEvents(data);
             await AsyncStorage.setItem('lastSeedTime', now.toString());
