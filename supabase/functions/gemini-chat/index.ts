@@ -10,7 +10,7 @@ Deno.serve(async (req: Request) => {
   // 1. Authentication and Setup
   const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
   const GEMINI_API_URL =
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent";
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
   if (!GEMINI_API_KEY) {
     return new Response(
@@ -47,7 +47,14 @@ Deno.serve(async (req: Request) => {
     );
   }
 
-  // 2. Construct the Chat History and Request Payload
+  // --- START NEW LOGIC FOR SEARCH REFINEMENT ---
+
+  const isSearchRefinerRequest = !history;
+
+  const systemInstructionText = isSearchRefinerRequest
+    ? "You are an AI search query refiner. Your only job is to analyze the user's input, which is a search term for an event finding app, and return a single, concise keyword or phrase suitable for a database search. Do not include any explanations, greetings, or punctuation other than the search term itself."
+    : undefined; // Use default chat instructions for regular chat
+
   const contents: Content[] = history || [];
 
   // Add the current user prompt
@@ -59,6 +66,14 @@ Deno.serve(async (req: Request) => {
   const payload: Payload = {
     contents: contents,
   };
+
+  if (systemInstructionText) {
+    payload.systemInstructionText = {
+      systemInstruction: {
+        parts: [{ text: systemInstructionText }]
+      }
+    };
+  }
 
   // 3. Call the Gemini API
   try {
@@ -92,7 +107,7 @@ Deno.serve(async (req: Request) => {
     }
 
     const generatedText =
-      geminiResult.candidates?.[0]?.content?.parts?.[0]?.text;
+      geminiResult.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
 
     if (!generatedText) {
       console.error("No text generated:", geminiResult);
@@ -102,11 +117,12 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // 4. Return the successful response
+    const responseBody = isSearchRefinerRequest
+      ? { refinedQuery: generatedText }
+      : { response: generatedText };
+
     return new Response(
-      JSON.stringify({
-        response: generatedText,
-      }),
+      JSON.stringify(responseBody),
       {
         status: 200,
         headers: { "Content-Type": "application/json" },
