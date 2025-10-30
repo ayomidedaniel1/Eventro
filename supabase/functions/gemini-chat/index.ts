@@ -68,7 +68,7 @@ Deno.serve(async (req: Request) => {
   };
 
   if (systemInstructionText) {
-    payload.systemInstructionText = {
+    payload.generationConfig = {
       systemInstruction: {
         parts: [{ text: systemInstructionText }]
       }

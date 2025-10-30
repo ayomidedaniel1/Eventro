@@ -19,7 +19,7 @@ export type GenerationConfig = {
 
 export type Payload = {
   contents: Content[];
-  systemInstructionText?: GenerationConfig;
+  generationConfig?: GenerationConfig;
 };
 
 export type RequestBody = {
