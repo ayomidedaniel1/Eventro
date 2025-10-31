@@ -1,13 +1,12 @@
 // deno-lint-ignore-file
 import { Content, Payload, RequestBody } from "./types.ts";
 
-// Edge Functions config object
 export const config = {
   auth: false,
 };
 
 Deno.serve(async (req: Request) => {
-  // 1. Authentication and Setup
+  // Authentication and Setup
   const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
   const GEMINI_API_URL =
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
@@ -47,13 +46,13 @@ Deno.serve(async (req: Request) => {
     );
   }
 
-  // --- START NEW LOGIC FOR SEARCH REFINEMENT ---
+  // LOGIC FOR SEARCH REFINEMENT
 
   const isSearchRefinerRequest = !history;
 
   const systemInstructionText = isSearchRefinerRequest
     ? "You are an AI search query refiner. Your only job is to analyze the user's input, which is a search term for an event finding app, and return a single, concise keyword or phrase suitable for a database search. Do not include any explanations, greetings, or punctuation other than the search term itself."
-    : undefined; // Use default chat instructions for regular chat
+    : undefined;
 
   const contents: Content[] = history || [];
 
@@ -75,7 +74,7 @@ Deno.serve(async (req: Request) => {
     };
   }
 
-  // 3. Call the Gemini API
+  // Call the Gemini API
   try {
     const geminiResponse = await fetch(
       `${GEMINI_API_URL}?key=${GEMINI_API_KEY}`,
