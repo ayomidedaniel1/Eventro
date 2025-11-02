@@ -46,7 +46,7 @@ Deno.serve(async (req: Request) => {
     );
   }
 
-  // LOGIC FOR SEARCH REFINEMENT
+  // SEARCH REFINEMENT
 
   const isSearchRefinerRequest = !history;
 
