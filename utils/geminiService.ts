@@ -15,10 +15,6 @@ export async function getRefinedSearchQuery(
       method: 'POST',
       body: {
         prompt: prompt,
-        // The Edge Function (gemini-chat) needs to be robust enough to handle the 
-        // absence of 'history' for this specific call, or expect it to be passed 
-        // as null/undefined. If it strictly requires 'history', it will fail 
-        // until the Edge Function code is updated.
       },
     });
 
@@ -27,7 +23,6 @@ export async function getRefinedSearchQuery(
       throw new Error(`AI Request Failed: Edge Function returned a non-2xx status code (${error.status}) or error: ${error.message}`);
     }
 
-    // This response structure is specifically expected from the search refinement logic 
     if (data?.refinedQuery) {
       return data.refinedQuery;
     }
@@ -61,7 +56,6 @@ export async function getGeminiResponse(
       throw new Error(`AI Request Failed: ${error.message}`);
     }
 
-    // This response structure is specifically expected from the chat logic.
     if (data?.response) {
       return data.response;
     }

@@ -56,7 +56,7 @@ Deno.serve(async (req: Request) => {
 
   const contents: Content[] = history || [];
 
-  // Add the current user prompt
+  // Add current user prompt
   contents.push({
     role: "user",
     parts: [{ text: prompt }],
@@ -74,7 +74,7 @@ Deno.serve(async (req: Request) => {
     };
   }
 
-  // Call the Gemini API
+  // Call Gemini API
   try {
     const geminiResponse = await fetch(
       `${GEMINI_API_URL}?key=${GEMINI_API_KEY}`,
